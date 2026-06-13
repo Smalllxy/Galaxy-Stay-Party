@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>银河站立党 · 游戏大厅</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #1e293b;
+      line-height: 1.5;
+      padding: 20px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 16px;
+    }
+
+    /* 深色模式 - 完全复用游戏原有配色体系 */
+    body.dark-mode {
+      background: #1e2a3a;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .mode-card {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    body.dark-mode .mode-card:hover {
+      background: #1e293b;
+      border-color: #3b82f6;
+    }
+
+    body.dark-mode .card-badge {
+      background: #1e293b;
+      color: #facc15;
+    }
+
+    body.dark-mode .feature-grid {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    body.dark-mode .feature-item {
+      background: #1e293b;
+    }
+
+    body.dark-mode .header {
+      border-bottom-color: #334155;
+    }
+
+    body.dark-mode h1 {
+      color: #facc15;
+    }
+
+    body.dark-mode .subtitle,
+    body.dark-mode .footer-note {
+      color: #94a3b8;
+    }
+
+    body.dark-mode .instructions-panel {
+      background: #0f172a;
+      border-left-color: #3b82f6;
+    }
+
+    body.dark-mode .instructions-panel h3 {
+      color: #facc15;
+    }
+
+    body.dark-mode .instructions-panel li {
+      color: #cbd5e6;
+    }
+
+    body.dark-mode .settings-gear {
+      background: #0f172a;
+      color: #facc15;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark-mode .modal-content {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .modal-title {
+      color: #facc15;
+    }
+
+    body.dark-mode .setting-row {
+      border-bottom-color: #334155;
+    }
+
+    body.dark-mode select {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-color: #475569;
+    }
+
+    body.dark-mode .font-value {
+      background: #0f172a;
+      border-color: #475569;
+      color: #e2e8f0;
+    }
+
+    body.dark-mode .btn-cancel {
+      background: #475569;
+      color: white;
+    }
+
+    body.dark-mode .btn-cancel:hover {
+      background: #334155;
+    }
+
+    /* 布局与容器 */
+    .main-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 2px;
+      color: #2c3e50;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      color: #5b6e8c;
+      font-size: 1.1rem;
+      font-style: italic;
+    }
+
+    .settings-gear {
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      background: rgba(255, 248, 225, 0.9);
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+      z-index: 20;
+    }
+
+    .settings-gear:hover {
+      transform: rotate(30deg) scale(1.05);
+      background: white;
+    }
+
+    /* 模式卡片网格 */
+    .modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
+      margin: 40px 0 32px;
+    }
+
+    .mode-card {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e9eef3;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 40px rgba(0, 0, 0, 0.12);
+      border-color: #cbd5e1;
+    }
+
+    .card-icon {
+      font-size: 3.8rem;
+      margin-bottom: 16px;
+    }
+
+    .mode-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #2c3e50, #3498db);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    body.dark-mode .mode-title {
+      background: linear-gradient(135deg, #facc15, #3b82f6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .mode-desc {
+      font-size: 0.95rem;
+      color: #5b6e8c;
+      margin-bottom: 20px;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    body.dark-mode .mode-desc {
+      color: #a0afc0;
+    }
+
+    .card-badge {
+      background: #ecfdf5;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #0b3b2f;
+      margin-bottom: 18px;
+      display: inline-block;
+    }
+
+    .mode-status {
+      background: #eef2ff;
+      color: #1e40af;
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: 0.2s;
+      width: fit-content;
+      margin-top: 12px;
+    }
+
+    body.dark-mode .mode-status {
+      background: #1e293b;
+      color: #facc15;
+    }
+
+    .mode-card.available .mode-status {
+      background: #2ecc71;
+      color: white;
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+    }
+
+    .mode-card.available .mode-status:hover {
+      background: #27ae60;
+      transform: scale(1.02);
+    }
+
+    /* 特色亮点区域 (类似原游戏说明卡片) */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 24px;
+      margin: 32px 0;
+      border: 1px solid #eef2f8;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #f8fafc;
+      padding: 16px 20px;
+      border-radius: 20px;
+      transition: 0.2s;
+    }
+
+    body.dark-mode .feature-item {
+      background: #1e293b;
+    }
+
+    .feature-emoji {
+      font-size: 2rem;
+    }
+
+    .feature-text h4 {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .feature-text p {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    /* 规则/说明面板 (复用原有风格) */
+    .instructions-panel {
+      background: #f8fafc;
+      border-radius: 24px;
+      padding: 24px 28px;
+      margin: 30px 0 20px;
+      border-left: 5px solid #3498db;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      justify-content: space-between;
+    }
+
+    .instructions-panel>div {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .instructions-panel h3 {
+      color: #2c3e50;
+      margin-bottom: 14px;
+      font-size: 1.3rem;
+    }
+
+    .instructions-panel ul {
+      padding-left: 20px;
+      list-style-type: none;
+    }
+
+    .instructions-panel li {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .instructions-panel li::before {
+      content: "🎲";
+      position: absolute;
+      left: -4px;
+      top: 0;
+      font-size: 0.85rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.8rem;
+      color: #6c7a91;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 24px;
+    }
+
+    /* 模态窗与设置 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 28px;
+      padding: 28px;
+      width: 90%;
+      max-width: 480px;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+      border: 1px solid #e2e8f0;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2c3e50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    .setting-label {
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.2s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2ecc71;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px);
+    }
+
+    select {
+      padding: 8px 16px;
+      border-radius: 40px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .font-slider-row {
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .font-value {
+      background: #f1f5f9;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      min-width: 50px;
+      text-align: center;
+      border: 1px solid #cbd5e1;
+    }
+
+    .btn-confirm {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-cancel {
+      background: #95a5a6;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    /* 响应式 */
+    @media (max-width: 680px) {
+      body {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .modes-grid {
+        gap: 20px;
+      }
+
+      .mode-title {
+        font-size: 1.5rem;
+      }
+
+      .instructions-panel {
+        flex-direction: column;
+      }
+    }
+
+    /* 动画 & 点缀 */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .mode-card {
+      animation: fadeSlideUp 0.4s ease-out forwards;
+    }
+
+    .mode-card:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+
+    .mode-card:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .mode-card:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+
+    .mode-card:nth-child(4) {
+      animation-delay: 0.2s;
+    }
+
+    /* 工具提示 */
+    .coming-soon-tooltip {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="main-container">
+  <div class="header">
+    <h1 data-i18n="home-title">🌌 银河站立党</h1>
+    <p class="subtitle" data-i18n="home-sub">站立与战力谐音 · 骰定乾坤 · 策略对决</p>
+    <button class="settings-gear" id="settingsGearBtn" aria-label="设置">⚙️</button>
+  </div>
+
+  <!-- 模式选择卡片区 -->
+  <div class="modes-grid">
+    <!-- 1. PVP 经典双人 (现有完整游戏) -->
+    <div class="mode-card available" id="pvpModeCard">
+      <div class="card-icon">⚔️🎲</div>
+      <div class="mode-title" data-i18n="mode-pvp-title">经典对决 · PVP</div>
+      <div class="mode-desc" data-i18n="mode-pvp-desc">本地双人对战，轮流攻防，12种独特角色，技能联动，骰子战术一决高下。</div>
+      <div class="card-badge" data-i18n="badge-ready">✅ 现已开放</div>
+      <div class="mode-status" data-i18n="enter-pvp">进入战场 →</div>
+    </div>
+
+    <!-- 2. PVE 单人挑战 (开发预告) -->
+    <div class="mode-card" id="pveModeCard">
+      <div class="card-icon">🤖⚡</div>
+      <div class="mode-title" data-i18n="mode-pve-title">单人冒险 · PVE</div>
+      <div class="mode-desc" data-i18n="mode-pve-desc">挑战智能AI，感受渐进难度，解锁剧情章节，磨练你的骰术与决策。</div>
+      <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
+      <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
+    </div>
+
+    <!-- 3. 2V1 合作模式 (2玩家 vs 强力Boss) -->
+    <div class="mode-card" id="coopModeCard">
+      <div class="card-icon">👥🛡️</div>
+      <div class="mode-title" data-i18n="mode-2v1-title">二对一 · 合作讨伐</div>
+      <div class="mode-desc" data-i18n="mode-2v1-desc">双人携手，共战史诗级首领，技能配合，策略逆转，赢取荣耀奖励。</div>
+      <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
+      <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
+    </div>
+
+    <!-- 4. 联机对战 (在线匹配) -->
+    <div class="mode-card" id="onlineModeCard">
+      <div class="card-icon">🌍📡</div>
+      <div class="mode-title" data-i18n="mode-online-title">联机竞技场 · 在线</div>
+      <div class="mode-desc" data-i18n="mode-online-desc">与全服玩家实时对决，排行榜与赛季奖励，真正的银河王者之争。</div>
+      <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
+      <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
+    </div>
+  </div>
+
+  <!-- 特色模块 / 快速亮点 (保持游戏原有风味) -->
+  <div class="feature-grid">
+    <div class="feature-item">
+      <div class="feature-emoji">🎭</div>
+      <div class="feature-text">
+        <h4 data-i18n="feature1-title">12种独特角色</h4>
+        <p data-i18n="feature1-desc">毒师·战狂·赌徒·魔女……每个角色颠覆战局</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-emoji">📚</div>
+      <div class="feature-text">
+        <h4 data-i18n="feature2-title">动态课程系统</h4>
+        <p data-i18n="feature2-desc">体育、化学、历史……每回合课程改变战场规则</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-emoji">🎲</div>
+      <div class="feature-text">
+        <h4 data-i18n="feature3-title">变量骰子 & 重掷</h4>
+        <p data-i18n="feature3-desc">特殊效果+战术重投，每一掷都充满变数</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-emoji">🛡️⚔️</div>
+      <div class="feature-text">
+        <h4 data-i18n="feature4-title">攻防博弈</h4>
+        <p data-i18n="feature4-desc">力量/坚固/中毒/强基计划 构筑深度策略</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 规则/状态说明（复用原风格） -->
+  <div class="instructions-panel">
+    <div>
+      <h3 data-i18n="basic-rules-title">📜 核心规则</h3>
+      <ul>
+        <li data-i18n="rule-dice">🎲 每回合投掷全部骰子，选择攻击或防御骰子</li>
+        <li data-i18n="rule-attack">⚔️ 攻击值 = 骰子和 + 力量层数</li>
+        <li data-i18n="rule-defense">🛡️ 防御值 = 骰子和 + 坚固层数</li>
+        <li data-i18n="rule-damage">💥 伤害 = (攻击值 - 防御值) × 技能/状态修正</li>
+        <li data-i18n="rule-special">✨ 变量骰子：解毒、回血、增伤、藏一手等奇效</li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-i18n="status-rules-title">🌀 状态详解</h3>
+      <ul>
+        <li><strong>你已中毒！</strong>：防御时每层造成1伤，逐渐衰减</li>
+        <li><strong>我下的毒</strong>：增幅中毒伤害，永不衰减</li>
+        <li><strong>力量/坚固</strong>：每层±1攻/防数值</li>
+        <li><strong>可精了</strong>：可选择骰子数-1</li>
+        <li><strong>很硬的甲</strong>：单次受伤减少25%</li>
+        <li><strong>藏一手</strong>：致命伤锁血1点，每局限2次</li>
+        <li><strong>强基计划</strong>：伤害提升20%</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-note">
+    <span data-i18n="footer-text">✨ 银河站立党 —— 骰子与智慧的交锋 · 更多模式即将抵达战场 ✨</span>
+  </div>
+</div>
+
+<!-- 设置模态框 -->
+<div class="modal-overlay" id="settings-modal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-title"><span data-i18n="settings-title">设置</span><span id="close-settings-btn" style="cursor:pointer; font-size:1.8rem;">&times;</span></div>
+    <div class="setting-row">
+      <span class="setting-label" data-i18n="dark-mode-label">深色模式</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="darkModeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting-row">
+      <span class="setting-label" data-i18n="language-label">语言 / Language</span>
+      <select id="languageSelect">
+        <option value="zh">简体中文</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    <div class="setting-row font-slider-row">
+      <span class="setting-label" data-i18n="font-size-label">字体大小</span>
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span data-i18n="font-small">A-</span>
+        <input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16" style="width:140px;">
+        <span id="fontSizeValue" class="font-value">16px</span>
+        <span data-i18n="font-large">A+</span>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    // ----- 多语言映射（与游戏保持一致风格）-----
+    const i18nMap = {
+      zh: {
+        "home-title": "🌌 银河站立党",
+        "home-sub": "站立与战力谐音 · 骰定乾坤 · 策略对决",
+        "mode-pvp-title": "经典对决 · PVP",
+        "mode-pvp-desc": "本地双人对战，轮流攻防，12种独特角色，技能联动，骰子战术一决高下。",
+        "mode-pve-title": "单人冒险 · PVE",
+        "mode-pve-desc": "挑战智能AI，感受渐进难度，解锁剧情章节，磨练你的骰术与决策。",
+        "mode-2v1-title": "二对一 · 合作讨伐",
+        "mode-2v1-desc": "双人携手，共战史诗级首领，技能配合，策略逆转，赢取荣耀奖励。",
+        "mode-online-title": "联机竞技场 · 在线",
+        "mode-online-desc": "与全服玩家实时对决，排行榜与赛季奖励，真正的银河王者之争。",
+        "badge-ready": "✅ 现已开放",
+        "badge-dev": "✨ 开发中",
+        "soon-status": "即将开放",
+        "enter-pvp": "进入战场 →",
+        "feature1-title": "12种独特角色",
+        "feature1-desc": "毒师·战狂·赌徒·魔女……每个角色颠覆战局",
+        "feature2-title": "动态课程系统",
+        "feature2-desc": "体育、化学、历史……每回合课程改变战场规则",
+        "feature3-title": "变量骰子 & 重掷",
+        "feature3-desc": "特殊效果+战术重投，每一掷都充满变数",
+        "feature4-title": "攻防博弈",
+        "feature4-desc": "力量/坚固/中毒/强基计划 构筑深度策略",
+        "basic-rules-title": "📜 核心规则",
+        "status-rules-title": "🌀 状态详解",
+        "rule-dice": "🎲 每回合投掷全部骰子，选择攻击或防御骰子",
+        "rule-attack": "⚔️ 攻击值 = 骰子和 + 力量层数",
+        "rule-defense": "🛡️ 防御值 = 骰子和 + 坚固层数",
+        "rule-damage": "💥 伤害 = (攻击值 - 防御值) × 技能/状态修正",
+        "rule-special": "✨ 变量骰子：解毒、回血、增伤、藏一手等奇效",
+        "footer-text": "✨ 银河站立党 —— 骰子与智慧的交锋 · 更多模式即将抵达战场 ✨",
+        "settings-title": "设置",
+        "dark-mode-label": "深色模式",
+        "language-label": "语言",
+        "font-size-label": "字体大小",
+        "font-small": "A-",
+        "font-large": "A+",
+        "close-btn": "关闭"
+      },
+      en: {
+        "home-title": "🌌 Galaxy Stay & Slay Party",
+        "home-sub": "Stand & Slay pun · Dice & Tactics Duel",
+        "mode-pvp-title": "Classic Duel · PVP",
+        "mode-pvp-desc": "Local two-player battle, 12 unique characters, skill combos, dice tactics decide victory.",
+        "mode-pve-title": "Solo Adventure · PVE",
+        "mode-pve-desc": "Challenge smart AI, progressive difficulty, unlock story chapters.",
+        "mode-2v1-title": "2V1 · Co-op Raid",
+        "mode-2v1-desc": "Team up against epic boss, coordinate skills, strategic reversal.",
+        "mode-online-title": "Online Arena",
+        "mode-online-desc": "Real-time PvP worldwide, leaderboards & seasonal rewards.",
+        "badge-ready": "✅ Available Now",
+        "badge-dev": "✨ In Development",
+        "soon-status": "Coming Soon",
+        "enter-pvp": "Enter Battle →",
+        "feature1-title": "12 Unique Characters",
+        "feature1-desc": "Poisoner, Berserker, Gambler... each alters the game.",
+        "feature2-title": "Dynamic Course System",
+        "feature2-desc": "PE, Chemistry, History – courses reshape rules each round.",
+        "feature3-title": "Special Dice & Reroll",
+        "feature3-desc": "Special effects + strategic rerolls, every throw counts.",
+        "feature4-title": "Offense & Defense",
+        "feature4-desc": "Power/Armor/Poison/Strong Plan for deep tactics.",
+        "basic-rules-title": "📜 Core Rules",
+        "status-rules-title": "🌀 Status Effects",
+        "rule-dice": "🎲 Roll all dice, choose attack/defense dice.",
+        "rule-attack": "⚔️ Attack = sum of selected dice + Power stacks",
+        "rule-defense": "🛡️ Defense = sum + Armor stacks",
+        "rule-damage": "💥 Damage = (Attack - Defense) × modifiers",
+        "rule-special": "✨ Special dice: heal, poison, last stand, etc.",
+        "footer-text": "✨ Galaxy Stay & Slay Party – Where dice meet wit, more modes inbound ✨",
+        "settings-title": "Settings",
+        "dark-mode-label": "Dark Mode",
+        "language-label": "Language",
+        "font-size-label": "Font Size",
+        "font-small": "A-",
+        "font-large": "A+",
+        "close-btn": "Close"
+      }
+    };
+
+    // DOM 元素
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsGear = document.getElementById('settingsGearBtn');
+    const closeSettingsBtn = document.getElementById('close-settings-btn');
+    const settingsCloseBtn = document.getElementById('settings-close-btn');
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const langSelect = document.getElementById('languageSelect');
+    const fontSizeSlider = document.getElementById('fontSizeSlider');
+    const fontSizeValueSpan = document.getElementById('fontSizeValue');
+
+    // 主题初始化
+    function initTheme() {
+      const isDark = localStorage.getItem('darkMode') === 'true';
+      if (isDark) document.body.classList.add('dark-mode');
+      darkModeToggle.checked = isDark;
+    }
+
+    function applyLanguage(lang) {
+      const texts = i18nMap[lang];
+      if (!texts) return;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (texts[key]) {
+          if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.placeholder = texts[key];
+          else el.innerText = texts[key];
+        }
+      });
+      localStorage.setItem('gameLang', lang);
+    }
+
+    function initLanguage() {
+      const saved = localStorage.getItem('gameLang') || 'zh';
+      langSelect.value = saved;
+      applyLanguage(saved);
+    }
+
+    function initFontSize() {
+      const saved = localStorage.getItem('gameFontSize');
+      let fontSize = saved ? parseInt(saved) : 16;
+      if (isNaN(fontSize)) fontSize = 16;
+      document.body.style.fontSize = fontSize + 'px';
+      if (fontSizeSlider) fontSizeSlider.value = fontSize;
+      if (fontSizeValueSpan) fontSizeValueSpan.innerText = fontSize + 'px';
+    }
+
+    // 设置模态框交互
+    function openSettings() { settingsModal.style.display = 'flex'; }
+    function closeSettings() { settingsModal.style.display = 'none'; }
+    if (settingsGear) settingsGear.onclick = openSettings;
+    if (closeSettingsBtn) closeSettingsBtn.onclick = closeSettings;
+    if (settingsCloseBtn) settingsCloseBtn.onclick = closeSettings;
+    if (settingsModal) settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
+
+    // 深色模式切换
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('change', () => {
+        if (darkModeToggle.checked) document.body.classList.add('dark-mode');
+        else document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', darkModeToggle.checked);
+      });
+    }
+
+    // 语言切换
+    if (langSelect) {
+      langSelect.addEventListener('change', (e) => applyLanguage(e.target.value));
+    }
+
+    // 字体大小滑动条
+    if (fontSizeSlider) {
+      fontSizeSlider.addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.body.style.fontSize = val + 'px';
+        if (fontSizeValueSpan) fontSizeValueSpan.innerText = val + 'px';
+        localStorage.setItem('gameFontSize', val);
+      });
+    }
+
+    // ----- 模式卡片交互与未来模式扩展预留 -----
+    // PVP模式跳转到完整游戏文件（需将原游戏保存为 game.html 或同目录下的 pvp.html）
+    const pvpCard = document.getElementById('pvpModeCard');
+    if (pvpCard) {
+      pvpCard.addEventListener('click', (e) => {
+        // 防止点到内部冒泡干扰，直接跳转
+        // 原游戏完整页面建议命名为 game.html 放在同目录下。
+        // 为了兼容性，弹窗确认并跳转
+        if (confirm('即将进入经典PVP双人对战模式，确保已保存游戏进度？')) {
+          window.location.href = 'game.html';   // 根据部署实际地址调整，默认指向完整游戏文件
+        }
+      });
+    }
+
+    // 其他模式开发中提示（预留扩展接口，方便后续接入 PVE / 2v1 / 联机）
+    const devModes = [
+      { id: 'pveModeCard', modeName: 'PVE 单人冒险' },
+      { id: 'coopModeCard', modeName: '2V1 合作讨伐' },
+      { id: 'onlineModeCard', modeName: '联机竞技场' }
+    ];
+    devModes.forEach(mode => {
+      const el = document.getElementById(mode.id);
+      if (el) {
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          alert(`✨ “${mode.modeName}” 正在紧张开发中！\n后续更新将带来智能AI/合作首领/在线匹配，敬请期待。`);
+        });
+      }
+    });
+
+    // 额外为PVP卡片增加样式视觉优化
+    // 所有初始化
+    initTheme();
+    initLanguage();
+    initFontSize();
+
+    // 小彩蛋 - 控制台输出未来扩展提示
+    console.log('🎲 银河站立党 | 主页已加载，预留PVE/2V1/Online扩展接口。后续只需接入对应逻辑，模式卡片即可无缝启用。');
+  })();
+</script>
+</body>
+</html>

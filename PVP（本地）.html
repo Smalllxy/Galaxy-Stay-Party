@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  
+  <!-- 1. 标题优化：双人对战骰子游戏 -->
+  <title>银河站立党 - 双人对战骰子游戏</title>
+  
+  <!-- 2. 添加 favicon (骰子风格 SVG 图标) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%233498db' rx='20'/%3E%3Ccircle cx='30' cy='30' r='8' fill='white'/%3E%3Ccircle cx='70' cy='70' r='8' fill='white'/%3E%3Ccircle cx='70' cy='30' r='8' fill='white'/%3E%3Ccircle cx='30' cy='70' r='8' fill='white'/%3E%3C/svg%3E">
+  
+  <!-- 3. SEO & 社交分享 meta 标签 -->
+  <meta name="description" content="一款双人对战策略骰子游戏，12种角色，课程系统，状态效果丰富。和朋友来一场骰子对决！">
+  <meta property="og:title" content="银河站立党 - 双人对战骰子游戏">
+  <meta property="og:description" content="一款双人对战策略骰子游戏，12种角色，课程系统，状态效果丰富。和朋友来一场骰子对决！">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_CN">
+  
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI','Microsoft YaHei',sans-serif; }
+    body { background:#f5f5f5; color:#333; line-height:1.6; margin:0 auto; padding:10px; max-width:100%; width:100vw; overflow-x:hidden; transition:background 0.2s, color 0.2s; font-size:16px; }
+    /* 深色模式 - 仅覆盖颜色，保留原有圆角/阴影/卡片样式 */
+    body.dark-mode { background:#1e2a3a; color:#e2e8f0; }
+    body.dark-mode .player-section, body.dark-mode .dice-panel, body.dark-mode .log-panel { background:#0f172a; border-color:#334155; }
+    body.dark-mode .stat-box { background:#1e293b; border-color:#334155; }
+    body.dark-mode .character-card { background:#1e293b; border-color:#334155; }
+    body.dark-mode .status-effects { background:#1e293b; border-color:#334155; }
+    body.dark-mode .player-actions { background:#1e293b; border-color:#334155; }
+    body.dark-mode .result-display { background:#1e293b; border-color:#334155; }
+    body.dark-mode .log-content { background:#1e293b; border-color:#334155; }
+    body.dark-mode .log-entry { background:#0f172a; border-left-color:#3b82f6; color:#e2e8f0; }
+    body.dark-mode .header { border-bottom-color:#334155; }
+    body.dark-mode .player-header { border-bottom-color:#334155; }
+    body.dark-mode .player-name { color:#f1f5f9; }
+    body.dark-mode .stat-label { color:#94a3b8; }
+    body.dark-mode .stat-value { color:#f1f5f9; }
+    body.dark-mode .character-effect { color:#94a3b8; }
+    body.dark-mode .health-text { color:#cbd5e1; }
+    body.dark-mode .dice { background:#334155; border-color:#475569; color:#f1f5f9; }
+    body.dark-mode .dice.selected { background:#3b82f6; color:white; }
+    body.dark-mode #turn-counter, body.dark-mode #course-display { background:#0f172a; color:#f1f5f9; }
+    body.dark-mode .instructions { background:#1e293b; border-left-color:#3b82f6; }
+    body.dark-mode .modal-content { background:#1e293b; color:#e2e8f0; }
+    body.dark-mode .card-option { background:#0f172a; border-color:#334155; }
+    body.dark-mode .card-option.selected { background:#1e3a8a; border-color:#3b82f6; }
+    body.dark-mode .special-option { background:#0f172a; border-color:#334155; }
+    body.dark-mode .special-option.selected { background:#452a0a; border-color:#f59e0b; }
+    body.dark-mode .modal-title { color:#facc15; }
+    body.dark-mode .btn-cancel { background:#475569; color:white; }
+    body.dark-mode .btn-cancel:hover { background:#334155; }
+    body.dark-mode .settings-gear { background:#0f172a; color:#facc15; box-shadow:0 2px 8px rgba(0,0,0,0.5); }
+    body.dark-mode select { background:#0f172a; color:#e2e8f0; border-color:#475569; }
+    body.dark-mode .setting-row { border-bottom-color:#334155; }
+
+    /* 深色模式标题颜色修复 + 说明文字可读性提升 */
+    body.dark-mode .panel-title,
+    body.dark-mode .action-title,
+    body.dark-mode .status-title,
+    body.dark-mode .character-name,
+    body.dark-mode .instructions h3 {
+        color: #facc15 !important;
+    }
+    body.dark-mode .instructions,
+    body.dark-mode .instructions ul,
+    body.dark-mode .instructions li,
+    body.dark-mode .instructions p {
+        color: #cbd5e6;
+    }
+    body.dark-mode .font-slider-row .font-value {
+        background: #0f172a;
+        color: #e2e8f0;
+        border-color: #475569;
+    }
+
+    /* 原始美观控制台样式 */
+    #console-modal.modal-overlay { background:rgba(240,245,250,0.85); backdrop-filter:blur(4px); }
+    body.dark-mode #console-modal.modal-overlay { background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); }
+    #console-modal .modal-content { background:#ffffff; border-radius:20px; box-shadow:0 12px 28px rgba(0,0,0,0.1); border:1px solid #e2e8f0; padding:20px; }
+    body.dark-mode #console-modal .modal-content { background:#1e293b; border-color:#334155; }
+    #console-modal .modal-title { color:#2c3e50; font-weight:600; border-bottom:2px solid #ecf0f1; padding-bottom:12px; margin-bottom:20px; }
+    body.dark-mode #console-modal .modal-title { color:#facc15; border-bottom-color:#334155; }
+    #consoleContent .cheat-col { background:#f8fafc !important; border-radius:16px; border:1px solid #e2e8f0; padding:16px; box-shadow:0 2px 6px rgba(0,0,0,0.02); }
+    body.dark-mode #consoleContent .cheat-col { background:#0f172a !important; border-color:#334155; }
+    #consoleContent .cheat-col:first-child h3 { color:#c0392b; font-weight:bold; border-left:4px solid #e74c3c; padding-left:12px; margin-top:0; }
+    #consoleContent .cheat-col:last-child h3 { color:#2980b9; font-weight:bold; border-left:4px solid #3498db; padding-left:12px; margin-top:0; }
+    body.dark-mode #consoleContent .cheat-col:first-child h3 { color:#f87171; border-left-color:#f87171; }
+    body.dark-mode #consoleContent .cheat-col:last-child h3 { color:#60a5fa; border-left-color:#60a5fa; }
+    #consoleContent div[style*="display:flex"][style*="justify-content:space-between"] { background:#ffffff !important; border:1px solid #e9ecef; border-radius:40px; margin-bottom:10px; padding:6px 12px !important; transition:all 0.2s; }
+    body.dark-mode #consoleContent div[style*="display:flex"][style*="justify-content:space-between"] { background:#1e293b !important; border-color:#334155; }
+    #consoleContent div[style*="display:flex"][style*="justify-content:space-between"]:hover { background:#f1f5f9 !important; border-color:#cbd5e1; }
+    body.dark-mode #consoleContent div[style*="display:flex"][style*="justify-content:space-between"]:hover { background:#334155 !important; border-color:#475569; }
+    #consoleContent div[style*="display:flex"] > span:first-child { color:#2c3e50; font-weight:500; font-size:0.85rem; }
+    body.dark-mode #consoleContent div[style*="display:flex"] > span:first-child { color:#cbd5e1; }
+    #consoleContent span[id^="console-val-"] { background:#f1f5f9 !important; color:#1e293b !important; font-weight:600; font-size:0.9rem; padding:4px 10px; border-radius:30px; min-width:50px; text-align:center; border:1px solid #e2e8f0; }
+    body.dark-mode #consoleContent span[id^="console-val-"] { background:#334155 !important; color:#e2e8f0 !important; border-color:#475569; }
+    .console-minus, .console-plus { background:#eef2f6 !important; color:#2c3e50 !important; border:1px solid #d0d7de !important; width:30px; height:30px; border-radius:30px; font-weight:bold; font-size:1.2rem; cursor:pointer; transition:all 0.2s; }
+    .console-minus:hover, .console-plus:hover { background:#e2e8f0 !important; border-color:#94a3b8 !important; transform:scale(1.02); }
+    .console-minus:active, .console-plus:active { background:#cbd5e1 !important; }
+    body.dark-mode .console-minus, body.dark-mode .console-plus { background:#334155 !important; color:#e2e8f0 !important; border-color:#475569; }
+    body.dark-mode .console-minus:hover, body.dark-mode .console-plus:hover { background:#475569 !important; }
+    #close-console-modal { color:#7f8c8d; transition:color 0.2s; } #close-console-modal:hover { color:#e74c3c; }
+    body.dark-mode #close-console-modal { color:#94a3b8; } body.dark-mode #close-console-modal:hover { color:#f87171; }
+    #closeConsoleBtn { background:#ecf0f1; color:#2c3e50; border:1px solid #bdc3c7; } #closeConsoleBtn:hover { background:#dfe6e9; border-color:#95a5a6; }
+    body.dark-mode #closeConsoleBtn { background:#334155; color:#e2e8f0; border-color:#475569; }
+    body.dark-mode #closeConsoleBtn:hover { background:#475569; }
+    #console-modal .modal-content::-webkit-scrollbar { width:6px; } #console-modal .modal-content::-webkit-scrollbar-track { background:#f1f1f1; border-radius:10px; } #console-modal .modal-content::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:10px; }
+    body.dark-mode #console-modal .modal-content::-webkit-scrollbar-track { background:#1e293b; } body.dark-mode #console-modal .modal-content::-webkit-scrollbar-thumb { background:#475569; }
+
+    .game-container { display:flex; flex-direction:column; width:100%; }
+    .player-area, .game-center, .player-info, .character-card { width:100%; max-width:100%; word-wrap:break-word; }
+    p, span, div { word-wrap:break-word; white-space:normal !important; }
+    @media (min-width:768px) { body { padding:20px; max-width:1200px; } .game-container { flex-direction:row; } }
+    @media (max-width:480px) { body { padding:5px; font-size:14px; } .character-card { margin:5px 0; padding:8px; } }
+    .header { text-align:center; margin-bottom:25px; padding-bottom:15px; border-bottom:1px solid #ddd; position: relative; }
+    h1 { color:#2c3e50; font-size:2.2rem; margin-bottom:8px; }
+    body.dark-mode h1 { color:#facc15; }
+    .subtitle { color:#7f8c8d; font-size:1.1rem; }
+    .player-section, .dice-panel, .log-panel { background:white; border-radius:10px; padding:20px; box-shadow:0 4px 8px rgba(0,0,0,0.1); border:1px solid #e0e0e0; }
+    .player-section { flex:1; }
+    .game-center { flex:1.5; display:flex; flex-direction:column; gap:20px; }
+    .log-panel { flex:1; display:flex; flex-direction:column; max-height:300px; }
+    .player-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding-bottom:12px; border-bottom:2px solid #ecf0f1; }
+    .player-name { font-size:1.4rem; font-weight:bold; color:#2c3e50; }
+    .turn-indicator { background:#3498db; color:white; padding:5px 12px; border-radius:15px; font-size:0.9rem; }
+    .health-container { margin-bottom:20px; }
+    .health-text { font-weight:bold; margin-bottom:5px; color:#2c3e50; }
+    .health-bar { height:20px; background:#ecf0f1; border-radius:10px; overflow:hidden; border:1px solid #bdc3c7; }
+    .health-fill { height:100%; background:#2ecc71; transition:width 0.5s; }
+    .stats-container { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:20px 0; }
+    .stat-box { text-align:center; padding:12px 5px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef; }
+    .stat-label { font-size:0.9rem; color:#7f8c8d; margin-bottom:5px; }
+    .stat-value { font-size:1.5rem; font-weight:bold; color:#2c3e50; transition:color 0.2s; }
+    .stat-value.stat-increase { color:#0066ff !important; }
+    .stat-value.stat-decrease { color:#ff0000 !important; }
+    .character-card { background:#f8f9fa; border-radius:8px; padding:15px; margin-top:15px; border:1px dashed #bdc3c7; }
+    .character-name { font-size:1.2rem; font-weight:bold; color:#2c3e50; margin-bottom:8px; text-align:center; }
+    .character-effect { font-size:0.9rem; color:#7f8c8d; text-align:center; }
+    .status-effects { margin-top:15px; padding:10px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef; }
+    .status-title { font-weight:bold; color:#2c3e50; margin-bottom:5px; font-size:0.9rem; }
+    .status-item { font-size:0.85rem; color:#2c3e50; margin-bottom:3px; }
+    .player-actions { margin-top:15px; padding:10px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef; }
+    .action-title { font-weight:bold; color:#2c3e50; margin-bottom:10px; font-size:0.9rem; text-align:center; }
+    .player-action-buttons { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:10px; }
+    .player-action-btn { padding:10px; border:none; border-radius:5px; font-size:0.9rem; font-weight:bold; cursor:pointer; transition:0.2s; }
+    .btn-attack { background:#e74c3c; color:white; } .btn-attack:hover:not(:disabled) { background:#c0392b; }
+    .btn-defend { background:#3498db; color:white; } .btn-defend:hover:not(:disabled) { background:#2980b9; }
+    .btn-special { background:#f39c12; color:white; } .btn-special:hover:not(:disabled) { background:#d68910; }
+    .btn-reroll { background:#9b59b6; color:white; } .btn-reroll:hover:not(:disabled) { background:#8e44ad; }
+    .btn-end-turn { background:#95a5a6; color:white; } .btn-end-turn:hover:not(:disabled) { background:#7f8c8d; }
+    .player-action-btn:disabled { opacity:0.5; cursor:not-allowed; }
+    .dice-selection-info { text-align:center; margin-top:10px; color:#7f8c8d; font-size:0.9rem; }
+    .character-card.skill-active { box-shadow:0 0 0 3px #3498db, 0 0 0 12px rgba(52,152,219,0.3); animation:skill-pulse 1s ease-in-out; }
+    @keyframes skill-pulse { 0% { box-shadow:0 0 0 0 #3498db; } 100% { box-shadow:0 0 0 3px #3498db, 0 0 0 12px #3498db4d; } }
+    .dice-container { margin:20px 0; }
+    .dice-display { display:flex; justify-content:center; gap:10px; margin-bottom:15px; flex-wrap:wrap; }
+    .dice { width:50px; height:50px; background:white; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold; box-shadow:0 3px 6px rgba(0,0,0,0.1); border:1px solid #ddd; cursor:pointer; transition:0.2s; }
+    .dice.selected { background:#3498db; color:white; border-color:#2980b9; }
+    .dice.rolling { animation:roll 0.5s ease-in-out; }
+    @keyframes roll { 0%{transform:rotate(0deg) scale(1);} 25%{transform:rotate(90deg) scale(1.1);} 50%{transform:rotate(180deg) scale(1);} 75%{transform:rotate(270deg) scale(1.1);} 100%{transform:rotate(360deg) scale(1);} }
+    .result-display { background:#f8f9fa; border-radius:8px; padding:20px; margin-top:15px; border:1px solid #e9ecef; text-align:center; font-size:1.1rem; min-height:80px; display:flex; align-items:center; justify-content:center; }
+    .log-content { flex:1; overflow-y:auto; padding:15px; background:#f8f9fa; border-radius:8px; border:1px solid #e9ecef; margin-top:10px; }
+    .log-entry { padding:8px 10px; margin-bottom:8px; background:white; border-radius:5px; border-left:4px solid #3498db; font-size:0.9rem; }
+    .log-entry.player1 { border-left-color:#3498db; } .log-entry.player2 { border-left-color:#e74c3c; } .log-entry.system { border-left-color:#2ecc71; } .log-entry.effect { border-left-color:#f39c12; } .log-entry.damage { border-left-color:#e74c3c; } .log-entry.heal { border-left-color:#2ecc71; }
+    .modal-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; }
+    .modal-content { background:white; border-radius:10px; padding:20px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.2); max-height:85vh; overflow-y:auto; }
+    .modal-title { font-size:1.5rem; margin-bottom:20px; color:#2c3e50; text-align:center; display:flex; justify-content:space-between; align-items:center; }
+    .card-options { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-bottom:25px; }
+    .card-option { padding:15px; background:#f8f9fa; border-radius:8px; border:2px solid #e9ecef; cursor:pointer; transition:0.2s; }
+    .card-option:hover { transform:translateY(-3px); box-shadow:0 5px 15px rgba(0,0,0,0.1); border-color:#3498db; }
+    .card-option.selected { border-color:#3498db; background:#e8f4fc; }
+    .card-name { font-weight:bold; font-size:1.1rem; margin-bottom:8px; color:#2c3e50; }
+    .card-stats { font-size:0.9rem; color:#7f8c8d; margin-bottom:8px; }
+    .card-effect { font-size:0.8rem; color:#7f8c8d; font-style:italic; }
+    .special-dice-options { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin:20px 0; }
+    .special-option { padding:15px; background:#f8f9fa; border-radius:8px; border:2px solid #e9ecef; cursor:pointer; text-align:center; transition:0.2s; }
+    .special-option:hover { transform:translateY(-3px); box-shadow:0 5px 15px rgba(0,0,0,0.1); border-color:#f39c12; }
+    .special-option.selected { border-color:#f39c12; background:#fef9e7; }
+    .special-option-title { font-weight:bold; font-size:1rem; margin-bottom:8px; color:#2c3e50; }
+    .special-option-desc { font-size:0.85rem; color:#7f8c8d; }
+    .modal-buttons { display:flex; justify-content:center; gap:15px; }
+    .btn-confirm { padding:12px 30px; background:#2ecc71; color:white; border:none; border-radius:8px; font-size:1.1rem; font-weight:bold; cursor:pointer; } .btn-confirm:hover { background:#27ae60; }
+    .btn-cancel { padding:12px 30px; background:#95a5a6; color:white; border:none; border-radius:8px; font-size:1.1rem; font-weight:bold; cursor:pointer; } .btn-cancel:hover { background:#7f8c8d; }
+    .special-dice-count { display:inline-block; background:#f39c12; color:white; padding:2px 8px; border-radius:10px; font-size:0.9rem; margin-left:5px; }
+    .instructions { background:#f8f9fa; border-radius:8px; padding:15px; margin-top:20px; border-left:4px solid #3498db; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .instructions h3 { color:#2c3e50; margin-bottom:10px; } .instructions ul { padding-left:20px; color:#555; } .instructions li { margin-bottom:8px; }
+    @media (max-width:640px) { .card-options { grid-template-columns:repeat(2,1fr); } .instructions { grid-template-columns:1fr; } }
+    @media (max-width:480px) { .card-options { grid-template-columns:1fr; } .special-dice-options { grid-template-columns:1fr; } }
+    #turn-counter, #course-display { font-size:1.2rem; font-weight:bold; background:#F5F5F5; padding:5px; border-radius:8px; text-align:center; margin-bottom:10px; color:#2c3e50; }
+    .new-game-btn { display:block; margin:0 auto; background:#eaf9ff; border:none; padding:10px 32px; border-radius:5px; cursor:pointer; font-weight:bold; color:#030c13; } .new-game-btn:hover { background:#87ceeb !important; }
+    body.dark-mode .new-game-btn { background:#2c3e50; color:#ecf0f1; } body.dark-mode .new-game-btn:hover { background:#3b5a7a; }
+    .log-buttons { margin-top:15px; text-align:center; }
+    #close-modal-btn { cursor:pointer; font-size:1.8rem; line-height:1; } #close-modal-btn:hover { color:#e74c3c; }
+    .hidden-console-hotspot { position:fixed; bottom:0; right:0; width:60px; height:60px; background:transparent; cursor:pointer; z-index:999; }
+    /* 设置按钮样式 */
+    .settings-gear { position: absolute; top: 12px; right: 20px; background: rgba(255,255,240,0.9); border: none; font-size: 28px; cursor: pointer; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; z-index: 10; }
+    .settings-gear:hover { transform: rotate(30deg); background: white; }
+    .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+    .setting-label { font-weight: bold; font-size: 1.1rem; }
+    /* 字体滑动条样式 */
+    .font-slider-row { justify-content: space-between; }
+    .font-slider-row .font-value { background: #f1f5f9; padding: 2px 8px; border-radius: 20px; min-width: 45px; text-align: center; border:1px solid #cbd5e1; }
+    .toggle-switch { position: relative; display: inline-block; width: 52px; height: 26px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.3s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; }
+    input:checked + .slider { background-color: #2ecc71; }
+    input:checked + .slider:before { transform: translateX(26px); }
+    select { padding: 6px 12px; border-radius: 20px; background: #f8fafc; color: #1e293b; border: 1px solid #cbd5e1; font-size: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1 data-i18n="game-title">银河站立党</h1>
+  <h6 data-i18n="game-subtitle">站立与战力谐音，令人忍俊不禁</h6>
+  <p class="subtitle" data-i18n="game-desc">选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！</p>
+  <button class="settings-gear" id="settingsGearBtn" aria-label="设置">⚙️</button>
+</div>
+
+<div class="game-container">
+  <div class="player-section">
+    <div class="player-header">
+      <div class="player-name" data-i18n="player1-name">先手</div>
+      <div class="turn-indicator" id="player1-turn">当前回合</div>
+    </div>
+    <div class="health-container">
+      <div class="health-text"><span data-i18n="health-label">生命值</span>：<span id="player1-health">99</span></div>
+      <div class="health-bar"><div class="health-fill" id="player1-health-bar" style="width:100%"></div></div>
+    </div>
+    <div class="stats-container">
+      <div class="stat-box"><div class="stat-label" data-i18n="total-dice">总骰子数</div><div class="stat-value" id="player1-total-dice">99</div></div>
+      <div class="stat-box"><div class="stat-label" data-i18n="attack-dice">攻击骰子</div><div class="stat-value" id="player1-attack-dice">99</div></div>
+      <div class="stat-box"><div class="stat-label" data-i18n="defense-dice">防御骰子</div><div class="stat-value" id="player1-defense-dice">99</div></div>
+    </div>
+    <div class="character-card"><div class="character-name" id="player1-character-name" style="color:#c0392b;">火花</div><div class="character-effect" id="player1-character-effect" style="color:#e74c3c;">真可爱<br>看什么看</div></div>
+    <div class="status-effects"><div class="status-title" data-i18n="status-title">状态效果</div><div id="player1-status">无</div></div>
+    <div class="player-actions">
+      <div class="action-title" data-i18n="player1-actions">先手操作</div>
+      <div class="player-action-buttons">
+        <button class="player-action-btn btn-attack" id="player1-attack-btn" data-i18n="attack-btn">发起攻击</button>
+        <button class="player-action-btn btn-defend" id="player1-defend-btn" disabled data-i18n="defend-btn">进行防御</button>
+        <button class="player-action-btn btn-special" id="player1-special-btn"><span data-i18n="special-dice">变量骰子</span> <span class="special-dice-count" id="player1-special-count">2</span></button>
+        <button class="player-action-btn btn-reroll" id="player1-reroll-btn" disabled data-i18n="reroll-btn">重掷选中骰子</button>
+      </div>
+      <button class="player-action-btn btn-end-turn" id="player1-end-turn-btn" disabled style="width:100%;margin-top:5px;" data-i18n="end-turn">结束回合</button>
+      <div class="dice-selection-info" id="player1-selection-info">请选择操作</div>
+    </div>
+  </div>
+
+  <div class="game-center">
+    <div id="turn-counter">回合数: 1</div>
+    <div id="course-display">当前课程: 无</div>
+    <div class="dice-panel">
+      <div class="panel-title" style="font-size:1.3rem;margin-bottom:20px;color:#2c3e50;text-align:center;padding-bottom:10px;border-bottom:2px solid #ecf0f1;" data-i18n="dice-area">骰子区域</div>
+      <div class="dice-container"><div class="dice-display" id="dice-result"></div></div>
+      <div class="result-display" id="action-result">等待操作...</div>
+    </div>
+    <div class="log-panel">
+      <div class="panel-title" style="font-size:1.3rem;margin-bottom:20px;color:#2c3e50;text-align:center;padding-bottom:10px;border-bottom:2px solid #ecf0f1;" data-i18n="game-log-title">游戏日志</div>
+      <div class="log-content" id="game-log"><div class="log-entry system">游戏开始！先手请选择角色卡。</div></div>
+      <div class="log-buttons"><button id="new-game-btn" class="new-game-btn" data-i18n="new-game">新的游戏</button></div>
+    </div>
+  </div>
+
+  <div class="player-section">
+    <div class="player-header">
+      <div class="player-name" data-i18n="player2-name">后手</div>
+      <div class="turn-indicator" id="player2-turn" style="display:none;">当前回合</div>
+    </div>
+    <div class="health-container">
+      <div class="health-text"><span data-i18n="health-label">生命值</span>：<span id="player2-health">99</span></div>
+      <div class="health-bar"><div class="health-fill" id="player2-health-bar" style="width:100%"></div></div>
+    </div>
+    <div class="stats-container">
+      <div class="stat-box"><div class="stat-label" data-i18n="total-dice">总骰子数</div><div class="stat-value" id="player2-total-dice">99</div></div>
+      <div class="stat-box"><div class="stat-label" data-i18n="attack-dice">攻击骰子</div><div class="stat-value" id="player2-attack-dice">99</div></div>
+      <div class="stat-box"><div class="stat-label" data-i18n="defense-dice">防御骰子</div><div class="stat-value" id="player2-defense-dice">99</div></div>
+    </div>
+    <div class="character-card"><div class="character-name" id="player2-character-name" style="color:#3498db;">哥伦比娅</div><div class="character-effect" id="player2-character-effect" style="color:#7fc9fa;">哥伦比娅举世无双<br>哥伦比娅聪明绝顶<br>哥伦比娅沉鱼落雁</div></div>
+    <div class="status-effects"><div class="status-title" data-i18n="status-title">状态效果</div><div id="player2-status">无</div></div>
+    <div class="player-actions">
+      <div class="action-title" data-i18n="player2-actions">后手操作</div>
+      <div class="player-action-buttons">
+        <button class="player-action-btn btn-attack" id="player2-attack-btn" disabled data-i18n="attack-btn">发起攻击</button>
+        <button class="player-action-btn btn-defend" id="player2-defend-btn" disabled data-i18n="defend-btn">进行防御</button>
+        <button class="player-action-btn btn-special" id="player2-special-btn" disabled><span data-i18n="special-dice">变量骰子</span> <span class="special-dice-count" id="player2-special-count">2</span></button>
+        <button class="player-action-btn btn-reroll" id="player2-reroll-btn" disabled data-i18n="reroll-btn">重掷选中骰子</button>
+      </div>
+      <button class="player-action-btn btn-end-turn" id="player2-end-turn-btn" disabled style="width:100%;margin-top:5px;" data-i18n="end-turn">结束回合</button>
+      <div class="dice-selection-info" id="player2-selection-info">请等待</div>
+    </div>
+  </div>
+</div>
+
+<!-- 设置模态框 (新增字体滑动条) -->
+<div class="modal-overlay" id="settings-modal" style="display:none;">
+  <div class="modal-content" style="max-width:450px;">
+    <div class="modal-title"><span data-i18n="settings-title">设置</span><span id="close-settings-btn" style="cursor:pointer; font-size:1.8rem;">&times;</span></div>
+    <div class="setting-row">
+      <span class="setting-label" data-i18n="dark-mode-label">深色模式</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="darkModeToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+    <div class="setting-row">
+      <span class="setting-label" data-i18n="language-label">语言</span>
+      <select id="languageSelect">
+        <option value="zh">简体中文</option>
+        <option value="en">English</option>
+      </select>
+    </div>
+    <!-- 字体大小调节滑动条 -->
+    <div class="setting-row font-slider-row">
+      <span class="setting-label" data-i18n="font-size-label">字体大小</span>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span data-i18n="font-small">A-</span>
+        <input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16" style="width:140px;">
+        <span id="fontSizeValue" class="font-value">16px</span>
+        <span data-i18n="font-large">A+</span>
+      </div>
+    </div>
+    <div class="modal-buttons">
+      <button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="character-modal" style="display:flex;"><div class="modal-content"><div class="modal-title">先手选择角色卡 <span id="close-modal-btn">&times;</span></div><div class="card-options" id="card-options-container"></div><div class="modal-buttons"><button class="btn-confirm" id="confirm-btn">确认选择</button></div></div></div>
+<div class="modal-overlay" id="special-dice-modal" style="display:none;"><div class="modal-content"><div class="modal-title">选择变量骰子效果 <span id="special-dice-remaining"></span></div><div class="special-dice-options" id="special-dice-options-container"></div><div class="modal-buttons"><button class="btn-cancel" id="cancel-special">取消</button><button class="btn-confirm" id="use-special">使用</button></div></div></div>
+<div class="instructions">
+  <div><h3 data-i18n="basic-rules-title">基本规则</h3><ul><li data-i18n="rule1">双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。</li><li data-i18n="rule2">共有12种角色，每种有不同技能和属性。</li><li data-i18n="rule3">攻击值 = 攻击选中骰子点数 + 力量层数</li><li data-i18n="rule4">防御值 = 防御选中骰子点数 + 坚固层数</li><li data-i18n="rule5">造成伤害值 = (攻击值 - 防御方防御值) * 其它效果</li><li data-i18n="rule6">变量骰子可在任意时间使用，提供特殊效果。</li></ul></div>
+  <div><h3 data-i18n="status-rules-title">状态解释</h3><ul><li><strong>你已中毒！</strong>：防御时每层造成1点伤害，触发后层数-1。若攻击造成伤害，攻击方下次防御中毒后额外解除1层。</li><li><strong>我下的毒</strong>：使中毒伤害×（1+层数），不会自然衰减。</li><li><strong>力量/坚固</strong>：每层+1点对应攻击/防御值。</li><li><strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。</li><li><strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。</li><li><strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。</li><li><strong>虚弱</strong>：攻击伤害减30%，触发后消失。</li><li><strong>666</strong>：掷骰时固定获得一个6点（可叠加）。</li><li><strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。</li><li><strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。</li></ul></div>
+</div>
+<div id="hiddenConsoleHotspot" class="hidden-console-hotspot" title="开发者控制台"></div>
+<div class="modal-overlay" id="console-modal" style="display:none;">
+  <div class="modal-content" style="max-width:700px;">
+    <div class="modal-title">开发者控制台 <span id="close-console-modal" style="cursor:pointer; font-size:1.8rem;">&times;</span></div>
+    <div id="consoleContent" style="display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between;"></div>
+    <div class="modal-buttons" style="margin-top:20px; flex-wrap:wrap; gap:10px;">
+      <button class="btn-cancel" id="closeConsoleBtn">关闭</button>
+      <button class="btn-confirm" id="consoleSwitchCourseBtn" style="background:#f39c12;">随机切换课程</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ======================= 常量提取 =======================
+  const STATUS = {
+    POISON: '你已中毒！',
+    DUDU: '我下的毒',
+    KEJING: '可精了',
+    CAI_DUO: '菜就多练',
+    HARD_ARMOR: '很硬的甲',
+    LAST_STAND: '藏一手',
+    WEAK: '虚弱',
+    STRONG_PLAN: '强基计划'
+  };
+
+  // ======================= 集中配置 (基于5.4.0完整版) =======================
+  const GAME_CONFIG = {
+    characters: {
+      1:{ id:1, name:'烬城勇者', maxHealth:32, totalDice:5, attackDice:3, defenseDice:2, effect:'三角猛攻：攻击时三个点数相同可额外攻击一次，并获得“菜就多练”并力量+3（每回合限一次）' },
+      2:{ id:2, name:'魔女', maxHealth:23, totalDice:5, attackDice:4, defenseDice:2, effect:'双月加持：造成伤害时若攻击骰子全为偶数，伤害*2' },
+      3:{ id:3, name:'宗师', maxHealth:28, totalDice:6, attackDice:4, defenseDice:1, effect:'贯甲一击：若攻击时有至少2个骰子为4点，无视对方防御值' },
+      4:{ id:4, name:'猎人', maxHealth:22, totalDice:4, attackDice:3, defenseDice:3, effect:'以守为攻：若防御时总点数大于敌方攻击点数，则造成差值伤害；否则反击防御点数的1/3（至少1点）' },
+      5:{ id:5, name:'毒师', maxHealth:26, totalDice:5, attackDice:3, defenseDice:3, effect:'蚀骨奇毒：攻击时每有一个奇数骰子，攻击结束后挂一层中毒；若全为偶数，则立即施加1层“我下的毒”' },
+      6:{ id:6, name:'幸运儿', maxHealth:28, totalDice:6, attackDice:3, defenseDice:2, effect:'虹彩恩赐：攻击时累计掷出3个6点时，增加一次变量骰子使用次数并回复2点生命' },
+      7:{ id:7, name:'战狂', maxHealth:27, totalDice:5, attackDice:4, defenseDice:1, effect:'嗜血凯旋：每次攻击回复攻击值的30%生命' },
+      8:{ id:8, name:'角斗士', maxHealth:30, totalDice:4, attackDice:2, defenseDice:2, effect:'斗场裁决：攻击后将力量层数设置为本次攻击值的50%；若选定的骰子点数全为6，则设置为100%并回复5点生命' },
+      9:{ id:9, name:'教官', maxHealth:29, totalDice:5, attackDice:3, defenseDice:2, effect:'因势导力：攻击后每有一种不同点数的骰子，攻击后力量+1' },
+      10:{ id:10, name:'北风骑士', maxHealth:28, totalDice:5, attackDice:3, defenseDice:2, effect:'寒风低语：每有一个未被选中的6点，给对手施加一层“可精了”并造成1点伤害' },
+      11:{ id:11, name:'赌徒', maxHealth:30, totalDice:4, attackDice:3, defenseDice:2, effect:'生死豪赌：骰子变为8面骰；攻击时选中的骰子会变成除本次攻击选中的点数种类以外的随机点数' },
+      12:{ id:12, name:'百变怪', maxHealth:0, totalDice:0, attackDice:0, defenseDice:0, effect:'随机扮演一位其他角色，确认后变为该角色' }
+    },
+    courses: [
+      { name:'体育', effectDesc:'力量+2', apply:(p)=>{ p.power+=2; addLog(p.name+'因体育课力量+2','effect'); } },
+      { name:'化学', effectDesc:'中毒+2', apply:(p)=>{ addStatus(p,STATUS.POISON,2); addLog(p.name+'因化学课叠加2层中毒','effect'); } },
+      { name:'自习', effectDesc:'无特殊效果', apply:(p)=>addLog(p.name+'的自习课什么也没发生','effect') },
+      { name:'心理', effectDesc:'+3血，解除1层负面', apply:(p)=>{ p.health=Math.min(p.maxHealth,p.health+3); [STATUS.POISON,STATUS.KEJING,STATUS.WEAK,STATUS.DUDU].forEach(e=>{ if(getStatus(p,e)>0) removeStatus(p,e,1); }); addLog(p.name+'因心理课回复3点生命','heal'); } },
+      { name:'信息技术', effectDesc:'变量骰子+1', apply:(p)=>{ p.specialDiceUses+=1; addLog(p.name+'因信息技术课获得1次变量骰子','effect'); } },
+      { name:'语文', effectDesc:'菜就多练，攻击骰+1', apply:(p)=>{ addStatus(p,STATUS.CAI_DUO,1); addLog(p.name+'因语文课获得“菜就多练”','effect'); } },
+      { name:'数学', effectDesc:'-3血', apply:(p)=>{ p.health=Math.max(0,p.health-3); addLog(p.name+'因数学课损失3点生命','damage'); if(p.health<=0) endGame(p.num===1?2:1); } },
+      { name:'物理', effectDesc:'报名强基计划，伤害提升', apply:(p)=>{ addStatus(p,STATUS.STRONG_PLAN,1); addLog(p.name+'因物理课获得“强基计划”','effect'); } },
+      { name:'历史', effectDesc:'总骰子数+1', apply:(p)=>{ p.totalDice+=1; addLog(p.name+'因历史课总骰子数+1','effect'); } },
+      { name:'地理', effectDesc:'坚固+1', apply:(p)=>{ p.armor+=1; addLog(p.name+'因地理课获得1层坚固','effect'); } }
+    ],
+    specialEffects: {
+      fixed:{ title:'倒霉蛋', desc:'增加一次重掷次数（上限2次）', exec:(p)=> { if(p.maxRerolls<2) p.maxRerolls++; else addLog('重掷次数已达上限2','system'); return true; } },
+      heal:{ title:'阴阳变转', desc:'解除所有负面效果各一层，并回复6点生命值', exec:(p)=> { [STATUS.POISON,STATUS.WEAK,STATUS.KEJING,STATUS.DUDU].forEach(e=>removeStatus(p,e,1)); p.health=Math.min(p.maxHealth,p.health+6); return true; } },
+      poison:{ title:'水煮黑背鲈', desc:'给对手施加4层中毒效果（每层1伤害）', exec:(p,opp)=> { addStatus(opp,STATUS.POISON,4); return true; } },
+      hard_armor:{ title:'很硬的甲', desc:'下回合受伤减少25%（包括dot），获得1层坚固', exec:(p)=> { p.armor+=1; addStatus(p,STATUS.HARD_ARMOR,1); return true; } },
+      laststand:{ title:'藏一手', desc:'下次受到致命伤害时保留1点生命值（不防dot），但是触发后使下次伤害减30%（每局限用2次）', exec:(p)=> { if(p.lastStandCount<2){ p.lastStandCount++; addStatus(p,STATUS.LAST_STAND,1); return true; } else addLog('藏一手次数已达上限2次','system'); return false; } },
+      empower:{ title:'力了', desc:'立即获得2层力量，并获得1层666（下次额外投掷初始6点的骰子，可叠加）', exec:(p)=> { p.power+=2; p.fixedSixStacks+=1; return true; } }
+    }
+  };
+
+  // ========== 角色技能函数映射 (完整) ==========
+  function extraAttackSkill(dice,p){ if(dice.length<3) return{}; let freq={}; dice.forEach(v=>freq[v]=(freq[v]||0)+1); if(Object.values(freq).some(v=>v>=3) && p.extraAttacksRemaining>0){ p.extraAttacksRemaining--; addStatus(p,STATUS.CAI_DUO,1); p.power+=3; return {extraAttack:true,desc:'三角猛攻触发！力量+3，并获得菜就多练'}; } return{}; }
+  function allEvenSkill(dice){ return {allEven:dice.length>0 && dice.every(v=>v%2===0)}; }
+  function ignoreDefSkill(dice){ return {ignoreDefense:dice.filter(v=>v===4).length>=2}; }
+  function counterSkill(dice,isDef,atkSum){ if(!isDef)return{}; let s=dice.reduce((a,b)=>a+b,0); return {counter:s>atkSum ? s-atkSum : Math.max(1,Math.floor(s/3))}; }
+  function poisonSkill(dice){ if(dice.length===0)return{}; return dice.every(v=>v%2===0) ? {appliedDudoku:1} : {poisonStacks:dice.filter(v=>v%2===1).length}; }
+  function luckySkill(dice,p){ let six=dice.filter(v=>v===6).length; if(six){ p.sixCount+=six; if(p.sixCount>=3){ p.specialDiceUses++; p.health=Math.min(p.maxHealth,p.health+2); p.sixCount-=3; return {triggered:true,desc:'虹彩恩赐进度:'+p.sixCount+'/3'}; } } return{}; }
+  function lifeStealSkill(dice){ return {lifesteal:true,sum:dice.reduce((a,b)=>a+b,0)}; }
+  function powerGainSkill(dice){ let u=new Set(dice).size; return u?{powerGain:u}:{}; }
+  function windSkill(dice,p,extra){ if(!extra||!extra.allDice) return{}; let cnt=extra.allDice.filter((_,i)=>!extra.selectedIndices.includes(i) && extra.allDice[i]===6).length; return cnt?{unselectedSix:cnt, damagePerSix:1}:{}; }
+  const SKILL_MAP = {
+    1: (dice, p) => extraAttackSkill(dice, p),
+    2: (dice) => allEvenSkill(dice),
+    3: (dice) => ignoreDefSkill(dice),
+    4: (dice, isDef, atkSum) => counterSkill(dice, isDef, atkSum),
+    5: (dice) => poisonSkill(dice),
+    6: (dice, p) => luckySkill(dice, p),
+    7: (dice) => lifeStealSkill(dice),
+    8: () => ({}),
+    9: (dice) => powerGainSkill(dice),
+    10: (dice, p, extra) => windSkill(dice, p, extra),
+    11: () => ({}),
+    12: () => ({})
+  };
+
+  // ========== 状态管理辅助 ==========
+  function getStatus(p, name){ return p.statusEffects[name] || 0; }
+  function setStatus(p,name,val){ if(val<=0) delete p.statusEffects[name]; else p.statusEffects[name]=val; }
+  function addStatus(p,name,delta=1){ let cur=getStatus(p,name); setStatus(p,name,cur+delta); }
+  function removeStatus(p,name,delta=1){ let cur=getStatus(p,name); setStatus(p,name,Math.max(0,cur-delta)); }
+
+  function getMaxSelectableDice(player, actionType) {
+    let base = (actionType === 'attack') ? player.attackDice : player.defenseDice;
+    if(getStatus(player, STATUS.CAI_DUO) > 0 && actionType === 'attack') base++;
+    if(getStatus(player, STATUS.KEJING) > 0) base = Math.max(1, base - 1);
+    return base;
+  }
+
+  // ========== 全局状态 ==========
+  let game = {
+    phase: 'idle', turn: 1, currentPlayer: 1, subState: 'idle', currentAction: null,
+    waitingForDefense: false, currentAttackData: null,
+    allDice: [], selectedIndices: [], prevCourseIdx: -1, currentCourseIdx: 0, isRerolling: false
+  };
+  let players = { 1:{}, 2:{} };
+  let playerSelectedCards = {1:false,2:false};
+  let selectingPlayer = 1, selectedCardId = 12;
+  const dom = {
+    p1:{attack:get('player1-attack-btn'),defend:get('player1-defend-btn'),special:get('player1-special-btn'),reroll:get('player1-reroll-btn'),endTurn:get('player1-end-turn-btn'),selInfo:get('player1-selection-info')},
+    p2:{attack:get('player2-attack-btn'),defend:get('player2-defend-btn'),special:get('player2-special-btn'),reroll:get('player2-reroll-btn'),endTurn:get('player2-end-turn-btn'),selInfo:get('player2-selection-info')}
+  };
+  function get(id){ return document.getElementById(id); }
+  function addLog(msg,type){ let e=document.createElement('div'); e.className='log-entry '+(type||'system'); e.textContent='['+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'] '+msg; get('game-log').appendChild(e); e.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  
+  function initPlayer(pn,name){
+    players[pn]={ name, num:pn, health:99, maxHealth:99, totalDice:9, attackDice:9, defenseDice:9, character:{id:1,name:'火花',effect:'真可爱<br>看什么看'}, specialDiceUses:2, statusEffects:{}, lastStandCount:0, power:0, armor:0, sixCount:0, extraAttack:false, fixedSixStacks:0, extraSixCount:0, extraAttacksRemaining:0, maxRerolls:1, rerollsUsedThisTurn:0, extraPoisonRemoveOnDefense:0 };
+  }
+  
+  function updatePlayerUI(pn){
+    let p=players[pn];
+    get('player'+pn+'-health').innerHTML=p.health+'/'+p.maxHealth;
+    get('player'+pn+'-health-bar').style.width=(p.health/p.maxHealth)*100+'%';
+    let da=getMaxSelectableDice(p,'attack');
+    let dd=getMaxSelectableDice(p,'defend');
+    get('player'+pn+'-total-dice').innerText=p.totalDice;
+    get('player'+pn+'-attack-dice').innerText=da;
+    get('player'+pn+'-defense-dice').innerText=dd;
+    get('player'+pn+'-character-name').innerHTML='<div style="color:'+(pn===1?'#c0392b':'#3498db')+';">'+(p.character.displayName||p.character.name)+'</div>';
+    get('player'+pn+'-character-effect').innerHTML=p.character.effect;
+    get('player'+pn+'-special-count').innerText=p.specialDiceUses;
+    let statusHtml=[];
+    if(p.power>0) statusHtml.push('力量+'+p.power);
+    if(p.armor>0) statusHtml.push('坚固+'+p.armor);
+    if(p.fixedSixStacks>0) statusHtml.push('666 ×'+p.fixedSixStacks);
+    let poison=getStatus(p,STATUS.POISON); if(poison) statusHtml.push(STATUS.POISON+' ×'+poison);
+    let dudoku=getStatus(p,STATUS.DUDU); if(dudoku) statusHtml.push(STATUS.DUDU+' ×'+dudoku);
+    let extra=[STATUS.CAI_DUO,STATUS.KEJING,STATUS.STRONG_PLAN,STATUS.HARD_ARMOR,STATUS.WEAK,STATUS.LAST_STAND];
+    extra.forEach(e=>{ let c=getStatus(p,e); if(c) statusHtml.push(e+(c>1?' ×'+c:'')); });
+    if(p.lastStandCount>0 && getStatus(p,STATUS.LAST_STAND)===0) statusHtml.push(STATUS.LAST_STAND+' ×'+p.lastStandCount);
+    if(p.character.id===6 && p.sixCount>0) statusHtml.push('虹彩恩赐:'+p.sixCount+'/3');
+    get('player'+pn+'-status').innerHTML=statusHtml.length?statusHtml.map(t=>'<div class="status-item">'+t+'</div>').join(''):'无';
+    get('player'+pn+'-turn').style.display=game.currentPlayer===pn?'block':'none';
+    let bar=get('player'+pn+'-health-bar'); bar.style.backgroundColor=p.health/p.maxHealth<=0.3?'#e74c3c':(p.health/p.maxHealth<=0.6?'#f39c12':'#2ecc71');
+  }
+  
+  function disableAllButtons(){ for(let i=1;i<=2;i++) [dom[`p${i}`].attack,dom[`p${i}`].defend,dom[`p${i}`].special,dom[`p${i}`].reroll,dom[`p${i}`].endTurn].forEach(b=>b.disabled=true); }
+  
+  function updateButtonStates(){
+    if(game.phase!=='playing'){ disableAllButtons(); return; }
+    for(let pn=1;pn<=2;pn++){
+      let isCur=(game.currentPlayer===pn);
+      let isDef=(game.waitingForDefense && game.currentAttackData && game.currentAttackData.defNum===pn);
+      let remRerolls=0;
+      if(game.currentAction==='attack' && isCur && (game.subState==='selecting'||game.subState==='waiting')) remRerolls=Math.max(0,players[pn].maxRerolls-players[pn].rerollsUsedThisTurn);
+      dom[`p${pn}`].reroll.innerText='重掷 ('+remRerolls+')';
+      let canEnd=false;
+      if(game.waitingForDefense && game.currentAttackData && game.currentAttackData.defNum!==null) canEnd=(pn===game.currentAttackData.defNum) && (game.subState==='waiting'||game.subState==='selecting');
+      else canEnd=(pn===game.currentPlayer) && (game.subState==='waiting'||game.subState==='selecting');
+      dom[`p${pn}`].endTurn.disabled=!canEnd;
+      dom[`p${pn}`].attack.disabled=!isCur || game.waitingForDefense || game.subState!=='idle';
+      dom[`p${pn}`].defend.disabled=!isDef || !game.waitingForDefense || game.subState!=='idle';
+      dom[`p${pn}`].special.disabled=players[pn].specialDiceUses<=0;
+      let canReroll=isCur && game.currentAction==='attack' && remRerolls>0 && (game.subState==='waiting'||game.subState==='selecting') && game.selectedIndices.length>0 && !game.isRerolling;
+      dom[`p${pn}`].reroll.disabled=!canReroll;
+      let maxAllowed=0;
+      if(game.currentAction==='attack' && isCur) maxAllowed=getMaxSelectableDice(players[game.currentPlayer],'attack');
+      else if(game.currentAction==='defend' && isDef) maxAllowed=getMaxSelectableDice(players[game.currentAttackData.defNum],'defend');
+      let sel=game.selectedIndices.length;
+      dom[`p${pn}`].selInfo.textContent=(game.subState==='selecting'||game.subState==='waiting')?`已选择 ${sel} 个骰子 (最多${maxAllowed}个)`+(sel===0?' - 请选择骰子':(sel>maxAllowed?' - 选择过多':' - 可以结束回合')):'请等待';
+    }
+  }
+  
+  function rollDice(count,pn){
+    let p=players[pn]; let vals=[], used=0, isGambler=(p.character.id===11);
+    for(let i=0;i<count;i++){ if(used<p.fixedSixStacks){ vals.push(6); used++; } else { vals.push(Math.floor(Math.random()*(isGambler?8:6))+1); } }
+    for(let i=0;i<p.extraSixCount;i++) vals.push(6);
+    p.fixedSixStacks-=used; p.extraSixCount=0; updatePlayerUI(pn); return vals;
+  }
+  
+  function displayDiceWithAnimation(vals){ let c=get('dice-result'); c.innerHTML=''; vals.forEach((v,i)=>{ let d=document.createElement('div'); d.className='dice rolling'; d.textContent='?'; d.dataset.index=i; c.appendChild(d); }); setTimeout(()=>{ if(game.phase!=='playing')return; for(let i=0;i<c.children.length;i++){ c.children[i].classList.remove('rolling'); c.children[i].textContent=vals[i]; if(game.selectedIndices.includes(i)) c.children[i].classList.add('selected'); } },500); }
+  
+  function toggleDiceSelection(i){ if(game.subState!=='selecting' && game.subState!=='waiting') return; if(game.selectedIndices.includes(i)) game.selectedIndices=game.selectedIndices.filter(x=>x!==i); else game.selectedIndices.push(i); let c=get('dice-result'); for(let j=0;j<c.children.length;j++) if(game.selectedIndices.includes(j)) c.children[j].classList.add('selected'); else c.children[j].classList.remove('selected'); game.subState='waiting'; updateButtonStates(); }
+  if(!window._diceDelegate){ get('dice-result').addEventListener('click',(e)=>{ let dice=e.target.closest('.dice'); if(dice) toggleDiceSelection(parseInt(dice.dataset.index)); }); window._diceDelegate=true; }
+  
+  function endGame(winner){ game.phase='ended'; updatePlayerUI(1); updatePlayerUI(2); get('action-result').innerHTML='<div style="color:#e74c3c;font-size:1.3rem;">'+players[winner].name+'获胜！</div>'; addLog('游戏结束！'+players[winner].name+'获胜！','system'); disableAllButtons(); }
+  
+  function switchTurn(){
+    game.currentPlayer=game.currentPlayer===1?2:1; players[game.currentPlayer].rerollsUsedThisTurn=0;
+    players[game.currentPlayer].extraAttacksRemaining = (players[game.currentPlayer].character.id===1)?1:0;
+    game.allDice=[]; game.selectedIndices=[]; get('dice-result').innerHTML='';
+    game.subState='idle'; game.currentAction=null; game.waitingForDefense=false;
+    if(game.currentPlayer===1){ game.turn++; get('turn-counter').innerText='回合数: '+game.turn; switchCourse(); }
+    updatePlayerUI(1); updatePlayerUI(2); updateButtonStates(); addLog('轮到'+players[game.currentPlayer].name+'的回合','system'); get('action-result').textContent=players[game.currentPlayer].name+'的回合';
+  }
+  
+  function applyQiangJi(dmg,att){ if(getStatus(att,STATUS.STRONG_PLAN)>0 && dmg>0){ let nd=Math.floor(dmg*1.2); if(nd<=dmg) nd=dmg+1; addLog(att.name+'的“强基计划”使伤害 '+dmg+' → '+nd,'effect'); return nd; } return dmg; }
+  function decayQiangJi(p){ if(getStatus(p,STATUS.STRONG_PLAN)>0) removeStatus(p,STATUS.STRONG_PLAN,1); }
+  
+  function processAttack(selectedDice,attNum){
+    let attacker=players[attNum], defender=players[attNum===1?2:1];
+    if(getStatus(attacker,STATUS.CAI_DUO)>0) removeStatus(attacker,STATUS.CAI_DUO,1);
+    if(getStatus(attacker,STATUS.KEJING)>0) removeStatus(attacker,STATUS.KEJING,1);
+    if(attacker.character.id===11){
+      let orig=selectedDice.slice(), origSet=new Set(orig), maxVal=8;
+      for(let i=0;i<selectedDice.length;i++){ let nv; do{ nv=Math.floor(Math.random()*maxVal)+1; }while(origSet.has(nv)); selectedDice[i]=nv; }
+      addLog(attacker.name+'的生死豪赌触发，骰子变为 '+selectedDice.join(', '),'effect');
+    }
+    let rawSum=selectedDice.reduce((s,v)=>s+v,0)+attacker.power;
+    let weakenedFlag=(getStatus(attacker,STATUS.WEAK)>0);
+    if(weakenedFlag){ addLog(attacker.name+'处于虚弱状态，本次攻击伤害减30%','effect'); removeStatus(attacker,STATUS.WEAK,1); }
+    let eff={}; let skillCtx={allDice:game.allDice,selectedIndices:game.selectedIndices};
+    let effectFunc = SKILL_MAP[attacker.character.id] || (()=>({}));
+    eff = effectFunc(selectedDice, attacker, skillCtx);
+    if(eff.appliedDudoku) addStatus(defender,STATUS.DUDU,eff.appliedDudoku);
+    if(eff.poisonStacks) addStatus(defender,STATUS.POISON,eff.poisonStacks);
+    if(eff.unselectedSix){ addStatus(defender,STATUS.KEJING,eff.unselectedSix); let ddmg=eff.unselectedSix * 1; defender.health=Math.max(0,defender.health-ddmg); addLog(attacker.name+'寒风低语：'+eff.unselectedSix+'个未选中6点，施加可精了并造成'+ddmg+'伤害','effect'); updatePlayerUI(defender.num); if(defender.health<=0){ endGame(attNum); return; } }
+    if(eff.extraAttack) attacker.extraAttack=true;
+    addLog(attacker.name+'攻击点数总和: '+rawSum+' ('+selectedDice.join('+')+(attacker.power>0?'+力量'+attacker.power:'')+')','player'+attNum);
+    get('action-result').textContent=attacker.name+'攻击骰子: '+selectedDice.join(', ')+' = '+rawSum+' - 请'+defender.name+'进行防御';
+    game.currentAttackData={attNum,defNum:defender.num,attackSum:rawSum,effectResult:eff,attackDice:selectedDice,weakened:weakenedFlag,pendingPoison:eff.poisonStacks||0};
+    game.waitingForDefense=true;
+    game.allDice=[]; game.selectedIndices=[]; get('dice-result').innerHTML=''; game.subState='idle'; game.currentAction=null;
+    decayQiangJi(attacker); updateButtonStates(); updatePlayerUI(1); updatePlayerUI(2);
+  }
+  
+  function processDefense(defenseDice,defNum){
+    if(!game.currentAttackData) return;
+    let atk=players[game.currentAttackData.attNum], def=players[defNum];
+    let atkSum=game.currentAttackData.attackSum, eff=game.currentAttackData.effectResult, atkDice=game.currentAttackData.attackDice;
+    if(getStatus(def,STATUS.KEJING)>0) removeStatus(def,STATUS.KEJING,1);
+    let defSum=defenseDice.reduce((s,v)=>s+v,0)+def.armor;
+    addLog(def.name+'防御点数总和: '+defSum+' ('+defenseDice.join('+')+(def.armor>0?'+坚固'+def.armor:'')+')','player'+defNum);
+    let defEff=(SKILL_MAP[def.character.id] || (()=>({})))(defenseDice, true, atkSum);
+    if(defEff.counter){ atk.health=Math.max(0,atk.health-defEff.counter); addLog(def.name+'触发以守为攻，造成'+defEff.counter+'点反击伤害！','damage'); updatePlayerUI(atk.num); }
+    let damage=eff.ignoreDefense?atkSum:Math.max(0,atkSum-defSum);
+    if(atk.character.id===2 && eff.allEven) damage*=2;
+    if(game.currentAttackData.weakened) damage=Math.floor(damage*0.7);
+    damage=applyQiangJi(damage,atk);
+    if(getStatus(def,STATUS.LAST_STAND)>0 && def.health-damage<=0){ let orig=damage; damage=def.health-1; addLog(def.name+'的"藏一手"触发！伤害'+orig+'→'+damage,'effect'); removeStatus(def,STATUS.LAST_STAND,1); def.lastStandCount--; addStatus(def,STATUS.WEAK,1); }
+    let finalDamage=damage, reduced=0;
+    if(getStatus(def,STATUS.HARD_ARMOR)>0 && damage>0){ reduced=Math.floor(damage*0.25); finalDamage=damage-reduced; addLog(def.name+'的“很硬的甲”生效，伤害减少'+reduced+'点','effect'); }
+    let poisonBefore=getStatus(def,STATUS.POISON), dudokuBefore=getStatus(def,STATUS.DUDU);
+    let poisonDmg=0;
+    if(poisonBefore>0){ poisonDmg=poisonBefore*(1+dudokuBefore); if(getStatus(def,STATUS.LAST_STAND)>0 && def.health-poisonDmg<=0){ poisonDmg=def.health-1; removeStatus(def,STATUS.LAST_STAND,1); def.lastStandCount--; addStatus(def,STATUS.WEAK,1); } if(getStatus(def,STATUS.HARD_ARMOR)>0 && poisonDmg>0) poisonDmg=Math.floor(poisonDmg*0.75); def.health=Math.max(0,def.health-poisonDmg); removeStatus(def,STATUS.POISON,1); addLog(def.name+'中毒损失'+poisonDmg+'生命，剩余中毒'+getStatus(def,STATUS.POISON)+'层','effect'); }
+    def.health=Math.max(0,def.health-finalDamage);
+    addLog(def.name+'受到 '+finalDamage+' 点伤害，剩余生命 '+def.health,'damage');
+    if(def.extraPoisonRemoveOnDefense>0 && getStatus(def,STATUS.POISON)>0){ removeStatus(def,STATUS.POISON,1); def.extraPoisonRemoveOnDefense=0; addLog(def.name+'因曾造成伤害，解除了1层中毒','effect'); }
+    if(getStatus(def,STATUS.HARD_ARMOR)>0 && (damage>0||poisonDmg>0)) removeStatus(def,STATUS.HARD_ARMOR,1);
+    updatePlayerUI(1);updatePlayerUI(2);
+    if(atk.character.id===9 && eff.powerGain){ atk.power+=eff.powerGain; addLog(atk.name+'因势导力力量+'+eff.powerGain,'effect'); updatePlayerUI(atk.num); }
+    if(atk.character.id===7 && eff.lifesteal){ let heal=Math.floor(eff.sum*0.3); if(heal>0){ atk.health=Math.min(atk.maxHealth,atk.health+heal); addLog(atk.name+'嗜血凯旋回复'+heal+'生命','heal'); updatePlayerUI(atk.num); } }
+    if(atk.character.id===8){ let sel=atkDice,av=atkSum; if(sel.length>0 && sel.every(v=>v===6)){ atk.power=av; atk.health=Math.min(atk.maxHealth,atk.health+5); } else{ atk.power=Math.floor(av/2); } addLog(atk.name+'斗场裁决：力量设为'+atk.power,'effect'); updatePlayerUI(atk.num); }
+    if(def.health<=0) endGame(atk.num); else if(atk.health<=0) endGame(def.num);
+    else if(atk.extraAttack){ atk.extraAttack=false; game.waitingForDefense=false; game.currentAttackData=null; game.allDice=[]; game.selectedIndices=[]; get('dice-result').innerHTML=''; game.subState='idle'; game.currentAction=null; game.currentPlayer=atk.num; players[atk.num].rerollsUsedThisTurn=0; updatePlayerUI(1); updatePlayerUI(2); updateButtonStates(); get('action-result').textContent=atk.name+'获得额外攻击机会！请攻击'; }
+    else{ game.waitingForDefense=false; game.currentAttackData=null; switchTurn(); }
+  }
+  
+  function startAttack(pn){ if(game.phase!=='playing' || game.currentPlayer!==pn || game.subState!=='idle') return; game.currentAction='attack'; game.subState='rolling'; game.selectedIndices=[]; players[pn].rerollsUsedThisTurn=0; updateButtonStates(); addLog(players[pn].name+'开始攻击...','player'+pn); get('action-result').textContent=players[pn].name+'正在攻击...'; game.allDice=rollDice(players[pn].totalDice,pn); displayDiceWithAnimation(game.allDice); setTimeout(()=>{ if(game.phase==='playing' && game.subState==='rolling'){ game.subState='selecting'; updateButtonStates(); addLog(players[pn].name+'掷出了骰子','player'+pn); } },600); }
+  function startDefense(pn){ if(game.phase!=='playing' || !game.waitingForDefense || (game.currentAttackData && game.currentAttackData.defNum!==pn) || game.subState!=='idle') return; game.currentAction='defend'; game.subState='rolling'; game.selectedIndices=[]; players[pn].rerollsUsedThisTurn=0; updateButtonStates(); addLog(players[pn].name+'开始防御...','player'+pn); get('action-result').textContent=players[pn].name+'正在防御...'; game.allDice=rollDice(players[pn].totalDice,pn); displayDiceWithAnimation(game.allDice); setTimeout(()=>{ if(game.phase==='playing' && game.subState==='rolling'){ game.subState='selecting'; updateButtonStates(); addLog(players[pn].name+'掷出了防御骰子','player'+pn); } },600); }
+  
+  function rerollSelected(pn){
+    if(game.isRerolling) return;
+    if(game.phase!=='playing'||game.currentPlayer!==pn||(game.subState!=='selecting'&&game.subState!=='waiting')) return;
+    if(game.currentAction!=='attack'){ addLog('防御时不能重掷骰子！','system'); return; }
+    let p=players[pn];
+    if(p.rerollsUsedThisTurn>=p.maxRerolls){ addLog('本回合已无可用的重掷次数！','system'); return; }
+    if(game.selectedIndices.length===0){ addLog('请先选择要重掷的骰子！','system'); return; }
+    game.isRerolling=true;
+    let idxs=game.selectedIndices.slice();
+    let diceEls=document.querySelectorAll('#dice-result .dice');
+    idxs.forEach(i=>{ let el=diceEls[i]; if(el) el.classList.remove('selected'); });
+    game.selectedIndices=[];
+    idxs.forEach(i=>game.allDice[i]=Math.floor(Math.random()*6)+1);
+    idxs.forEach(i=>{ let el=diceEls[i]; if(el){ el.classList.add('rolling'); el.textContent='?'; } });
+    setTimeout(()=>{
+      idxs.forEach(i=>{ let el=diceEls[i]; if(el){ el.classList.remove('rolling'); el.textContent=game.allDice[i]; } });
+      p.rerollsUsedThisTurn++;
+      addLog(players[pn].name+'重掷了 '+idxs.length+' 个骰子','player'+pn);
+      game.subState='waiting';
+      updateButtonStates();
+      game.isRerolling=false;
+    },400);
+  }
+  
+  function endTurn(pn){ if(game.waitingForDefense && game.currentAttackData && game.currentAttackData.defNum!==null && pn!==game.currentAttackData.defNum){ addLog('当前是防御阶段，只有防御方可以结束回合！','system'); return; } if(game.phase!=='playing') return; let max=0; if(game.currentAction==='attack') max=getMaxSelectableDice(players[game.currentPlayer],'attack'); else if(game.currentAction==='defend') max=getMaxSelectableDice(players[game.currentAttackData.defNum],'defend'); if(game.selectedIndices.length===0 || game.selectedIndices.length>max){ addLog('请正确选择骰子！','system'); return; } game.subState='processing'; updateButtonStates(); let sel=game.selectedIndices.map(i=>game.allDice[i]); if(game.currentAction==='attack') processAttack(sel,pn); else processDefense(sel,pn); }
+  
+  function switchCourse(){ if(game.phase!=='playing') return; if(game.prevCourseIdx!==-1 && GAME_CONFIG.courses[game.prevCourseIdx].name==='历史'){ players[1].totalDice--; players[2].totalDice--; addLog('历史课效果结束，双方总骰子数-1','system'); } let ni; do{ ni=Math.floor(Math.random()*GAME_CONFIG.courses.length); }while(ni===game.currentCourseIdx && GAME_CONFIG.courses.length>1); game.prevCourseIdx=game.currentCourseIdx; game.currentCourseIdx=ni; let course=GAME_CONFIG.courses[ni]; get('course-display').textContent='当前课程: '+course.name+'（'+course.effectDesc+'）'; course.apply(players[1]); course.apply(players[2]); updatePlayerUI(1); updatePlayerUI(2); refreshConsoleValues(); }
+  
+  function showSpecialModal(pn){ if(game.phase!=='playing' || players[pn].specialDiceUses<=0) return; window._curSpecialPlayer=pn; let container=document.getElementById('special-dice-options-container'); container.innerHTML=''; for(let [key,cfg] of Object.entries(GAME_CONFIG.specialEffects)){ let div=document.createElement('div'); div.className='special-option'; div.dataset.effect=key; div.innerHTML=`<div class="special-option-title">${cfg.title}</div><div class="special-option-desc">${cfg.desc}</div>`; div.onclick=()=>{ document.querySelectorAll('#special-dice-options-container .special-option').forEach(x=>x.classList.remove('selected')); div.classList.add('selected'); }; container.appendChild(div); } get('special-dice-remaining').innerText=` (剩余次数: ${players[pn].specialDiceUses})`; get('special-dice-modal').style.display='flex'; }
+  
+  function useSpecialDice(){
+    let opt=document.querySelector('#special-dice-options-container .special-option.selected');
+    if(!opt){ alert('请选择一个效果'); return; }
+    let pn=window._curSpecialPlayer, p=players[pn], opp=players[pn===1?2:1];
+    if(p.specialDiceUses<=0) return;
+    let key=opt.dataset.effect, cfg=GAME_CONFIG.specialEffects[key];
+    let success=false;
+    if(key==='poison') success=cfg.exec(p,opp);
+    else success=cfg.exec(p,opp);
+    if(success){
+      p.specialDiceUses--;
+      addLog(p.name+'使用了变量骰子:'+cfg.title,'effect');
+      updatePlayerUI(pn);
+      updatePlayerUI(opp);
+      updateButtonStates();
+    }
+    get('special-dice-modal').style.display='none';
+  }
+  
+  function generateCardOptions(){ let c=get('card-options-container'); c.innerHTML=''; for(let i=1;i<=12;i++){ let ch=GAME_CONFIG.characters[i]; let d=document.createElement('div'); d.className='card-option'; d.dataset.cardId=i; if(i===12) d.innerHTML='<div class="card-name" style="color:#9b59b6;">百变怪</div><div class="card-stats">属性随机</div><div class="card-effect">随机扮演一位其他角色</div>'; else d.innerHTML=`<div class="card-name" style="color:${selectingPlayer===1?'#c0392b':'#3498db'};">${ch.name}</div><div class="card-stats">生命:${ch.maxHealth} | 总骰:${ch.totalDice} | 攻:${ch.attackDice} | 防:${ch.defenseDice}</div><div class="card-effect">${ch.effect}</div>`; d.onclick=function(){ document.querySelectorAll('.card-option').forEach(o=>o.classList.remove('selected')); this.classList.add('selected'); selectedCardId=parseInt(this.dataset.cardId); }; c.appendChild(d); } c.querySelector('[data-card-id="12"]').classList.add('selected'); selectedCardId=12; }
+  function confirmChar(){ let chosen=selectedCardId; if(chosen===12){ let ids=[]; for(let k=1;k<=11;k++) ids.push(k); chosen=ids[Math.floor(Math.random()*ids.length)]; } let card=GAME_CONFIG.characters[chosen]; let p=players[selectingPlayer]; p.character={ id:card.id, name:card.name, displayName:selectedCardId===12?'百变怪（'+card.name+'）':card.name, effect:card.effect, effectFn: SKILL_MAP[card.id] || (()=>({})) }; p.maxHealth=card.maxHealth; p.health=card.maxHealth; p.totalDice=card.totalDice; p.attackDice=card.attackDice; p.defenseDice=card.defenseDice; if(selectingPlayer===2) p.maxHealth+=3,p.health=p.maxHealth; p.extraAttacksRemaining=(card.id===1)?1:0; playerSelectedCards[selectingPlayer]=true; addLog(players[selectingPlayer].name+'选择了'+p.character.displayName,'player'+selectingPlayer); updatePlayerUI(selectingPlayer); if(playerSelectedCards[1] && playerSelectedCards[2]){ get('character-modal').style.display='none'; game.phase='playing'; if(players[1].character.id===1) players[1].extraAttacksRemaining=1; game.turn=1; get('turn-counter').innerText='回合数: 1'; game.currentCourseIdx=Math.floor(Math.random()*GAME_CONFIG.courses.length); game.prevCourseIdx=-1; let course=GAME_CONFIG.courses[game.currentCourseIdx]; get('course-display').textContent='当前课程: '+course.name+'（'+course.effectDesc+'）'; course.apply(players[1]); course.apply(players[2]); updatePlayerUI(1); updatePlayerUI(2); updateButtonStates(); addLog('游戏开始！先手的回合','system'); get('action-result').textContent='先手的回合，请选择操作'; }else{ selectingPlayer=2; document.querySelector('#character-modal .modal-title').firstChild.textContent='后手选择角色卡'; generateCardOptions(); addLog('请后手选择角色卡','system'); } }
+  function resetGame(){ initPlayer(1,'先手'); initPlayer(2,'后手'); players[2].character={id:0,name:'哥伦比娅',effect:'哥伦比娅举世无双<br>哥伦比娅聪明绝顶<br>哥伦比娅沉鱼落雁'}; playerSelectedCards={1:false,2:false}; game={ phase:'idle', turn:1, currentPlayer:1, subState:'idle', currentAction:null, waitingForDefense:false, currentAttackData:null, allDice:[], selectedIndices:[], prevCourseIdx:-1, currentCourseIdx:0, isRerolling:false }; selectingPlayer=1; selectedCardId=12; get('turn-counter').innerText='回合数: 1'; get('course-display').innerText='当前课程: 无'; get('game-log').innerHTML='<div class="log-entry system">游戏已重置，请选择角色开始新对局。</div>'; get('dice-result').innerHTML=''; get('action-result').textContent='等待开始...'; updatePlayerUI(1); updatePlayerUI(2); disableAllButtons(); document.querySelector('#character-modal .modal-title').firstChild.textContent='先手选择角色卡'; get('character-modal').style.display='flex'; generateCardOptions(); addLog('请先手选择角色卡','system'); }
+  
+  function refreshConsoleValues(){ for(let pn=1;pn<=2;pn++){ ['health','maxHealth','totalDice','attackDice','defenseDice','specialDiceUses','maxRerolls'].forEach(f=>{ let sp=document.getElementById(`console-val-${pn}-${f}`); if(sp && players[pn]) sp.innerText=players[pn][f]; }); } let cd=document.getElementById('course-console-display'); if(cd) cd.innerText=get('course-display').innerText; }
+  function renderConsolePanel(){ let container=document.getElementById('consoleContent'); if(!container)return; let fields=[{key:'maxHealth',label:'💖 生命上限'},{key:'health',label:'❤️ 生命值'},{key:'totalDice',label:'🎲 总骰子数'},{key:'attackDice',label:'⚔️ 攻击骰子'},{key:'defenseDice',label:'🛡️ 防御骰子'},{key:'specialDiceUses',label:'✨ 变量骰子次数'},{key:'maxRerolls',label:'🔄 重投次数上限'}]; let buildCol=(pn,title)=>{ let html=`<div class="cheat-col" style="border-radius:16px; padding:12px;"><h3 style="margin-bottom:12px;">${title}</h3>`; fields.forEach(f=>{ let v=players[pn]?.[f.key]||0; html+=`<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; background:#f0f2f5; padding:6px 12px; border-radius:30px;"><span style="font-size:0.85rem;">${f.label}</span><div style="display:flex; gap:10px;"><button class="console-minus" onclick="window.adminMod(${pn},'${f.key}',-1)">−</button><span id="console-val-${pn}-${f.key}" style="min-width:45px; text-align:center; font-weight:bold;">${v}</span><button class="console-plus" onclick="window.adminMod(${pn},'${f.key}',1)">+</button></div></div>`; }); html+='</div>'; return html; }; container.innerHTML=`<div class="cheat-col" style="width:100%; margin-bottom:8px;"><h3>📚 当前课程</h3><div id="course-console-display" style="font-weight:bold;">${get('course-display')?.innerText||'无'}</div></div><div style="display:flex; gap:20px; flex-wrap:wrap;">${buildCol(1,'🔴 先手 · 红方')+buildCol(2,'🔵 后手 · 蓝方')}</div>`; }
+  window.adminMod=function(pn,attr,delta){ if(game.phase!=='playing') return; let p=players[pn]; if(attr==='maxHealth'){ let oldMax=p.maxHealth; p.maxHealth=Math.max(1,p.maxHealth+delta); let newMax=p.maxHealth; if(newMax>oldMax) p.health=Math.min(p.maxHealth, p.health+(newMax-oldMax)); else if(newMax<oldMax) p.health=Math.min(p.health, newMax); } else if(attr==='health') p.health=Math.max(1,Math.min(p.maxHealth,p.health+delta)); else p[attr]=Math.max(0,(p[attr]||0)+delta); updatePlayerUI(pn); updateButtonStates(); refreshConsoleValues(); };
+  window.adminSwitchCourse=function(){ switchCourse(); refreshConsoleValues(); };
+  
+  // ========== 多语言支持 ==========
+  const i18nMap = {
+    zh: { "game-title":"银河站立党", "game-subtitle":"站立与战力谐音，令人忍俊不禁", "game-desc":"选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！", "player1-name":"先手", "player2-name":"后手", "health-label":"生命值", "total-dice":"总骰子数", "attack-dice":"攻击骰子", "defense-dice":"防御骰子", "status-title":"状态效果", "attack-btn":"发起攻击", "defend-btn":"进行防御", "special-dice":"变量骰子", "reroll-btn":"重掷选中骰子", "end-turn":"结束回合", "dice-area":"骰子区域", "game-log-title":"游戏日志", "new-game":"新的游戏", "basic-rules-title":"基本规则", "status-rules-title":"状态解释", "settings-title":"设置", "dark-mode-label":"深色模式", "language-label":"语言", "close-btn":"关闭", "player1-actions":"先手操作","player2-actions":"后手操作", "rule1":"双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。","rule2":"共有12种角色，每种有不同技能和属性。","rule3":"攻击值 = 攻击选中骰子点数 + 力量层数","rule4":"防御值 = 防御选中骰子点数 + 坚固层数","rule5":"造成伤害值 = (攻击值 - 防御方防御值) * 其它效果","rule6":"变量骰子可在任意时间使用，提供特殊效果。","font-size-label":"字体大小","font-small":"A-","font-large":"A+" },
+    en: { "game-title":"Galaxy Stay / Slay Party", "game-subtitle":"“Stay” stands for standing, “Slay” stands for power – a pun that makes you grin.", "game-desc":"Choose character, roll dice, select attack/defense dice, then end turn!", "player1-name":"First Player", "player2-name":"Second Player", "health-label":"HP", "total-dice":"Total Dice", "attack-dice":"Attack Dice", "defense-dice":"Defense Dice", "status-title":"Status Effects", "attack-btn":"Attack", "defend-btn":"Defend", "special-dice":"Special Dice", "reroll-btn":"Reroll", "end-turn":"End Turn", "dice-area":"Dice Area", "game-log-title":"Game Log", "new-game":"New Game", "basic-rules-title":"Basic Rules", "status-rules-title":"Status Glossary", "settings-title":"Settings", "dark-mode-label":"Dark Mode", "language-label":"Language", "close-btn":"Close", "player1-actions":"First Player Action","player2-actions":"Second Player Action", "rule1":"Players take turns attacking/defending, choose attack or defense dice each turn.","rule2":"12 characters with unique skills and stats.","rule3":"Attack = selected dice sum + Power stacks","rule4":"Defense = selected dice sum + Armor stacks","rule5":"Damage = (Attack - Defense) * other effects","rule6":"Special dice can be used anytime for unique effects.","font-size-label":"Font Size","font-small":"A-","font-large":"A+" }
+  };
+  function applyLanguage(lang){ let texts=i18nMap[lang]; document.querySelectorAll('[data-i18n]').forEach(el=>{ let key=el.getAttribute('data-i18n'); if(texts[key]){ if(el.tagName==='INPUT'||el.tagName==='TEXTAREA') el.placeholder=texts[key]; else el.innerText=texts[key]; } }); localStorage.setItem('gameLang',lang); }
+  function initLanguage(){ let saved=localStorage.getItem('gameLang')||'zh'; document.getElementById('languageSelect').value=saved; applyLanguage(saved); }
+  function initTheme(){ let isDark=localStorage.getItem('darkMode')==='true'; if(isDark) document.body.classList.add('dark-mode'); document.getElementById('darkModeToggle').checked=isDark; }
+  function initFontSize() { const slider = document.getElementById('fontSizeSlider'); const valueSpan = document.getElementById('fontSizeValue'); const saved = localStorage.getItem('gameFontSize'); let fontSize = saved ? parseInt(saved) : 16; if (isNaN(fontSize)) fontSize = 16; document.body.style.fontSize = fontSize + 'px'; if (slider) slider.value = fontSize; if (valueSpan) valueSpan.innerText = fontSize + 'px'; if (slider) slider.addEventListener('input', (e) => { let val = parseInt(e.target.value); document.body.style.fontSize = val + 'px'; if (valueSpan) valueSpan.innerText = val + 'px'; localStorage.setItem('gameFontSize', val); }); }
+  
+  function bindEvents(){
+    dom.p1.attack.onclick=()=>startAttack(1); dom.p1.defend.onclick=()=>startDefense(1); dom.p1.special.onclick=()=>showSpecialModal(1); dom.p1.reroll.onclick=()=>rerollSelected(1); dom.p1.endTurn.onclick=()=>endTurn(1);
+    dom.p2.attack.onclick=()=>startAttack(2); dom.p2.defend.onclick=()=>startDefense(2); dom.p2.special.onclick=()=>showSpecialModal(2); dom.p2.reroll.onclick=()=>rerollSelected(2); dom.p2.endTurn.onclick=()=>endTurn(2);
+    get('confirm-btn').onclick=confirmChar; get('cancel-special').onclick=()=>get('special-dice-modal').style.display='none'; get('use-special').onclick=useSpecialDice;
+    get('new-game-btn').onclick=()=>{ if(game.phase==='playing' && !confirm('游戏进行中，重置会丢失进度，确定吗？')) return; resetGame(); setTimeout(renderConsolePanel,100); };
+    get('close-modal-btn').onclick=()=>get('character-modal').style.display='none';
+    document.getElementById('hiddenConsoleHotspot').onclick=()=>{ refreshConsoleValues(); renderConsolePanel(); get('console-modal').style.display='flex'; };
+    get('close-console-modal').onclick=()=>get('console-modal').style.display='none'; get('closeConsoleBtn').onclick=()=>get('console-modal').style.display='none'; get('consoleSwitchCourseBtn').onclick=()=>window.adminSwitchCourse();
+    get('console-modal').addEventListener('click',e=>{ if(e.target===get('console-modal')) get('console-modal').style.display='none'; });
+    const settingsBtn=document.getElementById('settingsGearBtn'); const settingsModal=document.getElementById('settings-modal'); const closeSettingsBtn=document.getElementById('close-settings-btn'); const settingsCloseBtn=document.getElementById('settings-close-btn'); const darkToggle=document.getElementById('darkModeToggle'); const langSelect=document.getElementById('languageSelect');
+    settingsBtn.onclick=()=>settingsModal.style.display='flex'; const closeModal=()=>settingsModal.style.display='none'; closeSettingsBtn.onclick=closeModal; settingsCloseBtn.onclick=closeModal; settingsModal.addEventListener('click',(e)=>{ if(e.target===settingsModal) closeModal(); });
+    darkToggle.addEventListener('change',()=>{ if(darkToggle.checked) document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode'); localStorage.setItem('darkMode',darkToggle.checked); });
+    langSelect.addEventListener('change',()=>{ applyLanguage(langSelect.value); });
+  }
+  
+  resetGame(); bindEvents(); initTheme(); initLanguage(); initFontSize(); setTimeout(()=>renderConsolePanel(),200);
+})();
+</script>
+</body>
+</html>
