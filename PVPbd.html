@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   
-  <!-- 1. 标题优化：双人对战骰子游戏 -->
-  <title>银河站立党 - 双人对战骰子游戏</title>
+  <!-- 标题优化：双人对战骰子游戏 -->
+  <title>银河站立党 -本地双人对战骰子游戏</title>
   
-  <!-- 2. 添加 favicon (骰子风格 SVG 图标) -->
+  <!-- 添加 favicon (骰子风格 SVG 图标) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%233498db' rx='20'/%3E%3Ccircle cx='30' cy='30' r='8' fill='white'/%3E%3Ccircle cx='70' cy='70' r='8' fill='white'/%3E%3Ccircle cx='70' cy='30' r='8' fill='white'/%3E%3Ccircle cx='30' cy='70' r='8' fill='white'/%3E%3C/svg%3E">
   
-  <!-- 3. SEO & 社交分享 meta 标签 -->
+  <!-- SEO & 社交分享 meta 标签 -->
   <meta name="description" content="一款双人对战策略骰子游戏，12种角色，课程系统，状态效果丰富。和朋友来一场骰子对决！">
   <meta property="og:title" content="银河站立党 - 双人对战骰子游戏">
   <meta property="og:description" content="一款双人对战策略骰子游戏，12种角色，课程系统，状态效果丰富。和朋友来一场骰子对决！">
@@ -20,7 +20,7 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI','Microsoft YaHei',sans-serif; }
     body { background:#f5f5f5; color:#333; line-height:1.6; margin:0 auto; padding:10px; max-width:100%; width:100vw; overflow-x:hidden; transition:background 0.2s, color 0.2s; font-size:16px; }
-    /* 深色模式 - 仅覆盖颜色，保留原有圆角/阴影/卡片样式 */
+    /* 深色模式 */
     body.dark-mode { background:#1e2a3a; color:#e2e8f0; }
     body.dark-mode .player-section, body.dark-mode .dice-panel, body.dark-mode .log-panel { background:#0f172a; border-color:#334155; }
     body.dark-mode .stat-box { background:#1e293b; border-color:#334155; }
@@ -52,8 +52,10 @@
     body.dark-mode .settings-gear { background:#0f172a; color:#facc15; box-shadow:0 2px 8px rgba(0,0,0,0.5); }
     body.dark-mode select { background:#0f172a; color:#e2e8f0; border-color:#475569; }
     body.dark-mode .setting-row { border-bottom-color:#334155; }
+    body.dark-mode .home-button { background:#0f172a; color:#facc15; box-shadow:0 2px 8px rgba(0,0,0,0.5); }
+    body.dark-mode .home-button:hover { background:#1e293b; }
 
-    /* 深色模式标题颜色修复 + 说明文字可读性提升 */
+    /* 深色模式标题颜色修复 */
     body.dark-mode .panel-title,
     body.dark-mode .action-title,
     body.dark-mode .status-title,
@@ -73,7 +75,7 @@
         border-color: #475569;
     }
 
-    /* 原始美观控制台样式 */
+    /* 控制台样式 */
     #console-modal.modal-overlay { background:rgba(240,245,250,0.85); backdrop-filter:blur(4px); }
     body.dark-mode #console-modal.modal-overlay { background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); }
     #console-modal .modal-content { background:#ffffff; border-radius:20px; box-shadow:0 12px 28px rgba(0,0,0,0.1); border:1px solid #e2e8f0; padding:20px; }
@@ -192,12 +194,14 @@
     .log-buttons { margin-top:15px; text-align:center; }
     #close-modal-btn { cursor:pointer; font-size:1.8rem; line-height:1; } #close-modal-btn:hover { color:#e74c3c; }
     .hidden-console-hotspot { position:fixed; bottom:0; right:0; width:60px; height:60px; background:transparent; cursor:pointer; z-index:999; }
-    /* 设置按钮样式 */
     .settings-gear { position: absolute; top: 12px; right: 20px; background: rgba(255,255,240,0.9); border: none; font-size: 28px; cursor: pointer; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s; z-index: 10; }
     .settings-gear:hover { transform: rotate(30deg); background: white; }
+    .home-button { position: absolute; top: 12px; left: 20px; background: rgba(255,255,240,0.9); border: none; font-size: 24px; cursor: pointer; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.2s, background 0.2s; z-index: 10; text-decoration: none; color: #2c3e50; }
+    .home-button:hover { transform: scale(1.05); background: white; }
+    body.dark-mode .home-button { background: #0f172a; color: #facc15; }
+    body.dark-mode .home-button:hover { background: #1e293b; }
     .setting-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
     .setting-label { font-weight: bold; font-size: 1.1rem; }
-    /* 字体滑动条样式 */
     .font-slider-row { justify-content: space-between; }
     .font-slider-row .font-value { background: #f1f5f9; padding: 2px 8px; border-radius: 20px; min-width: 45px; text-align: center; border:1px solid #cbd5e1; }
     .toggle-switch { position: relative; display: inline-block; width: 52px; height: 26px; }
@@ -211,6 +215,7 @@
 </head>
 <body>
 <div class="header">
+  <a href="index.html" class="home-button" title="返回主页">🏠</a>
   <h1 data-i18n="game-title">银河站立党</h1>
   <h6 data-i18n="game-subtitle">站立与战力谐音，令人忍俊不禁</h6>
   <p class="subtitle" data-i18n="game-desc">选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！</p>
@@ -292,7 +297,7 @@
   </div>
 </div>
 
-<!-- 设置模态框 (新增字体滑动条) -->
+<!-- 设置模态框 -->
 <div class="modal-overlay" id="settings-modal" style="display:none;">
   <div class="modal-content" style="max-width:450px;">
     <div class="modal-title"><span data-i18n="settings-title">设置</span><span id="close-settings-btn" style="cursor:pointer; font-size:1.8rem;">&times;</span></div>
@@ -310,7 +315,6 @@
         <option value="en">English</option>
       </select>
     </div>
-    <!-- 字体大小调节滑动条 -->
     <div class="setting-row font-slider-row">
       <span class="setting-label" data-i18n="font-size-label">字体大小</span>
       <div style="display:flex; align-items:center; gap:10px;">
@@ -346,7 +350,6 @@
 
 <script>
 (function(){
-  // ======================= 常量提取 =======================
   const STATUS = {
     POISON: '你已中毒！',
     DUDU: '我下的毒',
@@ -358,19 +361,18 @@
     STRONG_PLAN: '强基计划'
   };
 
-  // ======================= 集中配置 (基于5.4.0完整版) =======================
   const GAME_CONFIG = {
     characters: {
       1:{ id:1, name:'烬城勇者', maxHealth:32, totalDice:5, attackDice:3, defenseDice:2, effect:'三角猛攻：攻击时三个点数相同可额外攻击一次，并获得“菜就多练”并力量+3（每回合限一次）' },
-      2:{ id:2, name:'魔女', maxHealth:23, totalDice:5, attackDice:4, defenseDice:2, effect:'双月加持：造成伤害时若攻击骰子全为偶数，伤害*2' },
-      3:{ id:3, name:'宗师', maxHealth:28, totalDice:6, attackDice:4, defenseDice:1, effect:'贯甲一击：若攻击时有至少2个骰子为4点，无视对方防御值' },
-      4:{ id:4, name:'猎人', maxHealth:22, totalDice:4, attackDice:3, defenseDice:3, effect:'以守为攻：若防御时总点数大于敌方攻击点数，则造成差值伤害；否则反击防御点数的1/3（至少1点）' },
+      2:{ id:2, name:'魔女', maxHealth:23, totalDice:5, attackDice:4, defenseDice:2, effect:'双月加持：攻击时若攻击骰子全为偶数，造成伤害*2' },
+      3:{ id:3, name:'宗师', maxHealth:28, totalDice:6, attackDice:4, defenseDice:1, effect:'贯甲一击：攻击时有至少2个骰子为4点，无视对方防御值' },
+      4:{ id:4, name:'猎人', maxHealth:22, totalDice:4, attackDice:3, defenseDice:3, effect:'以守为攻：防御时总点数大于敌方攻击点数，则造成差值伤害；否则反击防御点数的1/3（至少1点）' },
       5:{ id:5, name:'毒师', maxHealth:26, totalDice:5, attackDice:3, defenseDice:3, effect:'蚀骨奇毒：攻击时每有一个奇数骰子，攻击结束后挂一层中毒；若全为偶数，则立即施加1层“我下的毒”' },
-      6:{ id:6, name:'幸运儿', maxHealth:28, totalDice:6, attackDice:3, defenseDice:2, effect:'虹彩恩赐：攻击时累计掷出3个6点时，增加一次变量骰子使用次数并回复2点生命' },
+      6:{ id:6, name:'幸运儿', maxHealth:28, totalDice:6, attackDice:3, defenseDice:2, effect:'虹彩恩赐：攻击时累计掷出3个6点，增加一次变量骰子使用次数并回复2点生命' },
       7:{ id:7, name:'战狂', maxHealth:27, totalDice:5, attackDice:4, defenseDice:1, effect:'嗜血凯旋：每次攻击回复攻击值的30%生命' },
       8:{ id:8, name:'角斗士', maxHealth:30, totalDice:4, attackDice:2, defenseDice:2, effect:'斗场裁决：攻击后将力量层数设置为本次攻击值的50%；若选定的骰子点数全为6，则设置为100%并回复5点生命' },
       9:{ id:9, name:'教官', maxHealth:29, totalDice:5, attackDice:3, defenseDice:2, effect:'因势导力：攻击后每有一种不同点数的骰子，攻击后力量+1' },
-      10:{ id:10, name:'北风骑士', maxHealth:28, totalDice:5, attackDice:3, defenseDice:2, effect:'寒风低语：每有一个未被选中的6点，给对手施加一层“可精了”并造成1点伤害' },
+      10:{ id:10, name:'北风骑士', maxHealth:28, totalDice:5, attackDice:3, defenseDice:2, effect:'寒风低语：攻击时每有一个未被选中的6点，给对手施加一层“可精了”并造成1点伤害' },
       11:{ id:11, name:'赌徒', maxHealth:30, totalDice:4, attackDice:3, defenseDice:2, effect:'生死豪赌：骰子变为8面骰；攻击时选中的骰子会变成除本次攻击选中的点数种类以外的随机点数' },
       12:{ id:12, name:'百变怪', maxHealth:0, totalDice:0, attackDice:0, defenseDice:0, effect:'随机扮演一位其他角色，确认后变为该角色' }
     },
@@ -389,20 +391,20 @@
     specialEffects: {
       fixed:{ title:'倒霉蛋', desc:'增加一次重掷次数（上限2次）', exec:(p)=> { if(p.maxRerolls<2) p.maxRerolls++; else addLog('重掷次数已达上限2','system'); return true; } },
       heal:{ title:'阴阳变转', desc:'解除所有负面效果各一层，并回复6点生命值', exec:(p)=> { [STATUS.POISON,STATUS.WEAK,STATUS.KEJING,STATUS.DUDU].forEach(e=>removeStatus(p,e,1)); p.health=Math.min(p.maxHealth,p.health+6); return true; } },
-      poison:{ title:'水煮黑背鲈', desc:'给对手施加4层中毒效果（每层1伤害）', exec:(p,opp)=> { addStatus(opp,STATUS.POISON,4); return true; } },
+      poison:{ title:'水煮黑背鲈', desc:'给对手施加3层中毒效果（每层1伤害）', exec:(p,opp)=> { addStatus(opp,STATUS.POISON,3); return true; } },
       hard_armor:{ title:'很硬的甲', desc:'下回合受伤减少25%（包括dot），获得1层坚固', exec:(p)=> { p.armor+=1; addStatus(p,STATUS.HARD_ARMOR,1); return true; } },
       laststand:{ title:'藏一手', desc:'下次受到致命伤害时保留1点生命值（不防dot），但是触发后使下次伤害减30%（每局限用2次）', exec:(p)=> { if(p.lastStandCount<2){ p.lastStandCount++; addStatus(p,STATUS.LAST_STAND,1); return true; } else addLog('藏一手次数已达上限2次','system'); return false; } },
       empower:{ title:'力了', desc:'立即获得2层力量，并获得1层666（下次额外投掷初始6点的骰子，可叠加）', exec:(p)=> { p.power+=2; p.fixedSixStacks+=1; return true; } }
     }
   };
 
-  // ========== 角色技能函数映射 (完整) ==========
-  function extraAttackSkill(dice,p){ if(dice.length<3) return{}; let freq={}; dice.forEach(v=>freq[v]=(freq[v]||0)+1); if(Object.values(freq).some(v=>v>=3) && p.extraAttacksRemaining>0){ p.extraAttacksRemaining--; addStatus(p,STATUS.CAI_DUO,1); p.power+=3; return {extraAttack:true,desc:'三角猛攻触发！力量+3，并获得菜就多练'}; } return{}; }
+  // 技能函数（保持完整）
+  function extraAttackSkill(dice,p){ if(dice.length<3) return{}; let freq={}; dice.forEach(v=>freq[v]=(freq[v]||0)+1); if(Object.values(freq).some(v=>v>=3) && p.extraAttacksRemaining>0){ p.extraAttacksRemaining--; addStatus(p,STATUS.CAI_DUO,1); p.power+=3; return {extraAttack:true}; } return{}; }
   function allEvenSkill(dice){ return {allEven:dice.length>0 && dice.every(v=>v%2===0)}; }
   function ignoreDefSkill(dice){ return {ignoreDefense:dice.filter(v=>v===4).length>=2}; }
   function counterSkill(dice,isDef,atkSum){ if(!isDef)return{}; let s=dice.reduce((a,b)=>a+b,0); return {counter:s>atkSum ? s-atkSum : Math.max(1,Math.floor(s/3))}; }
   function poisonSkill(dice){ if(dice.length===0)return{}; return dice.every(v=>v%2===0) ? {appliedDudoku:1} : {poisonStacks:dice.filter(v=>v%2===1).length}; }
-  function luckySkill(dice,p){ let six=dice.filter(v=>v===6).length; if(six){ p.sixCount+=six; if(p.sixCount>=3){ p.specialDiceUses++; p.health=Math.min(p.maxHealth,p.health+2); p.sixCount-=3; return {triggered:true,desc:'虹彩恩赐进度:'+p.sixCount+'/3'}; } } return{}; }
+  function luckySkill(dice,p){ let six=dice.filter(v=>v===6).length; if(six){ p.sixCount+=six; if(p.sixCount>=3){ p.specialDiceUses++; p.health=Math.min(p.maxHealth,p.health+2); p.sixCount-=3; } } return{}; }
   function lifeStealSkill(dice){ return {lifesteal:true,sum:dice.reduce((a,b)=>a+b,0)}; }
   function powerGainSkill(dice){ let u=new Set(dice).size; return u?{powerGain:u}:{}; }
   function windSkill(dice,p,extra){ if(!extra||!extra.allDice) return{}; let cnt=extra.allDice.filter((_,i)=>!extra.selectedIndices.includes(i) && extra.allDice[i]===6).length; return cnt?{unselectedSix:cnt, damagePerSix:1}:{}; }
@@ -421,12 +423,10 @@
     12: () => ({})
   };
 
-  // ========== 状态管理辅助 ==========
   function getStatus(p, name){ return p.statusEffects[name] || 0; }
   function setStatus(p,name,val){ if(val<=0) delete p.statusEffects[name]; else p.statusEffects[name]=val; }
   function addStatus(p,name,delta=1){ let cur=getStatus(p,name); setStatus(p,name,cur+delta); }
   function removeStatus(p,name,delta=1){ let cur=getStatus(p,name); setStatus(p,name,Math.max(0,cur-delta)); }
-
   function getMaxSelectableDice(player, actionType) {
     let base = (actionType === 'attack') ? player.attackDice : player.defenseDice;
     if(getStatus(player, STATUS.CAI_DUO) > 0 && actionType === 'attack') base++;
@@ -434,7 +434,6 @@
     return base;
   }
 
-  // ========== 全局状态 ==========
   let game = {
     phase: 'idle', turn: 1, currentPlayer: 1, subState: 'idle', currentAction: null,
     waitingForDefense: false, currentAttackData: null,
@@ -451,11 +450,12 @@
   function addLog(msg,type){ let e=document.createElement('div'); e.className='log-entry '+(type||'system'); e.textContent='['+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+'] '+msg; get('game-log').appendChild(e); e.scrollIntoView({behavior:'smooth',block:'nearest'}); }
   
   function initPlayer(pn,name){
-    players[pn]={ name, num:pn, health:99, maxHealth:99, totalDice:9, attackDice:9, defenseDice:9, character:{id:1,name:'火花',effect:'真可爱<br>看什么看'}, specialDiceUses:2, statusEffects:{}, lastStandCount:0, power:0, armor:0, sixCount:0, extraAttack:false, fixedSixStacks:0, extraSixCount:0, extraAttacksRemaining:0, maxRerolls:1, rerollsUsedThisTurn:0, extraPoisonRemoveOnDefense:0 };
+    players[pn]={ name, num:pn, health:99, maxHealth:99, totalDice:9, attackDice:9, defenseDice:9, character:{id:1,name:'火花',effect:'和火花一起<br>狂欢到世界尽头'}, specialDiceUses:2, statusEffects:{}, lastStandCount:0, power:0, armor:0, sixCount:0, extraAttack:false, fixedSixStacks:0, extraSixCount:0, extraAttacksRemaining:0, maxRerolls:1, rerollsUsedThisTurn:0, extraPoisonRemoveOnDefense:0 };
   }
   
   function updatePlayerUI(pn){
     let p=players[pn];
+    if(!p) return; // 防御性编程
     get('player'+pn+'-health').innerHTML=p.health+'/'+p.maxHealth;
     get('player'+pn+'-health-bar').style.width=(p.health/p.maxHealth)*100+'%';
     let da=getMaxSelectableDice(p,'attack');
@@ -626,23 +626,47 @@
   
   function showSpecialModal(pn){ if(game.phase!=='playing' || players[pn].specialDiceUses<=0) return; window._curSpecialPlayer=pn; let container=document.getElementById('special-dice-options-container'); container.innerHTML=''; for(let [key,cfg] of Object.entries(GAME_CONFIG.specialEffects)){ let div=document.createElement('div'); div.className='special-option'; div.dataset.effect=key; div.innerHTML=`<div class="special-option-title">${cfg.title}</div><div class="special-option-desc">${cfg.desc}</div>`; div.onclick=()=>{ document.querySelectorAll('#special-dice-options-container .special-option').forEach(x=>x.classList.remove('selected')); div.classList.add('selected'); }; container.appendChild(div); } get('special-dice-remaining').innerText=` (剩余次数: ${players[pn].specialDiceUses})`; get('special-dice-modal').style.display='flex'; }
   
+
   function useSpecialDice(){
-    let opt=document.querySelector('#special-dice-options-container .special-option.selected');
-    if(!opt){ alert('请选择一个效果'); return; }
-    let pn=window._curSpecialPlayer, p=players[pn], opp=players[pn===1?2:1];
-    if(p.specialDiceUses<=0) return;
-    let key=opt.dataset.effect, cfg=GAME_CONFIG.specialEffects[key];
-    let success=false;
-    if(key==='poison') success=cfg.exec(p,opp);
-    else success=cfg.exec(p,opp);
-    if(success){
+    let opt = document.querySelector('#special-dice-options-container .special-option.selected');
+    if (!opt) {
+      alert('请选择一个效果');
+      document.getElementById('special-dice-modal').style.display = 'none';
+      return;
+    }
+    let pn = window._curSpecialPlayer;
+    if (pn === undefined || !players[pn]) {
+      console.error('无效玩家编号', pn);
+      document.getElementById('special-dice-modal').style.display = 'none';
+      return;
+    }
+    let p = players[pn];
+    let opp = players[pn === 1 ? 2 : 1];
+    if (p.specialDiceUses <= 0) {
+      document.getElementById('special-dice-modal').style.display = 'none';
+      return;
+    }
+    let key = opt.dataset.effect;
+    let cfg = GAME_CONFIG.specialEffects[key];
+    if (!cfg) {
+      alert('未知效果');
+      document.getElementById('special-dice-modal').style.display = 'none';
+      return;
+    }
+    let success = false;
+    try {
+      success = cfg.exec(p, opp);
+    } catch (err) {
+      console.error('变量骰子执行出错', err);
+    }
+    if (success) {
       p.specialDiceUses--;
-      addLog(p.name+'使用了变量骰子:'+cfg.title,'effect');
-      updatePlayerUI(pn);
-      updatePlayerUI(opp);
+      addLog(p.name + '使用了变量骰子:' + cfg.title, 'effect');
+      updatePlayerUI(pn);      // 传递数字编号
+      updatePlayerUI(opp.num); // 传递数字编号
       updateButtonStates();
     }
-    get('special-dice-modal').style.display='none';
+    document.getElementById('special-dice-modal').style.display = 'none';
   }
   
   function generateCardOptions(){ let c=get('card-options-container'); c.innerHTML=''; for(let i=1;i<=12;i++){ let ch=GAME_CONFIG.characters[i]; let d=document.createElement('div'); d.className='card-option'; d.dataset.cardId=i; if(i===12) d.innerHTML='<div class="card-name" style="color:#9b59b6;">百变怪</div><div class="card-stats">属性随机</div><div class="card-effect">随机扮演一位其他角色</div>'; else d.innerHTML=`<div class="card-name" style="color:${selectingPlayer===1?'#c0392b':'#3498db'};">${ch.name}</div><div class="card-stats">生命:${ch.maxHealth} | 总骰:${ch.totalDice} | 攻:${ch.attackDice} | 防:${ch.defenseDice}</div><div class="card-effect">${ch.effect}</div>`; d.onclick=function(){ document.querySelectorAll('.card-option').forEach(o=>o.classList.remove('selected')); this.classList.add('selected'); selectedCardId=parseInt(this.dataset.cardId); }; c.appendChild(d); } c.querySelector('[data-card-id="12"]').classList.add('selected'); selectedCardId=12; }
@@ -654,7 +678,6 @@
   window.adminMod=function(pn,attr,delta){ if(game.phase!=='playing') return; let p=players[pn]; if(attr==='maxHealth'){ let oldMax=p.maxHealth; p.maxHealth=Math.max(1,p.maxHealth+delta); let newMax=p.maxHealth; if(newMax>oldMax) p.health=Math.min(p.maxHealth, p.health+(newMax-oldMax)); else if(newMax<oldMax) p.health=Math.min(p.health, newMax); } else if(attr==='health') p.health=Math.max(1,Math.min(p.maxHealth,p.health+delta)); else p[attr]=Math.max(0,(p[attr]||0)+delta); updatePlayerUI(pn); updateButtonStates(); refreshConsoleValues(); };
   window.adminSwitchCourse=function(){ switchCourse(); refreshConsoleValues(); };
   
-  // ========== 多语言支持 ==========
   const i18nMap = {
     zh: { "game-title":"银河站立党", "game-subtitle":"站立与战力谐音，令人忍俊不禁", "game-desc":"选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！", "player1-name":"先手", "player2-name":"后手", "health-label":"生命值", "total-dice":"总骰子数", "attack-dice":"攻击骰子", "defense-dice":"防御骰子", "status-title":"状态效果", "attack-btn":"发起攻击", "defend-btn":"进行防御", "special-dice":"变量骰子", "reroll-btn":"重掷选中骰子", "end-turn":"结束回合", "dice-area":"骰子区域", "game-log-title":"游戏日志", "new-game":"新的游戏", "basic-rules-title":"基本规则", "status-rules-title":"状态解释", "settings-title":"设置", "dark-mode-label":"深色模式", "language-label":"语言", "close-btn":"关闭", "player1-actions":"先手操作","player2-actions":"后手操作", "rule1":"双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。","rule2":"共有12种角色，每种有不同技能和属性。","rule3":"攻击值 = 攻击选中骰子点数 + 力量层数","rule4":"防御值 = 防御选中骰子点数 + 坚固层数","rule5":"造成伤害值 = (攻击值 - 防御方防御值) * 其它效果","rule6":"变量骰子可在任意时间使用，提供特殊效果。","font-size-label":"字体大小","font-small":"A-","font-large":"A+" },
     en: { "game-title":"Galaxy Stay / Slay Party", "game-subtitle":"“Stay” stands for standing, “Slay” stands for power – a pun that makes you grin.", "game-desc":"Choose character, roll dice, select attack/defense dice, then end turn!", "player1-name":"First Player", "player2-name":"Second Player", "health-label":"HP", "total-dice":"Total Dice", "attack-dice":"Attack Dice", "defense-dice":"Defense Dice", "status-title":"Status Effects", "attack-btn":"Attack", "defend-btn":"Defend", "special-dice":"Special Dice", "reroll-btn":"Reroll", "end-turn":"End Turn", "dice-area":"Dice Area", "game-log-title":"Game Log", "new-game":"New Game", "basic-rules-title":"Basic Rules", "status-rules-title":"Status Glossary", "settings-title":"Settings", "dark-mode-label":"Dark Mode", "language-label":"Language", "close-btn":"Close", "player1-actions":"First Player Action","player2-actions":"Second Player Action", "rule1":"Players take turns attacking/defending, choose attack or defense dice each turn.","rule2":"12 characters with unique skills and stats.","rule3":"Attack = selected dice sum + Power stacks","rule4":"Defense = selected dice sum + Armor stacks","rule5":"Damage = (Attack - Defense) * other effects","rule6":"Special dice can be used anytime for unique effects.","font-size-label":"Font Size","font-small":"A-","font-large":"A+" }

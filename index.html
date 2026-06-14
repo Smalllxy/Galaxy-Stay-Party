@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>银河站立党 · 游戏大厅</title>
+  <title>银河站立党 · 战略大厅</title>
   <style>
     * {
       margin: 0;
@@ -21,7 +21,7 @@
       font-size: 16px;
     }
 
-    /* 深色模式 - 完全复用游戏原有配色体系 */
+    /* 深色模式 - 精准复刻原游戏暗色风格 */
     body.dark-mode {
       background: #1e2a3a;
       color: #e2e8f0;
@@ -73,7 +73,8 @@
       color: #facc15;
     }
 
-    body.dark-mode .instructions-panel li {
+    body.dark-mode .instructions-panel li,
+    body.dark-mode .instructions-panel p {
       color: #cbd5e6;
     }
 
@@ -118,7 +119,7 @@
       background: #334155;
     }
 
-    /* 布局与容器 */
+    /* 主容器 */
     .main-container {
       max-width: 1300px;
       margin: 0 auto;
@@ -192,7 +193,6 @@
       align-items: center;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
 
     .mode-card:hover {
@@ -227,7 +227,6 @@
       font-size: 0.95rem;
       color: #5b6e8c;
       margin-bottom: 20px;
-      line-height: 1.4;
       flex: 1;
     }
 
@@ -243,7 +242,6 @@
       font-weight: 600;
       color: #0b3b2f;
       margin-bottom: 18px;
-      display: inline-block;
     }
 
     .mode-status {
@@ -253,14 +251,8 @@
       padding: 8px 18px;
       font-size: 0.85rem;
       font-weight: 600;
-      transition: 0.2s;
       width: fit-content;
       margin-top: 12px;
-    }
-
-    body.dark-mode .mode-status {
-      background: #1e293b;
-      color: #facc15;
     }
 
     .mode-card.available .mode-status {
@@ -269,12 +261,7 @@
       box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
     }
 
-    .mode-card.available .mode-status:hover {
-      background: #27ae60;
-      transform: scale(1.02);
-    }
-
-    /* 特色亮点区域 (类似原游戏说明卡片) */
+    /* 特色亮点模块 */
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -284,7 +271,6 @@
       padding: 24px;
       margin: 32px 0;
       border: 1px solid #eef2f8;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
     }
 
     .feature-item {
@@ -294,7 +280,6 @@
       background: #f8fafc;
       padding: 16px 20px;
       border-radius: 20px;
-      transition: 0.2s;
     }
 
     body.dark-mode .feature-item {
@@ -310,12 +295,7 @@
       margin-bottom: 4px;
     }
 
-    .feature-text p {
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-
-    /* 规则/说明面板 (复用原有风格) */
+    /* 规则面板 —— 完全符合原著 (状态/规则深度复刻) */
     .instructions-panel {
       background: #f8fafc;
       border-radius: 24px;
@@ -328,35 +308,51 @@
       justify-content: space-between;
     }
 
-    .instructions-panel>div {
+    .instructions-panel > div {
       flex: 1;
-      min-width: 220px;
+      min-width: 260px;
     }
 
     .instructions-panel h3 {
       color: #2c3e50;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
       font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .instructions-panel ul {
-      padding-left: 20px;
-      list-style-type: none;
+      padding-left: 0;
+      list-style: none;
     }
 
     .instructions-panel li {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 0.9rem;
       position: relative;
-      padding-left: 18px;
+      padding-left: 24px;
+      line-height: 1.4;
     }
 
     .instructions-panel li::before {
       content: "🎲";
       position: absolute;
-      left: -4px;
+      left: 0;
       top: 0;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
+    }
+
+    .rule-group {
+      margin-bottom: 20px;
+    }
+
+    .rule-group strong {
+      color: #e67e22;
+    }
+
+    body.dark-mode .rule-group strong {
+      color: #facc15;
     }
 
     .footer-note {
@@ -368,7 +364,74 @@
       padding-top: 24px;
     }
 
-    /* 模态窗与设置 */
+    /* 关注作者按钮专用样式 */
+    .author-section {
+      text-align: center;
+      margin: 28px 0 16px;
+    }
+
+    .author-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffffcc;
+      backdrop-filter: blur(2px);
+      background: linear-gradient(135deg, #ffffff, #f8fafc);
+      padding: 10px 24px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #1e293b;
+      text-decoration: none;
+      border: 1px solid #cbd5e1;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      letter-spacing: 0.3px;
+    }
+
+    body.dark-mode .author-link {
+      background: #1e293b;
+      border-color: #3b82f6;
+      color: #facc15;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .author-link:hover {
+      transform: translateY(-3px);
+      background: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .author-link:hover {
+      background: #2d3a4e;
+      border-color: #facc15;
+      color: #facc15;
+    }
+
+    .author-icon {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    }
+
+    .author-text {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    /* 小分割装饰线（可选）*/
+    .author-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #94a3b8, transparent);
+      margin: 8px auto 0;
+    }
+
+    body.dark-mode .author-divider {
+      background: linear-gradient(90deg, transparent, #facc15, transparent);
+    }
+
+    /* 模态窗口 & 设置 */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -389,14 +452,11 @@
       padding: 28px;
       width: 90%;
       max-width: 480px;
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
-      border: 1px solid #e2e8f0;
     }
 
     .modal-title {
       font-size: 1.6rem;
       font-weight: 700;
-      color: #2c3e50;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -483,7 +543,6 @@
       font-weight: 600;
       min-width: 50px;
       text-align: center;
-      border: 1px solid #cbd5e1;
     }
 
     .btn-confirm {
@@ -514,36 +573,33 @@
       margin-top: 28px;
     }
 
-    /* 响应式 */
     @media (max-width: 680px) {
       body {
         padding: 16px;
       }
-
       h1 {
         font-size: 2.2rem;
       }
-
-      .modes-grid {
-        gap: 20px;
-      }
-
       .mode-title {
         font-size: 1.5rem;
       }
-
       .instructions-panel {
         flex-direction: column;
       }
+      .author-link {
+        padding: 8px 18px;
+        gap: 8px;
+      }
+      .author-icon {
+        font-size: 1.3rem;
+      }
     }
 
-    /* 动画 & 点缀 */
     @keyframes fadeSlideUp {
       from {
         opacity: 0;
         transform: translateY(20px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -553,135 +609,106 @@
     .mode-card {
       animation: fadeSlideUp 0.4s ease-out forwards;
     }
-
-    .mode-card:nth-child(1) {
-      animation-delay: 0.05s;
-    }
-
-    .mode-card:nth-child(2) {
-      animation-delay: 0.1s;
-    }
-
-    .mode-card:nth-child(3) {
-      animation-delay: 0.15s;
-    }
-
-    .mode-card:nth-child(4) {
-      animation-delay: 0.2s;
-    }
-
-    /* 工具提示 */
-    .coming-soon-tooltip {
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
 <div class="main-container">
   <div class="header">
     <h1 data-i18n="home-title">🌌 银河站立党</h1>
-    <p class="subtitle" data-i18n="home-sub">站立与战力谐音 · 骰定乾坤 · 策略对决</p>
+    <p class="subtitle" data-i18n="home-sub">站立与战力谐音，骰子与智谋的银河舞台</p>
     <button class="settings-gear" id="settingsGearBtn" aria-label="设置">⚙️</button>
   </div>
 
-  <!-- 模式选择卡片区 -->
+  <!-- 模式卡片 -->
   <div class="modes-grid">
-    <!-- 1. PVP 经典双人 (现有完整游戏) -->
     <div class="mode-card available" id="pvpModeCard">
       <div class="card-icon">⚔️🎲</div>
       <div class="mode-title" data-i18n="mode-pvp-title">经典对决 · PVP</div>
-      <div class="mode-desc" data-i18n="mode-pvp-desc">本地双人对战，轮流攻防，12种独特角色，技能联动，骰子战术一决高下。</div>
+      <div class="mode-desc" data-i18n="mode-pvp-desc">本地双人对战，12种独特角色，技能联动，攻防心理战，掷出制胜之路。</div>
       <div class="card-badge" data-i18n="badge-ready">✅ 现已开放</div>
       <div class="mode-status" data-i18n="enter-pvp">进入战场 →</div>
     </div>
-
-    <!-- 2. PVE 单人挑战 (开发预告) -->
     <div class="mode-card" id="pveModeCard">
       <div class="card-icon">🤖⚡</div>
       <div class="mode-title" data-i18n="mode-pve-title">单人冒险 · PVE</div>
-      <div class="mode-desc" data-i18n="mode-pve-desc">挑战智能AI，感受渐进难度，解锁剧情章节，磨练你的骰术与决策。</div>
+      <div class="mode-desc" data-i18n="mode-pve-desc">挑战智能AI，关卡章节，梯度难度，淬炼你的骰术与决策。</div>
       <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
       <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
     </div>
-
-    <!-- 3. 2V1 合作模式 (2玩家 vs 强力Boss) -->
     <div class="mode-card" id="coopModeCard">
       <div class="card-icon">👥🛡️</div>
       <div class="mode-title" data-i18n="mode-2v1-title">二对一 · 合作讨伐</div>
-      <div class="mode-desc" data-i18n="mode-2v1-desc">双人携手，共战史诗级首领，技能配合，策略逆转，赢取荣耀奖励。</div>
+      <div class="mode-desc" data-i18n="mode-2v1-desc">双人联手挑战史诗首领，技能配合，卡牌加成，逆转战局。</div>
       <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
       <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
     </div>
-
-    <!-- 4. 联机对战 (在线匹配) -->
     <div class="mode-card" id="onlineModeCard">
       <div class="card-icon">🌍📡</div>
       <div class="mode-title" data-i18n="mode-online-title">联机竞技场 · 在线</div>
-      <div class="mode-desc" data-i18n="mode-online-desc">与全服玩家实时对决，排行榜与赛季奖励，真正的银河王者之争。</div>
+      <div class="mode-desc" data-i18n="mode-online-desc">实时匹配，网络对战，银河王者之争。</div>
       <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
       <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
     </div>
   </div>
 
-  <!-- 特色模块 / 快速亮点 (保持游戏原有风味) -->
+  <!-- 特色亮点 -->
   <div class="feature-grid">
-    <div class="feature-item">
-      <div class="feature-emoji">🎭</div>
-      <div class="feature-text">
-        <h4 data-i18n="feature1-title">12种独特角色</h4>
-        <p data-i18n="feature1-desc">毒师·战狂·赌徒·魔女……每个角色颠覆战局</p>
-      </div>
+    <div class="feature-item"><div class="feature-emoji">🎭</div><div class="feature-text"><h4 data-i18n="feature1-title">12种独特角色</h4><p data-i18n="feature1-desc">烬城勇者·毒师·赌徒·魔女……每位颠覆战局</p></div></div>
+    <div class="feature-item"><div class="feature-emoji">📚</div><div class="feature-text"><h4 data-i18n="feature2-title">动态课程系统</h4><p data-i18n="feature2-desc">体育·化学·历史·物理……每回合课程改变规则</p></div></div>
+    <div class="feature-item"><div class="feature-emoji">🎲</div><div class="feature-text"><h4 data-i18n="feature3-title">变量骰子 & 重掷</h4><p data-i18n="feature3-desc">特殊效果+战术重投，每一掷都充满变数</p></div></div>
+    <div class="feature-item"><div class="feature-emoji">🛡️⚔️</div><div class="feature-text"><h4 data-i18n="feature4-title">攻防博弈</h4><p data-i18n="feature4-desc">力量/坚固/中毒/强基计划，深度策略构筑</p></div></div>
+  </div>
+
+  <!-- 规则&状态面板 -->
+  <div class="instructions-panel" id="rulesPanel">
+    <div>
+      <h3><span data-i18n="basic-rules-title">📜 基本规则</span></h3>
+      <ul data-i18n-list="rules">
+        <li data-i18n="rule1">双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。</li>
+        <li data-i18n="rule2">共有12种角色，每种有不同技能和属性。</li>
+        <li data-i18n="rule3">攻击值 = 攻击选中骰子点数 + 力量层数</li>
+        <li data-i18n="rule4">防御值 = 防御选中骰子点数 + 坚固层数</li>
+        <li data-i18n="rule5">造成伤害值 = (攻击值 - 防御方防御值) × 其它效果</li>
+        <li data-i18n="rule6">变量骰子可在任意时间使用，提供特殊效果。</li>
+      </ul>
     </div>
-    <div class="feature-item">
-      <div class="feature-emoji">📚</div>
-      <div class="feature-text">
-        <h4 data-i18n="feature2-title">动态课程系统</h4>
-        <p data-i18n="feature2-desc">体育、化学、历史……每回合课程改变战场规则</p>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-emoji">🎲</div>
-      <div class="feature-text">
-        <h4 data-i18n="feature3-title">变量骰子 & 重掷</h4>
-        <p data-i18n="feature3-desc">特殊效果+战术重投，每一掷都充满变数</p>
-      </div>
-    </div>
-    <div class="feature-item">
-      <div class="feature-emoji">🛡️⚔️</div>
-      <div class="feature-text">
-        <h4 data-i18n="feature4-title">攻防博弈</h4>
-        <p data-i18n="feature4-desc">力量/坚固/中毒/强基计划 构筑深度策略</p>
+    <div>
+      <h3><span data-i18n="status-rules-title">🌀 状态解释</span></h3>
+      <div class="rule-group" data-i18n-group="status">
+        <ul>
+          <li><strong data-i18n="status-poison-name">你已中毒！</strong> <span data-i18n="status-poison-desc">：防御时每层造成1点伤害，触发后层数-1。若攻击造成伤害，攻击方下次防御中毒后额外解除1层。</span></li>
+          <li><strong data-i18n="status-dudu-name">我下的毒</strong> <span data-i18n="status-dudu-desc">：使中毒伤害×(1+层数)，不会自然衰减。</span></li>
+          <li><strong data-i18n="status-power">力量/坚固</strong> <span data-i18n="status-power-desc">：每层+1点对应攻击/防御值。</span></li>
+          <li><strong data-i18n="status-kejing">可精了</strong> <span data-i18n="status-kejing-desc">：攻击或防御时可选骰子数-1（最低1个），触发后消耗一层。</span></li>
+          <li><strong data-i18n="status-hardarmor">很硬的甲</strong> <span data-i18n="status-hardarmor-desc">：受伤减少25%（包括dot），触发后消失。</span></li>
+          <li><strong data-i18n="status-laststand">藏一手</strong> <span data-i18n="status-laststand-desc">：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。</span></li>
+          <li><strong data-i18n="status-weak">虚弱</strong> <span data-i18n="status-weak-desc">：攻击伤害减30%，触发后消失。</span></li>
+          <li><strong data-i18n="status-666">666</strong> <span data-i18n="status-666-desc">：掷骰时固定获得一个6点（可叠加）。</span></li>
+          <li><strong data-i18n="status-caiduo">菜就多练</strong> <span data-i18n="status-caiduo-desc">：攻击时可选攻击骰子数+1，触发后消失。</span></li>
+          <li><strong data-i18n="status-strongplan">强基计划</strong> <span data-i18n="status-strongplan-desc">：造成伤害提升20%（至少+1），攻击结束后消耗一层。</span></li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <!-- 规则/状态说明（复用原风格） -->
-  <div class="instructions-panel">
-    <div>
-      <h3 data-i18n="basic-rules-title">📜 核心规则</h3>
-      <ul>
-        <li data-i18n="rule-dice">🎲 每回合投掷全部骰子，选择攻击或防御骰子</li>
-        <li data-i18n="rule-attack">⚔️ 攻击值 = 骰子和 + 力量层数</li>
-        <li data-i18n="rule-defense">🛡️ 防御值 = 骰子和 + 坚固层数</li>
-        <li data-i18n="rule-damage">💥 伤害 = (攻击值 - 防御值) × 技能/状态修正</li>
-        <li data-i18n="rule-special">✨ 变量骰子：解毒、回血、增伤、藏一手等奇效</li>
-      </ul>
-    </div>
-    <div>
-      <h3 data-i18n="status-rules-title">🌀 状态详解</h3>
-      <ul>
-        <li><strong>你已中毒！</strong>：防御时每层造成1伤，逐渐衰减</li>
-        <li><strong>我下的毒</strong>：增幅中毒伤害，永不衰减</li>
-        <li><strong>力量/坚固</strong>：每层±1攻/防数值</li>
-        <li><strong>可精了</strong>：可选择骰子数-1</li>
-        <li><strong>很硬的甲</strong>：单次受伤减少25%</li>
-        <li><strong>藏一手</strong>：致命伤锁血1点，每局限2次</li>
-        <li><strong>强基计划</strong>：伤害提升20%</li>
-      </ul>
-    </div>
-  </div>
   <div class="footer-note">
-    <span data-i18n="footer-text">✨ 银河站立党 —— 骰子与智慧的交锋 · 更多模式即将抵达战场 ✨</span>
+    <span data-i18n="footer-text">✨ 银河站立党 —— 站立与战力谐音，令人忍俊不禁 · 更多模式即将抵达战场 ✨</span>
+  </div>
+
+  <!-- ========= 新增关注作者区域（B站主页） ========= -->
+  <div class="author-section">
+    <!-- 优雅点缀线（装饰） -->
+    <div class="author-divider"></div>
+    <a href="https://space.bilibili.com/630895916?spm_id_from=333.1007.0.0" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="author-link" 
+       aria-label="关注作者B站主页">
+      <span class="author-icon">🅱️</span>
+      <span class="author-text" data-i18n="follow-author-btn">关注作者</span>
+      <span style="font-size:0.9rem; transition:transform 0.2s;">↗</span>
+    </a>
+    <div class="author-divider"></div>
   </div>
 </div>
 
@@ -691,114 +718,145 @@
     <div class="modal-title"><span data-i18n="settings-title">设置</span><span id="close-settings-btn" style="cursor:pointer; font-size:1.8rem;">&times;</span></div>
     <div class="setting-row">
       <span class="setting-label" data-i18n="dark-mode-label">深色模式</span>
-      <label class="toggle-switch">
-        <input type="checkbox" id="darkModeToggle">
-        <span class="slider"></span>
-      </label>
+      <label class="toggle-switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
     </div>
     <div class="setting-row">
       <span class="setting-label" data-i18n="language-label">语言 / Language</span>
-      <select id="languageSelect">
-        <option value="zh">简体中文</option>
-        <option value="en">English</option>
-      </select>
+      <select id="languageSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
     </div>
     <div class="setting-row font-slider-row">
       <span class="setting-label" data-i18n="font-size-label">字体大小</span>
-      <div style="display:flex; align-items:center; gap:12px;">
-        <span data-i18n="font-small">A-</span>
-        <input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16" style="width:140px;">
-        <span id="fontSizeValue" class="font-value">16px</span>
-        <span data-i18n="font-large">A+</span>
-      </div>
+      <div style="display:flex; align-items:center; gap:12px;"><span data-i18n="font-small">A-</span><input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16"><span id="fontSizeValue" class="font-value">16px</span><span data-i18n="font-large">A+</span></div>
     </div>
-    <div class="modal-buttons">
-      <button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button>
-    </div>
+    <div class="modal-buttons"><button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button></div>
   </div>
 </div>
 
 <script>
-  (function(){
-    // ----- 多语言映射（与游戏保持一致风格）-----
+  (function() {
+    // ---------- 多语言完整映射（包含规则双关 & 谐音梗 + 新增关注作者按钮）----------
     const i18nMap = {
       zh: {
         "home-title": "🌌 银河站立党",
-        "home-sub": "站立与战力谐音 · 骰定乾坤 · 策略对决",
+        "home-sub": "站立与战力谐音，令人忍俊不禁 · 骰子与智谋的银河舞台",
         "mode-pvp-title": "经典对决 · PVP",
-        "mode-pvp-desc": "本地双人对战，轮流攻防，12种独特角色，技能联动，骰子战术一决高下。",
+        "mode-pvp-desc": "本地双人对战，12种独特角色，技能联动，攻防心理战，掷出制胜之路。",
         "mode-pve-title": "单人冒险 · PVE",
-        "mode-pve-desc": "挑战智能AI，感受渐进难度，解锁剧情章节，磨练你的骰术与决策。",
+        "mode-pve-desc": "挑战智能AI，剧情章节，梯度难度，淬炼你的骰术与决策。",
         "mode-2v1-title": "二对一 · 合作讨伐",
-        "mode-2v1-desc": "双人携手，共战史诗级首领，技能配合，策略逆转，赢取荣耀奖励。",
+        "mode-2v1-desc": "双人联手挑战史诗首领，技能配合，羁绊加成，逆转战局。",
         "mode-online-title": "联机竞技场 · 在线",
-        "mode-online-desc": "与全服玩家实时对决，排行榜与赛季奖励，真正的银河王者之争。",
+        "mode-online-desc": "全球实时匹配，赛季排行榜，银河王者之争。",
         "badge-ready": "✅ 现已开放",
         "badge-dev": "✨ 开发中",
         "soon-status": "即将开放",
         "enter-pvp": "进入战场 →",
         "feature1-title": "12种独特角色",
-        "feature1-desc": "毒师·战狂·赌徒·魔女……每个角色颠覆战局",
+        "feature1-desc": "烬城勇者·毒师·赌徒·魔女……每位颠覆战局",
         "feature2-title": "动态课程系统",
-        "feature2-desc": "体育、化学、历史……每回合课程改变战场规则",
+        "feature2-desc": "体育·化学·历史·物理……每回合课程改变规则",
         "feature3-title": "变量骰子 & 重掷",
         "feature3-desc": "特殊效果+战术重投，每一掷都充满变数",
         "feature4-title": "攻防博弈",
-        "feature4-desc": "力量/坚固/中毒/强基计划 构筑深度策略",
-        "basic-rules-title": "📜 核心规则",
-        "status-rules-title": "🌀 状态详解",
-        "rule-dice": "🎲 每回合投掷全部骰子，选择攻击或防御骰子",
-        "rule-attack": "⚔️ 攻击值 = 骰子和 + 力量层数",
-        "rule-defense": "🛡️ 防御值 = 骰子和 + 坚固层数",
-        "rule-damage": "💥 伤害 = (攻击值 - 防御值) × 技能/状态修正",
-        "rule-special": "✨ 变量骰子：解毒、回血、增伤、藏一手等奇效",
-        "footer-text": "✨ 银河站立党 —— 骰子与智慧的交锋 · 更多模式即将抵达战场 ✨",
+        "feature4-desc": "力量/坚固/中毒/强基计划，深度策略构筑",
+        "basic-rules-title": "📜 基本规则",
+        "status-rules-title": "🌀 状态解释（原著完整版）",
+        "rule1": "双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。",
+        "rule2": "共有12种角色，每种有不同技能和属性。",
+        "rule3": "攻击值 = 攻击选中骰子点数 + 力量层数",
+        "rule4": "防御值 = 防御选中骰子点数 + 坚固层数",
+        "rule5": "造成伤害值 = (攻击值 - 防御方防御值) × 其它效果",
+        "rule6": "变量骰子可在任意时间使用，提供特殊效果。",
+        "status-poison-name": "你已中毒！",
+        "status-poison-desc": "：防御时每层造成1点伤害，触发后层数-1。若攻击造成伤害，攻击方下次防御中毒后额外解除1层。",
+        "status-dudu-name": "我下的毒",
+        "status-dudu-desc": "：使中毒伤害×(1+层数)，不会自然衰减。",
+        "status-power": "力量/坚固",
+        "status-power-desc": "：每层+1点对应攻击/防御值。",
+        "status-kejing": "可精了",
+        "status-kejing-desc": "：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。",
+        "status-hardarmor": "很硬的甲",
+        "status-hardarmor-desc": "：受伤减少25%（包括dot），触发后消失。",
+        "status-laststand": "藏一手",
+        "status-laststand-desc": "：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。",
+        "status-weak": "虚弱",
+        "status-weak-desc": "：攻击伤害减30%，触发后消失。",
+        "status-666": "666",
+        "status-666-desc": "：掷骰时固定获得一个6点（可叠加）。",
+        "status-caiduo": "菜就多练",
+        "status-caiduo-desc": "：攻击时可选攻击骰子数+1，触发后消失。",
+        "status-strongplan": "强基计划",
+        "status-strongplan-desc": "：造成伤害提升20%（至少+1），攻击结束后消耗一层。",
+        "footer-text": "✨ 银河站立党 —— 站立与战力谐音，令人忍俊不禁 · 更多模式即将抵达战场 ✨",
         "settings-title": "设置",
         "dark-mode-label": "深色模式",
         "language-label": "语言",
         "font-size-label": "字体大小",
         "font-small": "A-",
         "font-large": "A+",
-        "close-btn": "关闭"
+        "close-btn": "关闭",
+        "follow-author-btn": "关注作者"
       },
       en: {
         "home-title": "🌌 Galaxy Stay & Slay Party",
-        "home-sub": "Stand & Slay pun · Dice & Tactics Duel",
+        "home-sub": "Stand & Slay – a pun that makes you grin. Dice & wits on the galactic stage.",
         "mode-pvp-title": "Classic Duel · PVP",
-        "mode-pvp-desc": "Local two-player battle, 12 unique characters, skill combos, dice tactics decide victory.",
+        "mode-pvp-desc": "Local two-player battle, 12 unique characters, skill combos, offense/defense mind games.",
         "mode-pve-title": "Solo Adventure · PVE",
-        "mode-pve-desc": "Challenge smart AI, progressive difficulty, unlock story chapters.",
+        "mode-pve-desc": "Challenge smart AI, story chapters, progressive difficulty, sharpen your dice mastery.",
         "mode-2v1-title": "2V1 · Co-op Raid",
-        "mode-2v1-desc": "Team up against epic boss, coordinate skills, strategic reversal.",
+        "mode-2v1-desc": "Team up against epic boss, synergy bonuses, turn the tide.",
         "mode-online-title": "Online Arena",
-        "mode-online-desc": "Real-time PvP worldwide, leaderboards & seasonal rewards.",
+        "mode-online-desc": "Real-time PvP worldwide, seasonal leaderboards, crown the galactic king.",
         "badge-ready": "✅ Available Now",
         "badge-dev": "✨ In Development",
         "soon-status": "Coming Soon",
         "enter-pvp": "Enter Battle →",
         "feature1-title": "12 Unique Characters",
-        "feature1-desc": "Poisoner, Berserker, Gambler... each alters the game.",
+        "feature1-desc": "Ember hero, Poisoner, Gambler, Witch... each flips the game.",
         "feature2-title": "Dynamic Course System",
-        "feature2-desc": "PE, Chemistry, History – courses reshape rules each round.",
+        "feature2-desc": "PE, Chemistry, History, Physics – courses alter rules every round.",
         "feature3-title": "Special Dice & Reroll",
-        "feature3-desc": "Special effects + strategic rerolls, every throw counts.",
+        "feature3-desc": "Unique effects + tactical rerolls, every throw counts.",
         "feature4-title": "Offense & Defense",
-        "feature4-desc": "Power/Armor/Poison/Strong Plan for deep tactics.",
+        "feature4-desc": "Power/Armor/Poison/Strong Plan for deep strategy.",
         "basic-rules-title": "📜 Core Rules",
-        "status-rules-title": "🌀 Status Effects",
-        "rule-dice": "🎲 Roll all dice, choose attack/defense dice.",
-        "rule-attack": "⚔️ Attack = sum of selected dice + Power stacks",
-        "rule-defense": "🛡️ Defense = sum + Armor stacks",
-        "rule-damage": "💥 Damage = (Attack - Defense) × modifiers",
-        "rule-special": "✨ Special dice: heal, poison, last stand, etc.",
-        "footer-text": "✨ Galaxy Stay & Slay Party – Where dice meet wit, more modes inbound ✨",
+        "status-rules-title": "🌀 Status Effects (Original)",
+        "rule1": "Players alternate attack/defense, choose attack or defense dice each turn.",
+        "rule2": "12 characters each with unique skills & stats.",
+        "rule3": "Attack = selected dice sum + Power stacks",
+        "rule4": "Defense = selected dice sum + Armor stacks",
+        "rule5": "Damage = (Attack - Defense) × other modifiers",
+        "rule6": "Special dice can be used anytime for unique effects.",
+        "status-poison-name": "Poisoned!",
+        "status-poison-desc": ": Each stack deals 1 damage when defending, then -1 stack. If attacker dealt damage this turn, attacker removes 1 extra poison layer on their next defense.",
+        "status-dudu-name": "My Special Poison",
+        "status-dudu-desc": ": Poison damage × (1+ stacks), never decays naturally.",
+        "status-power": "Power / Armor",
+        "status-power-desc": ": Each stack adds +1 to attack/defense value.",
+        "status-kejing": "Sly & Sharp",
+        "status-kejing-desc": ": Optional dice count -1 (min 1) when attacking/defending, consumed after use.",
+        "status-hardarmor": "Tough Shell",
+        "status-hardarmor-desc": ": Incoming damage -25% (including DoT), disappears after trigger.",
+        "status-laststand": "Hidden Ace",
+        "status-laststand-desc": ": When taking lethal damage, survive with 1 HP & gain Weakness (2 uses per game).",
+        "status-weak": "Weakness",
+        "status-weak-desc": ": Attack damage -30%, disappears after trigger.",
+        "status-666": "Lucky Six",
+        "status-666-desc": ": Gain a fixed 6 when rolling dice (stacks).",
+        "status-caiduo": "Git Gud",
+        "status-caiduo-desc": ": +1 optional attack dice when attacking, disappears after use.",
+        "status-strongplan": "Strong Foundation",
+        "status-strongplan-desc": ": Damage +20% (min +1), consumed after attack.",
+        "footer-text": "✨ Galaxy Stay & Slay Party – Stand & Slay pun, more modes incoming ✨",
         "settings-title": "Settings",
         "dark-mode-label": "Dark Mode",
         "language-label": "Language",
         "font-size-label": "Font Size",
         "font-small": "A-",
         "font-large": "A+",
-        "close-btn": "Close"
+        "close-btn": "Close",
+        "follow-author-btn": "Follow Author"
       }
     };
 
@@ -819,9 +877,11 @@
       darkModeToggle.checked = isDark;
     }
 
+    // 应用多语言（完全替换规则区域文本，支持动态，保留按钮图标独立）
     function applyLanguage(lang) {
       const texts = i18nMap[lang];
       if (!texts) return;
+      // 普通带 data-i18n 元素更新（注意关注按钮的 .author-text 单独包含文本，不受图标影响）
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (texts[key]) {
@@ -829,6 +889,20 @@
           else el.innerText = texts[key];
         }
       });
+      
+      // 手动处理规则面板中带有独立强标签的子项
+      const statusMappings = [
+        "status-poison-name", "status-poison-desc", "status-dudu-name", "status-dudu-desc",
+        "status-power", "status-power-desc", "status-kejing", "status-kejing-desc",
+        "status-hardarmor", "status-hardarmor-desc", "status-laststand", "status-laststand-desc",
+        "status-weak", "status-weak-desc", "status-666", "status-666-desc",
+        "status-caiduo", "status-caiduo-desc", "status-strongplan", "status-strongplan-desc"
+      ];
+      statusMappings.forEach(key => {
+        const el = document.querySelector(`[data-i18n="${key}"]`);
+        if (el && texts[key]) el.innerText = texts[key];
+      });
+      
       localStorage.setItem('gameLang', lang);
     }
 
@@ -838,6 +912,7 @@
       applyLanguage(saved);
     }
 
+    // 字体调节全局生效
     function initFontSize() {
       const saved = localStorage.getItem('gameFontSize');
       let fontSize = saved ? parseInt(saved) : 16;
@@ -846,30 +921,6 @@
       if (fontSizeSlider) fontSizeSlider.value = fontSize;
       if (fontSizeValueSpan) fontSizeValueSpan.innerText = fontSize + 'px';
     }
-
-    // 设置模态框交互
-    function openSettings() { settingsModal.style.display = 'flex'; }
-    function closeSettings() { settingsModal.style.display = 'none'; }
-    if (settingsGear) settingsGear.onclick = openSettings;
-    if (closeSettingsBtn) closeSettingsBtn.onclick = closeSettings;
-    if (settingsCloseBtn) settingsCloseBtn.onclick = closeSettings;
-    if (settingsModal) settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
-
-    // 深色模式切换
-    if (darkModeToggle) {
-      darkModeToggle.addEventListener('change', () => {
-        if (darkModeToggle.checked) document.body.classList.add('dark-mode');
-        else document.body.classList.remove('dark-mode');
-        localStorage.setItem('darkMode', darkModeToggle.checked);
-      });
-    }
-
-    // 语言切换
-    if (langSelect) {
-      langSelect.addEventListener('change', (e) => applyLanguage(e.target.value));
-    }
-
-    // 字体大小滑动条
     if (fontSizeSlider) {
       fontSizeSlider.addEventListener('input', (e) => {
         const val = parseInt(e.target.value);
@@ -879,44 +930,47 @@
       });
     }
 
-    // ----- 模式卡片交互与未来模式扩展预留 -----
-    // PVP模式跳转到完整游戏文件（需将原游戏保存为 game.html 或同目录下的 pvp.html）
+    // 设置弹窗逻辑
+    function openSettings() { settingsModal.style.display = 'flex'; }
+    function closeSettings() { settingsModal.style.display = 'none'; }
+    if (settingsGear) settingsGear.onclick = openSettings;
+    if (closeSettingsBtn) closeSettingsBtn.onclick = closeSettings;
+    if (settingsCloseBtn) settingsCloseBtn.onclick = closeSettings;
+    if (settingsModal) settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeSettings(); });
+    if (darkModeToggle) darkModeToggle.addEventListener('change', () => {
+      if (darkModeToggle.checked) document.body.classList.add('dark-mode');
+      else document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', darkModeToggle.checked);
+    });
+    if (langSelect) langSelect.addEventListener('change', (e) => applyLanguage(e.target.value));
+
+    // 模式跳转 —— PVP 跳转游戏页面
     const pvpCard = document.getElementById('pvpModeCard');
     if (pvpCard) {
       pvpCard.addEventListener('click', (e) => {
-        // 防止点到内部冒泡干扰，直接跳转
-        // 原游戏完整页面建议命名为 game.html 放在同目录下。
-        // 为了兼容性，弹窗确认并跳转
-        if (confirm('即将进入经典PVP双人对战模式，确保已保存游戏进度？')) {
-          window.location.href = 'PVPbd.html';   // 根据部署实际地址调整，默认指向完整游戏文件
-        }
+        window.location.href = 'game.html';
       });
     }
 
-    // 其他模式开发中提示（预留扩展接口，方便后续接入 PVE / 2v1 / 联机）
+    // 开发中模式温和提示
     const devModes = [
-      { id: 'pveModeCard', modeName: 'PVE 单人冒险' },
-      { id: 'coopModeCard', modeName: '2V1 合作讨伐' },
-      { id: 'onlineModeCard', modeName: '联机竞技场' }
+      { id: 'pveModeCard', name: 'PVE 单人冒险' },
+      { id: 'coopModeCard', name: '2V1 合作讨伐' },
+      { id: 'onlineModeCard', name: '联机竞技场' }
     ];
     devModes.forEach(mode => {
       const el = document.getElementById(mode.id);
       if (el) {
         el.addEventListener('click', (e) => {
           e.stopPropagation();
-          alert(`✨ “${mode.modeName}” 正在紧张开发中！\n后续更新将带来智能AI/合作首领/在线匹配，敬请期待。`);
+          alert(`✨ “${mode.name}” 正在全力开发中！\n未来将带来智能AI / 合作首领 / 全球匹配，敬请期待。`);
         });
       }
     });
 
-    // 额外为PVP卡片增加样式视觉优化
-    // 所有初始化
     initTheme();
     initLanguage();
     initFontSize();
-
-    // 小彩蛋 - 控制台输出未来扩展提示
-    console.log('🎲 银河站立党 | 主页已加载，预留PVE/2V1/Online扩展接口。后续只需接入对应逻辑，模式卡片即可无缝启用。');
   })();
 </script>
 </body>
