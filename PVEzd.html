@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-    <title>银河站立党 · 选择自由版</title>
+    <title>银河站立党 · 冒险战斗</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%233498db' rx='20'/%3E%3Ccircle cx='30' cy='30' r='8' fill='white'/%3E%3Ccircle cx='70' cy='70' r='8' fill='white'/%3E%3Ccircle cx='70' cy='30' r='8' fill='white'/%3E%3Ccircle cx='30' cy='70' r='8' fill='white'/%3E%3C/svg%3E" />
     <style>
-        /* ===== CSS 变量（主题系统） ===== */
+        /* ===== 完整样式 ===== */
         :root {
             --bg-body: #f5f5f5;
             --bg-card: #ffffff;
@@ -47,7 +47,6 @@
             --transition: 0.25s ease;
         }
 
-        /* ===== 深色主题 ===== */
         body.dark-mode {
             --bg-body: #1e2a3a;
             --bg-card: #0f172a;
@@ -84,7 +83,6 @@
             --color-blue: #60a5fa;
         }
 
-        /* ===== 重置 & 全局 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -129,7 +127,6 @@
             transform: none;
         }
 
-        /* ===== 布局 ===== */
         .game-container {
             display: flex;
             flex-direction: column;
@@ -156,7 +153,6 @@
             }
         }
 
-        /* ===== 头部 ===== */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -210,7 +206,6 @@
             background: var(--bg-panel);
         }
 
-        /* ===== 通用面板 ===== */
         .player-section,
         .dice-panel,
         .log-panel {
@@ -231,7 +226,6 @@
             margin-bottom: 16px;
         }
 
-        /* ===== 玩家区域 ===== */
         .player-header {
             display: flex;
             justify-content: space-between;
@@ -427,7 +421,6 @@
             min-height: 22px;
         }
 
-        /* ===== 骰子区域 ===== */
         .dice-display {
             display: flex;
             justify-content: center;
@@ -464,28 +457,30 @@
         .dice.rolling {
             animation: diceShake 0.45s ease-out;
         }
-        .dice.reveal {
-            transition: transform 0.2s;
-        }
         @keyframes diceShake {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            20% {
-                transform: rotate(30deg) scale(1.08);
-            }
-            40% {
-                transform: rotate(-20deg) scale(0.95);
-            }
-            60% {
-                transform: rotate(15deg) scale(1.04);
-            }
-            80% {
-                transform: rotate(-8deg) scale(0.98);
-            }
-            100% {
-                transform: rotate(0deg) scale(1);
-            }
+            0% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(30deg) scale(1.08); }
+            40% { transform: rotate(-20deg) scale(0.95); }
+            60% { transform: rotate(15deg) scale(1.04); }
+            80% { transform: rotate(-8deg) scale(0.98); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        #selection-summary {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: var(--bg-log);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            min-height: 30px;
+            line-height: 1.6;
+            transition: background 0.2s;
+        }
+        #selection-summary strong {
+            color: var(--text-primary);
         }
 
         .result-display {
@@ -504,25 +499,6 @@
             color: var(--text-primary);
         }
 
-        /* ===== 选择摘要 ===== */
-        #selection-summary {
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: var(--bg-log);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            min-height: 30px;
-            line-height: 1.6;
-            transition: background 0.2s;
-        }
-        #selection-summary strong {
-            color: var(--text-primary);
-        }
-
-        /* ===== 日志 ===== */
         .log-content {
             flex: 1;
             overflow-y: auto;
@@ -580,7 +556,6 @@
             color: #fff;
         }
 
-        /* ===== 课程 & 回合 ===== */
         #turn-counter,
         #course-display {
             font-size: 1.1rem;
@@ -595,7 +570,6 @@
             transition: background 0.2s;
         }
 
-        /* ===== 模态框 ===== */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -609,14 +583,8 @@
             animation: modalFade 0.2s ease;
         }
         @keyframes modalFade {
-            from {
-                opacity: 0;
-                transform: scale(0.96);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
         }
         .modal-content {
             background: var(--bg-modal);
@@ -768,7 +736,6 @@
             background: #7f8d8d;
         }
 
-        /* ===== 设置面板 ===== */
         .setting-row {
             display: flex;
             justify-content: space-between;
@@ -815,10 +782,10 @@
             border-radius: 50%;
             transition: transform 0.3s;
         }
-        input:checked+.slider {
+        input:checked + .slider {
             background: var(--bg-toggle-checked);
         }
-        input:checked+.slider::before {
+        input:checked + .slider::before {
             transform: translateX(24px);
         }
         select {
@@ -848,7 +815,6 @@
             border-color: var(--color-primary);
         }
 
-        /* ===== 说明区域（优化阅读） ===== */
         .instructions {
             background: var(--bg-instructions);
             border-radius: var(--radius-sm);
@@ -884,7 +850,6 @@
             margin-bottom: 6px;
         }
 
-        /* ===== 开发者控制台 ===== */
         .hidden-console-hotspot {
             position: fixed;
             bottom: 0;
@@ -965,26 +930,66 @@
             background: var(--border-light);
         }
 
-        /* ===== 工具类 ===== */
-        .hidden {
-            display: none !important;
+        /* ===== PVE 特有样式 ===== */
+        .pve-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex-wrap: wrap;
+            gap: 6px;
         }
-        .text-center {
+        .pve-progress .stage {
+            font-size: 1rem;
+        }
+        .pve-progress .difficulty {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .btn-back-menu {
+            background: var(--color-danger);
+            color: #fff;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-back-menu:hover {
+            background: var(--color-red);
+        }
+
+        .ai-status {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: var(--bg-status);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+        .ai-bonus {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-log);
+            border-radius: var(--radius-sm);
+            padding: 4px 10px;
+            margin-top: 4px;
+            border: 1px solid var(--border-light);
             text-align: center;
         }
-        .flex-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .gap-8 {
-            gap: 8px;
-        }
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .w-full {
-            width: 100%;
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
@@ -993,19 +998,27 @@
     <!-- ===== 头部 ===== -->
     <div class="header">
         <a href="index.html" class="home-button" title="返回主页">🏠</a>
-        <h1>银河站立党</h1>
-        <h6>站立与战力谐音，令人忍俊不禁</h6>
+        <h1>⚔️ 冒险战斗</h1>
+        <h6>击败所有敌人，完成试炼</h6>
         <p class="subtitle">选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！</p>
         <button class="settings-gear" id="settingsGearBtn" aria-label="设置">⚙️</button>
+    </div>
+
+    <!-- ===== PVE 进度条 ===== -->
+    <div class="pve-progress" id="pveProgress">
+        <span class="stage" id="pveStage">第 1 / 3 场</span>
+        <span class="difficulty" id="pveDifficulty">难度：普通</span>
+        <span class="difficulty" id="aiBonusDisplay">AI加成：无</span>
+        <button class="btn-back-menu" id="backToMenuBtn">返回主菜单</button>
     </div>
 
     <!-- ===== 游戏主体 ===== -->
     <div class="game-container">
 
-        <!-- 先手 -->
+        <!-- 玩家区 -->
         <div class="player-section" id="player1-section">
             <div class="player-header">
-                <div class="player-name" id="p1-name">先手</div>
+                <div class="player-name" id="p1-name">勇者</div>
                 <div class="turn-indicator" id="p1-turn">当前回合</div>
             </div>
             <div class="health-container">
@@ -1018,15 +1031,15 @@
                 <div class="stat-box"><div class="stat-label">防御骰</div><div class="stat-value" id="p1-def-dice">99</div></div>
             </div>
             <div class="character-card">
-                <div class="character-name" id="p1-char-name" style="color:var(--color-red);">火花</div>
-                <div class="character-effect" id="p1-char-effect" style="color:var(--color-danger);">真可爱<br />看什么看</div>
+                <div class="character-name" id="p1-char-name" style="color:var(--color-red);">烬城勇者</div>
+                <div class="character-effect" id="p1-char-effect" style="color:var(--color-danger);">技能描述</div>
             </div>
             <div class="status-effects">
                 <div class="status-title">状态效果</div>
                 <div id="p1-status">无</div>
             </div>
             <div class="player-actions">
-                <div class="action-title">先手操作</div>
+                <div class="action-title">你的操作</div>
                 <div class="player-action-buttons">
                     <button class="btn-attack" id="p1-attack">发起攻击</button>
                     <button class="btn-defend" id="p1-defend" disabled>进行防御</button>
@@ -1051,16 +1064,16 @@
             </div>
 
             <div class="log-panel">
-                <div class="panel-title">游戏日志</div>
-                <div class="log-content" id="game-log"><div class="log-entry system">游戏开始！先手请选择角色卡。</div></div>
-                <div class="log-buttons"><button class="new-game-btn" id="new-game-btn">新的游戏</button></div>
+                <div class="panel-title">战斗日志</div>
+                <div class="log-content" id="game-log"><div class="log-entry system">战斗开始！</div></div>
+                <div class="log-buttons"><button class="new-game-btn" id="new-game-btn">重新开始</button></div>
             </div>
         </div>
 
-        <!-- 后手 -->
+        <!-- AI 对手区 -->
         <div class="player-section" id="player2-section">
             <div class="player-header">
-                <div class="player-name" id="p2-name">后手</div>
+                <div class="player-name" id="p2-name">AI 对手</div>
                 <div class="turn-indicator" id="p2-turn">当前回合</div>
             </div>
             <div class="health-container">
@@ -1073,37 +1086,22 @@
                 <div class="stat-box"><div class="stat-label">防御骰</div><div class="stat-value" id="p2-def-dice">99</div></div>
             </div>
             <div class="character-card">
-                <div class="character-name" id="p2-char-name" style="color:var(--color-primary);">哥伦比娅</div>
-                <div class="character-effect" id="p2-char-effect" style="color:var(--color-blue);">哥伦比娅举世无双<br />哥伦比娅聪明绝顶<br />哥伦比娅沉鱼落雁</div>
+                <div class="character-name" id="p2-char-name" style="color:var(--color-primary);">AI角色</div>
+                <div class="character-effect" id="p2-char-effect" style="color:var(--color-blue);">技能描述</div>
             </div>
             <div class="status-effects">
                 <div class="status-title">状态效果</div>
                 <div id="p2-status">无</div>
             </div>
-            <div class="player-actions">
-                <div class="action-title">后手操作</div>
-                <div class="player-action-buttons">
-                    <button class="btn-attack" id="p2-attack" disabled>发起攻击</button>
-                    <button class="btn-defend" id="p2-defend" disabled>进行防御</button>
-                    <button class="btn-special" id="p2-special" disabled>变量骰子 <span class="special-dice-count" id="p2-special-count">2</span></button>
-                    <button class="btn-reroll" id="p2-reroll" disabled>重掷 (0)</button>
-                </div>
-                <button class="btn-end-turn" id="p2-end-turn" disabled>结束回合</button>
-                <div class="dice-selection-info" id="p2-info">请等待</div>
-            </div>
+            <div class="ai-status" id="aiStatus">AI 自动操作中...</div>
+            <div class="ai-bonus" id="aiBonusDetail">AI加成：无</div>
         </div>
     </div>
 
-    <!-- ===== 角色选择模态框 ===== -->
-    <div class="modal-overlay" id="char-modal">
-        <div class="modal-content">
-            <div class="modal-title"><span id="char-modal-title">先手选择角色卡</span><span class="close-btn" id="char-modal-close">&times;</span></div>
-            <div class="card-options" id="card-options"></div>
-            <div class="modal-buttons"><button class="btn-confirm" id="char-confirm">确认选择</button></div>
-        </div>
-    </div>
+    <!-- ===== 规则说明 ===== -->
+    <div class="instructions" id="instructions-area"></div>
 
-    <!-- ===== 特殊骰子模态框 ===== -->
+    <!-- ===== 模态框：特殊骰子 ===== -->
     <div class="modal-overlay hidden" id="special-modal">
         <div class="modal-content">
             <div class="modal-title">选择变量骰子效果 <span id="special-remaining"></span><span class="close-btn" id="special-modal-close">&times;</span></div>
@@ -1111,6 +1109,18 @@
             <div class="modal-buttons">
                 <button class="btn-cancel" id="special-cancel">取消</button>
                 <button class="btn-confirm" id="special-use">使用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 模态框：战斗结果 ===== -->
+    <div class="modal-overlay hidden" id="result-modal">
+        <div class="modal-content">
+            <div class="modal-title" id="result-title">战斗结束</div>
+            <div id="result-body" style="text-align:center;margin:16px 0;"></div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" id="result-continue">继续</button>
+                <button class="btn-confirm" id="result-menu">返回主菜单</button>
             </div>
         </div>
     </div>
@@ -1141,25 +1151,15 @@
         </div>
     </div>
 
-    <!-- ===== 说明区域（规则和状态） ===== -->
-    <div class="instructions" id="instructions-area"></div>
-
     <!-- ===== 控制台热区 ===== -->
     <div class="hidden-console-hotspot" id="console-hotspot" title="开发者控制台"></div>
 
     <script>
-        // ================================================================
-        //  银河站立党 · 最终修复版（含自由选择骰子）
-        //  5.4.10：移除选择数量上限限制，允许任意选中/取消，仅结束回合时校验
-        //  机制：中毒保持原版（一次性结算，只减1层）
-        // ================================================================
-
         (function() {
             'use strict';
 
             // ---------- 安全 DOM 获取 ----------
             const $ = (id) => document.getElementById(id);
-            const qs = (sel, ctx = document) => ctx.querySelector(sel);
 
             // ---------- 常量 ----------
             const STATUS = {
@@ -1488,57 +1488,6 @@
                 },
             };
 
-            // ---------- 游戏状态 ----------
-            function createPlayer(num, name) {
-                return {
-                    num,
-                    name,
-                    health: 99,
-                    maxHealth: 99,
-                    totalDice: 9,
-                    attackDice: 9,
-                    defenseDice: 9,
-                    character: { id: 0, name: '火花', effect: '真可爱<br>看什么看', skill: null },
-                    specialDiceUses: 2,
-                    statusEffects: {},
-                    power: 0,
-                    armor: 0,
-                    _lastStandUsed: 0,
-                    _fixedSixStacks: 0,
-                    _extraSixCount: 0,
-                    _sixCount: 0,
-                    _extraAttacksRemaining: 0,
-                    maxRerolls: 1,
-                    rerollsUsedThisTurn: 0,
-                    _extraPoisonRemove: 0,
-                    _gamblerBuff: 0,
-                    _hasExtraAttack: false,
-                };
-            }
-
-            const G = {
-                phase: 'idle',
-                turn: 1,
-                currentPlayer: 1,
-                subState: 'idle',
-                currentAction: null,
-                waitingForDefense: false,
-                attackData: null,
-                allDice: [],
-                selectedIndices: [],
-                prevCourseIdx: -1,
-                currentCourseIdx: 0,
-                isRerolling: false,
-                _attackerSelection: [],
-                _defenderSelection: [],
-            };
-
-            const players = { 1: null, 2: null };
-            let selectedCards = { 1: false, 2: false };
-            let selectingPlayer = 1;
-            let selectedCardId = CHAR.MIMIC;
-            let _specialTargetPlayer = 1;
-
             // ---------- 工具函数 ----------
             function getStatus(p, key) { return p.statusEffects[key] || 0; }
 
@@ -1588,7 +1537,7 @@
                 const el = $('game-log');
                 if (!el) return;
                 const e = document.createElement('div');
-                e.className = `log-entry ${type}`;
+                e.className = 'log-entry ' + type;
                 const t = new Date();
                 const ts = String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
                 e.textContent = '[' + ts + '] ' + msg;
@@ -1596,13 +1545,103 @@
                 e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
 
+            // ---------- 玩家对象 ----------
+            function createPlayer(num, name, characterData, isAI = false, aiDifficulty = 0) {
+                const p = {
+                    num,
+                    name,
+                    health: characterData.maxHealth,
+                    maxHealth: characterData.maxHealth,
+                    totalDice: characterData.totalDice,
+                    attackDice: characterData.attackDice,
+                    defenseDice: characterData.defenseDice,
+                    character: {
+                        id: characterData.id,
+                        name: characterData.name,
+                        effect: characterData.effect,
+                        skill: characterData.skill,
+                    },
+                    specialDiceUses: 2,
+                    statusEffects: {},
+                    power: 0,
+                    armor: 0,
+                    _lastStandUsed: 0,
+                    _fixedSixStacks: 0,
+                    _extraSixCount: 0,
+                    _sixCount: 0,
+                    _extraAttacksRemaining: characterData.id === CHAR.EMBER_HERO ? 1 : 0,
+                    maxRerolls: 1,
+                    rerollsUsedThisTurn: 0,
+                    _extraPoisonRemove: 0,
+                    _gamblerBuff: 0,
+                    _hasExtraAttack: false,
+                    isAI,
+                    aiDifficulty,
+                    bonusDesc: '',
+                };
+
+                if (isAI && aiDifficulty > 0) {
+                    let parts = [];
+                    let hpBonus = 0;
+                    let powerBonus = 0;
+                    let armorBonus = 0;
+                    let specialBonus = 0;
+
+                    if (aiDifficulty >= 1) { hpBonus += 5; }
+                    if (aiDifficulty >= 2) { powerBonus += 1;
+                        armorBonus += 1; }
+                    if (aiDifficulty >= 3) { hpBonus += 10;
+                        powerBonus += 1;
+                        armorBonus += 1;
+                        specialBonus += 1; }
+
+                    if (hpBonus > 0) parts.push('生命+' + hpBonus);
+                    if (powerBonus > 0) parts.push('力量+' + powerBonus);
+                    if (armorBonus > 0) parts.push('坚固+' + armorBonus);
+                    if (specialBonus > 0) parts.push('变量骰子+' + specialBonus);
+
+                    p.maxHealth += hpBonus;
+                    p.health = p.maxHealth;
+                    p.power += powerBonus;
+                    p.armor += armorBonus;
+                    p.specialDiceUses += specialBonus;
+                    p.bonusDesc = parts.join('，');
+                }
+                return p;
+            }
+
+            // ---------- 游戏状态 ----------
+            const G = {
+                phase: 'idle',
+                turn: 1,
+                currentPlayer: 1,
+                subState: 'idle',
+                currentAction: null,
+                waitingForDefense: false,
+                attackData: null,
+                allDice: [],
+                selectedIndices: [],
+                prevCourseIdx: -1,
+                currentCourseIdx: 0,
+                isRerolling: false,
+                _attackerSelection: [],
+                _defenderSelection: [],
+            };
+
+            const players = { 1: null, 2: null };
+            let _uiCache = { p1: {}, p2: {} };
+            let pveConfig = null;
+            let currentBattle = 1;
+            let totalBattles = 3;
+            let _specialTargetPlayer = 1;
+
             // ---------- 选择摘要 ----------
             function updateSelectionSummary() {
                 const el = $('selection-summary');
                 if (!el) return;
+                const atkName = players[1]?.name || '勇者';
+                const defName = players[2]?.name || 'AI';
                 let html = '';
-                const atkName = players[1]?.name || '先手';
-                const defName = players[2]?.name || '后手';
                 if (G._attackerSelection && G._attackerSelection.length > 0) {
                     html += `<strong>${atkName}</strong> 攻击选：${G._attackerSelection.join('、')}  `;
                 } else {
@@ -1616,7 +1655,28 @@
                 el.innerHTML = html;
             }
 
-            // ---------- 核心游戏逻辑 ----------
+            function updateAIBonusDisplay() {
+                const ai = players[2];
+                if (!ai) return;
+                const detailEl = $('aiBonusDetail');
+                const stageEl = $('aiBonusDisplay');
+                const diffNames = ['练习', '普通', '困难', '噩梦'];
+                const diff = pveConfig ? pveConfig.difficulty : 0;
+
+                if (detailEl) {
+                    detailEl.textContent = ai.bonusDesc ? 'AI 难度加成：' + ai.bonusDesc : 'AI 难度加成：无';
+                }
+                if (stageEl) {
+                    let diffText = diffNames[diff] || '普通';
+                    if (ai.bonusDesc) {
+                        stageEl.textContent = '难度：' + diffText + ' (加成：' + ai.bonusDesc + ')';
+                    } else {
+                        stageEl.textContent = '难度：' + diffText;
+                    }
+                }
+            }
+
+            // ---------- 核心战斗逻辑 ----------
             function switchCourse() {
                 if (G.phase !== 'playing') return;
                 if (G.prevCourseIdx >= 0 && G.prevCourseIdx < COURSES.length) {
@@ -1654,9 +1714,11 @@
                 G.phase = 'ended';
                 log(players[winner].name + ' 获胜！', 'system');
                 const ar = $('action-result');
-                if (ar) ar.innerHTML = `<div style="color:var(--color-danger);font-size:1.3rem;">${players[winner].name} 获胜！</div>`;
+                if (ar) ar.innerHTML =
+                `<div style="color:var(--color-danger);font-size:1.3rem;">${players[winner].name} 获胜！</div>`;
                 disableAllButtons();
                 refreshAllUI();
+                showResult(players[winner], players[winner === 1 ? 2 : 1]);
             }
 
             function switchTurn() {
@@ -1686,8 +1748,13 @@
                 const ar = $('action-result');
                 if (ar) ar.textContent = p.name + ' 的回合，请选择操作';
                 updateButtons();
+
+                if (G.currentPlayer === 2) {
+                    setTimeout(() => aiTakeTurn(), 600);
+                }
             }
 
+            // ---------- 战斗处理 ----------
             function processAttack(selectedDice, attNum) {
                 const att = players[attNum];
                 const def = players[attNum === 1 ? 2 : 1];
@@ -1775,6 +1842,18 @@
 
                 refreshAllUI();
                 updateButtons();
+
+                if (def.isAI && G.phase === 'playing') {
+                    setTimeout(() => {
+                        if (G.waitingForDefense && G.attackData && G.attackData.defNum === 2) {
+                            aiDefend();
+                        }
+                    }, 400);
+                } else {
+                    const ar2 = $('action-result');
+                    if (ar2) ar2.textContent = '点击"进行防御"并选择骰子';
+                    updateButtons();
+                }
             }
 
             function processDefense(selectedDice, defNum) {
@@ -1838,7 +1917,6 @@
                     removeStatus(def, STATUS.HARD_ARMOR, 1);
                 }
 
-                // === 中毒结算（一次性总伤害，只减1层） ===
                 const poisonBefore = getStatus(def, STATUS.POISON);
                 const dudokuBefore = getStatus(def, STATUS.DUDU);
                 if (poisonBefore > 0) {
@@ -1907,6 +1985,9 @@
                     const ar = $('action-result');
                     if (ar) ar.textContent = att.name + ' 获得额外攻击！请攻击';
                     log(att.name + ' 获得额外攻击机会', 'effect');
+                    if (att.isAI) {
+                        setTimeout(() => aiAttack(), 300);
+                    }
                     return;
                 }
 
@@ -1915,68 +1996,363 @@
                 switchTurn();
             }
 
+            // ---------- AI 决策 ----------
+            function computeScore(attacker, selectedValues, allDice, selectedIndices) {
+                const role = attacker.character.name;
+                let sum = selectedValues.reduce((a, b) => a + b, 0);
+                switch (role) {
+                    case '烬城勇者': {
+                        const freq = {};
+                        selectedValues.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                        if (Object.values(freq).some(c => c >= 3)) sum += 100000;
+                        return sum;
+                    }
+                    case '魔女':
+                        return selectedValues.every(v => v % 2 === 0) ? sum + 100000 : sum - selectedValues.filter(v => v % 2 ===
+                            1).length * 100;
+                    case '宗师':
+                        return selectedValues.filter(v => v === 4).length >= 2 ? sum + 100000 : sum + selectedValues.filter(
+                            v => v === 4).length * 50;
+                    case '毒师':
+                        return selectedValues.every(v => v % 2 === 0) ? sum + 100000 : sum + selectedValues.filter(v => v % 2 ===
+                            1).length * 200;
+                    case '幸运儿':
+                        return sum + selectedValues.filter(v => v === 6).length * 1000;
+                    case '角斗士':
+                        return selectedValues.every(v => v === 6) ? sum + 100000 : sum;
+                    case '教官':
+                        return sum + new Set(selectedValues).size * 500;
+                    case '北风骑士': {
+                        const sixCnt = selectedValues.filter(v => v === 6).length;
+                        return sixCnt > 2 ? -100000 : sum - sixCnt * 200;
+                    }
+                    case '赌徒':
+                        return -sum;
+                    default:
+                        return sum;
+                }
+            }
+
+            function selectBestAttackDice(attacker, allDice) {
+                let maxAllowed = attacker.attackDice;
+                if (getStatus(attacker, STATUS.CAI_DUO) > 0) maxAllowed++;
+                if (getStatus(attacker, STATUS.KEJING) > 0) maxAllowed = Math.max(1, maxAllowed - 1);
+                if (allDice.length <= maxAllowed) return allDice.map((_, idx) => idx);
+                let bestIndices = [],
+                    bestScore = -Infinity;
+                const combine = (start, chosen) => {
+                    if (chosen.length === maxAllowed) {
+                        const vals = chosen.map(i => allDice[i]);
+                        const sc = computeScore(attacker, vals, allDice, chosen);
+                        if (sc > bestScore) { bestScore = sc;
+                            bestIndices = [...chosen]; }
+                        return;
+                    }
+                    for (let i = start; i < allDice.length; i++) {
+                        combine(i + 1, [...chosen, i]);
+                    }
+                };
+                combine(0, []);
+                return bestIndices;
+            }
+
+            function aiChooseAttack(attacker) {
+                let allDice = rollDice(attacker.totalDice, attacker);
+                let selectedIdx = selectBestAttackDice(attacker, allDice);
+                let rerollsLeft = attacker.maxRerolls - attacker.rerollsUsedThisTurn;
+                while (rerollsLeft > 0) {
+                    let toReroll = [];
+                    const selectedVals = selectedIdx.map(i => allDice[i]);
+                    const role = attacker.character.name;
+                    if (role === '烬城勇者') {
+                        const freq = {};
+                        selectedVals.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                        const minFreq = Math.min(...Object.values(freq));
+                        const rerollVals = Object.keys(freq).filter(k => freq[k] === minFreq).map(Number);
+                        toReroll.push(...selectedIdx.filter(i => rerollVals.includes(allDice[i])));
+                    } else if (role === '魔女') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] % 2 === 1));
+                    } else if (role === '宗师') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] !== 4));
+                    } else if (role === '毒师') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] % 2 === 1));
+                    } else if (role === '幸运儿') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] !== 6));
+                    } else if (role === '角斗士') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] !== 6));
+                    } else if (role === '教官') {
+                        const unique = new Set();
+                        const dup = [];
+                        for (const idx of selectedIdx) {
+                            if (unique.has(allDice[idx])) dup.push(idx);
+                            else unique.add(allDice[idx]);
+                        }
+                        toReroll.push(...dup);
+                    } else if (role === '北风骑士') {
+                        const sixIndices = selectedIdx.filter(i => allDice[i] === 6);
+                        if (sixIndices.length > 2) toReroll.push(...sixIndices.slice(2));
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] !== 6));
+                    } else if (role === '赌徒') {
+                        toReroll.push(...selectedIdx.filter(i => allDice[i] >= 5));
+                    } else {
+                        toReroll.push(...selectedIdx);
+                    }
+                    if (toReroll.length === 0) break;
+                    for (const idx of toReroll) {
+                        allDice[idx] = Math.floor(Math.random() * (attacker.character.id === CHAR.GAMBLER ? 8 : 6)) + 1;
+                    }
+                    attacker.rerollsUsedThisTurn++;
+                    rerollsLeft--;
+                    selectedIdx = selectBestAttackDice(attacker, allDice);
+                }
+                return { allDice, selectedIndices: selectedIdx, selectedValues: selectedIdx.map(i => allDice[i]) };
+            }
+
+            function aiChooseDefense(defender) {
+                let allDice = rollDice(defender.totalDice, defender);
+                let maxAllowed = defender.defenseDice;
+                if (getStatus(defender, STATUS.KEJING) > 0) maxAllowed = Math.max(1, maxAllowed - 1);
+                const sorted = allDice.map((v, i) => ({ v, i })).sort((a, b) => b.v - a.v).slice(0, maxAllowed);
+                const selectedIdx = sorted.map(item => item.i);
+                return { allDice, selectedIndices: selectedIdx, selectedValues: selectedIdx.map(i => allDice[i]) };
+            }
+
+            function chooseVariableDiceEffect(player, opponent) {
+                const hpPercent = player.health / player.maxHealth;
+                const hasNegative = getStatus(player, STATUS.POISON) > 0 || getStatus(player, STATUS.KEJING) > 0 ||
+                    getStatus(player, STATUS.DUDU) > 0;
+                const hasMyPoison = getStatus(player, STATUS.DUDU) > 0;
+                if (hpPercent < 0.3 && player._lastStandUsed < 2) return 'laststand';
+                if (hasMyPoison && hpPercent < 0.6) return 'heal';
+                if (hasNegative && hpPercent < 0.6) return 'heal';
+                switch (player.character.name) {
+                    case '烬城勇者':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'laststand');
+                    case '魔女':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'hard_armor');
+                    case '宗师':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'laststand');
+                    case '猎人':
+                        return (getStatus(player, STATUS.HARD_ARMOR) === 0) ? 'hard_armor' : 'heal';
+                    case '毒师':
+                        if (getStatus(opponent, STATUS.POISON) < 6) return 'poison';
+                        return (player._lastStandUsed < 2 ? 'laststand' : 'heal');
+                    case '幸运儿':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'heal');
+                    case '战狂':
+                        return (player.specialDiceUses > 0) ? 'empower' : (getStatus(player, STATUS.HARD_ARMOR) === 0 ?
+                            'hard_armor' : (player._lastStandUsed < 2 ? 'laststand' : 'heal'));
+                    case '角斗士':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'laststand');
+                    case '教官':
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'heal');
+                    case '北风骑士':
+                        return (player.specialDiceUses > 0) ? 'empower' : 'heal';
+                    case '赌徒':
+                        if (player.maxRerolls < 2) return 'fixed';
+                        if (player._lastStandUsed < 2) return 'laststand';
+                        return (player.specialDiceUses > 0) ? 'empower' : 'heal';
+                    default:
+                        return (player.maxRerolls < 2) ? 'fixed' : (player.specialDiceUses > 0 ? 'empower' : 'heal');
+                }
+            }
+
+            function useVariableDice(player, opponent, effectKey) {
+                if (!SPECIAL_EFFECTS[effectKey]) return;
+                SPECIAL_EFFECTS[effectKey].exec(player, opponent);
+                player.specialDiceUses--;
+            }
+
+            // ---------- AI 操作 ----------
+            function aiTakeTurn() {
+                if (G.phase !== 'playing' || G.currentPlayer !== 2) return;
+                const ai = players[2];
+                const player = players[1];
+                if (ai.specialDiceUses > 0 && Math.random() < 0.7) {
+                    const eff = chooseVariableDiceEffect(ai, player);
+                    if (eff) {
+                        useVariableDice(ai, player, eff);
+                        log('AI 使用了变量骰子：' + SPECIAL_EFFECTS[eff].title, 'effect');
+                        refreshAllUI();
+                    }
+                }
+                aiAttack();
+            }
+
+            function aiAttack() {
+                if (G.phase !== 'playing' || G.currentPlayer !== 2) return;
+                const ai = players[2];
+                G.currentAction = 'attack';
+                G.subState = 'rolling';
+                G.selectedIndices = [];
+                ai.rerollsUsedThisTurn = 0;
+                updateButtons();
+                log(ai.name + ' 开始攻击...', 'player2');
+                const ar = $('action-result');
+                if (ar) ar.textContent = ai.name + ' 正在掷骰...';
+
+                const attackRes = aiChooseAttack(ai);
+                G.allDice = attackRes.allDice;
+                displayDice(attackRes.allDice);
+                setTimeout(() => {
+                    const sel = attackRes.selectedIndices;
+                    const diceEls = document.querySelectorAll('#dice-result .dice');
+                    diceEls.forEach((el, i) => {
+                        if (sel.includes(i)) el.classList.add('selected');
+                        else el.classList.remove('selected');
+                    });
+                    G._attackerSelection = attackRes.selectedValues.slice();
+                    G._defenderSelection = [];
+                    updateSelectionSummary();
+                    G.selectedIndices = sel;
+                    setTimeout(() => {
+                        if (G.phase === 'playing') {
+                            processAttack(attackRes.selectedValues, 2);
+                        }
+                    }, 400);
+                }, 600);
+            }
+
+            function aiDefend() {
+                if (!G.waitingForDefense || G.attackData.defNum !== 2) return;
+                const ai = players[2];
+                G.currentAction = 'defend';
+                G.subState = 'rolling';
+                G.selectedIndices = [];
+                ai.rerollsUsedThisTurn = 0;
+                updateButtons();
+                log(ai.name + ' 开始防御...', 'player2');
+                const ar = $('action-result');
+                if (ar) ar.textContent = ai.name + ' 正在掷骰...';
+
+                const defRes = aiChooseDefense(ai);
+                G.allDice = defRes.allDice;
+                displayDice(defRes.allDice);
+                setTimeout(() => {
+                    const sel = defRes.selectedIndices;
+                    const diceEls = document.querySelectorAll('#dice-result .dice');
+                    diceEls.forEach((el, i) => {
+                        if (sel.includes(i)) el.classList.add('selected');
+                        else el.classList.remove('selected');
+                    });
+                    G._defenderSelection = defRes.selectedValues.slice();
+                    updateSelectionSummary();
+                    G.selectedIndices = sel;
+                    setTimeout(() => {
+                        if (G.phase === 'playing') {
+                            processDefense(defRes.selectedValues, 2);
+                        }
+                    }, 400);
+                }, 600);
+            }
+
             // ---------- 玩家操作 ----------
             function startAttack(pn) {
-                if (G.phase !== 'playing' || G.currentPlayer !== pn || G.subState !== 'idle') return;
+                if (pn !== 1 || G.phase !== 'playing' || G.currentPlayer !== 1 || G.subState !== 'idle') return;
                 if (G.waitingForDefense) return;
                 G.currentAction = 'attack';
                 G.subState = 'rolling';
                 G.selectedIndices = [];
-                players[pn].rerollsUsedThisTurn = 0;
+                players[1].rerollsUsedThisTurn = 0;
                 updateButtons();
-                log(players[pn].name + ' 开始攻击...', 'player' + pn);
+                log(players[1].name + ' 开始攻击...', 'player1');
                 const ar = $('action-result');
-                if (ar) ar.textContent = players[pn].name + ' 正在掷骰...';
+                if (ar) ar.textContent = players[1].name + ' 正在掷骰...';
 
-                const dice = rollDice(players[pn].totalDice, players[pn]);
+                const dice = rollDice(players[1].totalDice, players[1]);
                 G.allDice = dice;
                 displayDice(dice);
 
                 setTimeout(() => {
                     if (G.phase === 'playing' && G.subState === 'rolling') {
                         G.subState = 'selecting';
+                        const max = getMaxSelectable(players[1], 'attack');
+                        const info = $('p1-info');
+                        if (info) info.textContent = '已选 0 个骰子 ';
                         updateButtons();
-                        log(players[pn].name + ' 掷出骰子', 'player' + pn);
+                        log(players[1].name + ' 掷出骰子', 'player1');
                         const ar2 = $('action-result');
-                        if (ar2) ar2.textContent = players[pn].name + ' — 选择攻击骰子（可自由选择，超出限制时无法结束）';
+                        if (ar2) ar2.textContent = players[1].name + ' — 选择攻击骰子';
                     }
                 }, 480);
             }
 
             function startDefense(pn) {
-                if (G.phase !== 'playing' || !G.waitingForDefense || G.subState !== 'idle') return;
-                if (!G.attackData || G.attackData.defNum !== pn) return;
+                if (pn !== 1 || G.phase !== 'playing' || !G.waitingForDefense || G.subState !== 'idle') return;
+                if (!G.attackData || G.attackData.defNum !== 1) return;
                 G.currentAction = 'defend';
                 G.subState = 'rolling';
                 G.selectedIndices = [];
-                players[pn].rerollsUsedThisTurn = 0;
+                players[1].rerollsUsedThisTurn = 0;
                 updateButtons();
-                log(players[pn].name + ' 开始防御...', 'player' + pn);
+                log(players[1].name + ' 开始防御...', 'player1');
                 const ar = $('action-result');
-                if (ar) ar.textContent = players[pn].name + ' 正在掷骰...';
+                if (ar) ar.textContent = players[1].name + ' 正在掷骰...';
 
-                const dice = rollDice(players[pn].totalDice, players[pn]);
+                const dice = rollDice(players[1].totalDice, players[1]);
                 G.allDice = dice;
                 displayDice(dice);
 
                 setTimeout(() => {
                     if (G.phase === 'playing' && G.subState === 'rolling') {
                         G.subState = 'selecting';
+                        const max = getMaxSelectable(players[1], 'defend');
+                        const info = $('p1-info');
+                        if (info) info.textContent = '已选 0 个骰子';
                         updateButtons();
-                        log(players[pn].name + ' 掷出防御骰子', 'player' + pn);
+                        log(players[1].name + ' 掷出防御骰子', 'player1');
                         const ar2 = $('action-result');
-                        if (ar2) ar2.textContent = players[pn].name + ' — 选择防御骰子（可自由选择，超出限制时无法结束）';
+                        if (ar2) ar2.textContent = players[1].name + ' — 选择防御骰子';
                     }
                 }, 480);
             }
 
-            // ---- 重掷功能（保持不变） ----
+            // 骰子交互
+            function setupDiceInteraction() {
+                const dr = $('dice-result');
+                if (!dr) return;
+                dr.addEventListener('click', (e) => {
+                    const dice = e.target.closest('.dice');
+                    if (!dice) return;
+                    if (G.phase !== 'playing') return;
+                    if (G.subState !== 'selecting' && G.subState !== 'waiting') return;
+                    const idx = parseInt(dice.dataset.index);
+                    if (isNaN(idx) || idx >= G.allDice.length) return;
+
+                    const pn = G.waitingForDefense ? G.attackData.defNum : G.currentPlayer;
+                    const p = players[pn];
+                    if (!p) return;
+                    if (G.selectedIndices.includes(idx)) {
+                        G.selectedIndices = G.selectedIndices.filter(i => i !== idx);
+                    } else {
+                        G.selectedIndices.push(idx);
+                    }
+                    G.subState = 'waiting';
+                    updateButtons();
+                    const allDice = document.querySelectorAll('#dice-result .dice');
+                    allDice.forEach((el, i) => {
+                        el.classList.toggle('selected', G.selectedIndices.includes(i));
+                    });
+                    const selVals = G.selectedIndices.map(i => G.allDice[i]);
+                    if (G.currentAction === 'attack') {
+                        G._attackerSelection = selVals;
+                    } else if (G.currentAction === 'defend') {
+                        G._defenderSelection = selVals;
+                    }
+                    updateSelectionSummary();
+                    const max = getMaxSelectable(p, G.currentAction);
+                    const info = $('p1-info');
+                    if (info) info.textContent = `已选 ${G.selectedIndices.length} 个骰子 (最大允许${max}个)`;
+                });
+            }
+
             function rerollSelected(pn) {
+                if (pn !== 1) return;
                 if (G.isRerolling) return;
-                if (G.phase !== 'playing' || G.currentPlayer !== pn) return;
+                if (G.phase !== 'playing' || G.currentPlayer !== 1) return;
                 if (G.subState !== 'selecting' && G.subState !== 'waiting') return;
                 if (G.currentAction !== 'attack') { log('防御时不能重掷', 'system'); return; }
-                const p = players[pn];
+                const p = players[1];
                 if (p.rerollsUsedThisTurn >= p.maxRerolls) { log('本回合重掷次数已用完', 'system'); return; }
                 if (G.selectedIndices.length === 0) { log('请先选择要重掷的骰子', 'system'); return; }
 
@@ -1993,24 +2369,26 @@
 
                 setTimeout(() => {
                     idxs.forEach(i => {
-                        G.allDice[i] = Math.floor(Math.random() * (players[pn].character.id === CHAR.GAMBLER ?
+                        G.allDice[i] = Math.floor(Math.random() * (players[1].character.id === CHAR.GAMBLER ?
                             8 : 6)) + 1;
                         const el = els[i];
                         if (el) { el.classList.remove('rolling');
                             el.textContent = G.allDice[i]; }
                     });
                     p.rerollsUsedThisTurn++;
-                    log(players[pn].name + ' 重掷了 ' + idxs.length + ' 个骰子', 'player' + pn);
+                    log(players[1].name + ' 重掷了 ' + idxs.length + ' 个骰子', 'player1');
                     G.subState = 'waiting';
                     G.isRerolling = false;
+                    const info = $('p1-info');
+                    if (info) info.textContent = `已选 ${G.selectedIndices.length} 个骰子`;
                     updateButtons();
                 }, 400);
             }
 
-            // ---- 结束回合（增加数量校验） ----
             function endTurn(pn) {
+                if (pn !== 1) return;
                 if (G.phase !== 'playing') return;
-                if (G.waitingForDefense && G.attackData && G.attackData.defNum !== pn) {
+                if (G.waitingForDefense && G.attackData && G.attackData.defNum !== 1) {
                     log('防御阶段，只有防御方可结束回合', 'system');
                     return;
                 }
@@ -2019,19 +2397,18 @@
                     return;
                 }
 
-                const p = players[pn];
+                const p = players[1];
                 let maxAllowed = 0;
                 if (G.currentAction === 'attack') maxAllowed = getMaxSelectable(p, 'attack');
                 else if (G.currentAction === 'defend') maxAllowed = getMaxSelectable(p, 'defend');
                 else { log('当前没有进行中的操作', 'system'); return; }
 
-                const selCount = G.selectedIndices.length;
-                if (selCount === 0) {
-                    log('请至少选择1个骰子', 'system');
+                if (G.selectedIndices.length === 0) {
+                    log('请至少选择 1 个骰子', 'system');
                     return;
                 }
-                if (selCount > maxAllowed) {
-                    log('选择的骰子数量(' + selCount + ')超过上限(' + maxAllowed + ')，请取消多余的骰子', 'system');
+                if (G.selectedIndices.length > maxAllowed) {
+                    log('选择的骰子数量（' + G.selectedIndices.length + '）超过最大允许值（' + maxAllowed + '），请减少选择', 'system');
                     return;
                 }
 
@@ -2039,16 +2416,21 @@
                 updateButtons();
 
                 const sel = G.selectedIndices.map(i => G.allDice[i]);
-                if (G.currentAction === 'attack') processAttack(sel, pn);
-                else processDefense(sel, pn);
+                if (G.currentAction === 'attack') {
+                    G._attackerSelection = sel;
+                    processAttack(sel, 1);
+                } else {
+                    G._defenderSelection = sel;
+                    processDefense(sel, 1);
+                }
             }
 
-            // ---------- 特殊骰子 ----------
             function useSpecialDice(pn) {
+                if (pn !== 1) return;
                 if (G.phase !== 'playing') return;
-                const p = players[pn];
+                const p = players[1];
                 if (p.specialDiceUses <= 0) { log('变量骰子次数已用完', 'system'); return; }
-                _specialTargetPlayer = pn;
+                _specialTargetPlayer = 1;
                 const container = $('special-options');
                 if (!container) return;
                 container.innerHTML = '';
@@ -2076,14 +2458,13 @@
             function confirmSpecialUse() {
                 const selected = document.querySelector('#special-options .special-option.selected');
                 if (!selected) { alert('请选择一个效果'); return; }
-                const pn = _specialTargetPlayer;
-                const p = players[pn];
+                const p = players[1];
                 if (!p || p.specialDiceUses <= 0) { const modal = $('special-modal'); if (modal) modal.classList.add(
                         'hidden'); return; }
                 const key = selected.dataset.effect;
                 const cfg = SPECIAL_EFFECTS[key];
                 if (!cfg) { const modal = $('special-modal'); if (modal) modal.classList.add('hidden'); return; }
-                const opp = players[pn === 1 ? 2 : 1];
+                const opp = players[2];
                 const ok = cfg.exec(p, opp);
                 if (ok) {
                     p.specialDiceUses--;
@@ -2098,13 +2479,12 @@
             }
 
             // ---------- UI 渲染 ----------
-            const _uiCache = { p1: {}, p2: {} };
-
             function refreshAllUI() {
                 updatePlayerUI(1);
                 updatePlayerUI(2);
                 updateButtons();
                 updateSelectionSummary();
+                updateAIBonusDisplay();
                 if (G.currentCourseIdx >= 0 && G.currentCourseIdx < COURSES.length) {
                     const c = COURSES[G.currentCourseIdx];
                     const cd = $('course-display');
@@ -2204,7 +2584,6 @@
                     cache.statusHtml = statusHtml;
                 }
 
-                // 更新选择信息（显示当前选择数量和上限，如果超出则提示）
                 const maxSel = G.currentAction === 'attack' ? getMaxSelectable(players[G.currentPlayer], 'attack') :
                     (G.currentAction === 'defend' && G.attackData ? getMaxSelectable(players[G.attackData.defNum],
                         'defend') : 0);
@@ -2212,13 +2591,10 @@
                 if (G.phase === 'playing') {
                     if (G.subState === 'selecting' || G.subState === 'waiting') {
                         const sel = G.selectedIndices.length;
-                        if (sel > maxSel) {
-                            infoText = '已选 ' + sel + ' 个骰子 (超过上限' + maxSel + '个) — 请取消多余的骰子';
-                        } else {
-                            infoText = '已选 ' + sel + ' 个骰子 (最多' + maxSel + '个)';
-                            if (sel === 0) infoText += ' — 请选择骰子';
-                            else if (sel <= maxSel) infoText += ' — 可结束回合';
-                        }
+                        infoText = '已选 ' + sel + ' 个骰子';
+                        if (sel > maxSel) infoText += ' — 超过最大允许 (' + maxSel + ')，请减少';
+                        else if (sel === 0) infoText += ' — 请选择骰子';
+                        else infoText += ' — 可结束回合';
                     } else if (G.subState === 'idle') {
                         infoText = G.waitingForDefense ? '等待防御...' : '请选择操作';
                     } else if (G.subState === 'rolling') {
@@ -2295,6 +2671,13 @@
                             } else {
                                 canEnd = (pn === G.currentPlayer);
                             }
+                            if (canEnd) {
+                                const p2 = players[pn];
+                                let max = 0;
+                                if (G.currentAction === 'attack') max = getMaxSelectable(p2, 'attack');
+                                else if (G.currentAction === 'defend') max = getMaxSelectable(p2, 'defend');
+                                if (G.selectedIndices.length > max) canEnd = false;
+                            }
                         }
                         endBtn.disabled = !canEnd;
                     }
@@ -2318,125 +2701,164 @@
                 }
             }
 
-            // ---------- 骰子交互（移除数量上限限制） ----------
-            function setupDiceInteraction() {
-                const dr = $('dice-result');
-                if (!dr) return;
-                dr.addEventListener('click', (e) => {
-                    const dice = e.target.closest('.dice');
-                    if (!dice) return;
-                    if (G.phase !== 'playing') return;
-                    if (G.subState !== 'selecting' && G.subState !== 'waiting') return;
-                    const idx = parseInt(dice.dataset.index);
-                    if (isNaN(idx) || idx >= G.allDice.length) return;
-
-                    // 切换选择状态（不加任何数量限制）
-                    if (G.selectedIndices.includes(idx)) {
-                        G.selectedIndices = G.selectedIndices.filter(i => i !== idx);
-                    } else {
-                        G.selectedIndices.push(idx);
-                    }
-                    G.subState = 'waiting';
-                    updateButtons();
-                    // 更新骰子显示样式
-                    const allDice = document.querySelectorAll('#dice-result .dice');
-                    allDice.forEach((el, i) => {
-                        el.classList.toggle('selected', G.selectedIndices.includes(i));
-                    });
-                });
+            // ---------- PVE 初始化 ----------
+            function loadPVEConfig() {
+                const configStr = localStorage.getItem('pveAdventureConfig');
+                if (!configStr) {
+                    alert('未找到冒险配置，请返回主菜单重新开始。');
+                    window.location.href = 'index.html';
+                    return null;
+                }
+                try {
+                    return JSON.parse(configStr);
+                } catch (e) {
+                    alert('配置解析失败，请重新开始。');
+                    window.location.href = 'index.html';
+                    return null;
+                }
             }
 
-            // ---------- 角色选择 ----------
-            function renderCharOptions() {
-                const container = $('card-options');
-                if (!container) {
-                    console.error('card-options 元素不存在');
-                    return;
-                }
-                container.innerHTML = '';
-                if (!CHARACTERS || Object.keys(CHARACTERS).length === 0) {
-                    container.innerHTML = '<div style="color:red;">角色数据加载失败，请刷新页面。</div>';
-                    return;
-                }
-                for (let i = 1; i <= 12; i++) {
-                    const ch = CHARACTERS[i];
-                    if (!ch) continue;
-                    const div = document.createElement('div');
-                    div.className = 'card-option';
-                    div.dataset.cardId = i;
-                    if (i === CHAR.MIMIC) {
-                        div.innerHTML =
-                            `<div class="card-name" style="color:var(--color-purple);">百变怪</div><div class="card-stats">属性随机</div><div class="card-effect">${ch.effect}</div>`;
-                    } else {
-                        const color = selectingPlayer === 1 ? 'var(--color-red)' : 'var(--color-primary)';
-                        div.innerHTML =
-                            `<div class="card-name" style="color:${color};">${ch.name}</div><div class="card-stats">❤️${ch.maxHealth} | 🎲${ch.totalDice} | ⚔️${ch.attackDice} | 🛡️${ch.defenseDice}</div><div class="card-effect">${ch.effect}</div>`;
-                    }
-                    div.addEventListener('click', () => {
-                        container.querySelectorAll('.card-option').forEach(el => el.classList.remove('selected'));
-                        div.classList.add('selected');
-                        selectedCardId = parseInt(div.dataset.cardId);
-                    });
-                    container.appendChild(div);
-                }
-                const defaultEl = container.querySelector('[data-card-id="' + CHAR.MIMIC + '"]');
-                if (defaultEl) defaultEl.classList.add('selected');
-                selectedCardId = CHAR.MIMIC;
+            function getRandomNormalCharacter() {
+                const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+                return ids[Math.floor(Math.random() * ids.length)];
             }
 
-            function confirmCharacter() {
-                let chosen = selectedCardId;
-                let isMimic = chosen === CHAR.MIMIC;
+            function initBattle(characterId, isMimic, diff, total, current) {
+                const charData = CHARACTERS[characterId];
+                if (!charData) { alert('角色数据不存在！'); return; }
+                let playerChar = { ...charData };
                 if (isMimic) {
-                    const ids = [];
-                    for (let k = 1; k <= 11; k++) ids.push(k);
-                    chosen = ids[Math.floor(Math.random() * ids.length)];
+                    playerChar.maxHealth += 2;
+                    playerChar.name = '百变怪（' + playerChar.name + '）';
                 }
-                const card = CHARACTERS[chosen];
-                if (!card) { log('角色数据异常，请重试', 'system'); return; }
-                const p = players[selectingPlayer];
-                p.character = {
-                    id: card.id,
-                    name: isMimic ? '百变怪（' + card.name + '）' : card.name,
-                    effect: card.effect,
-                    skill: card.skill,
-                };
-                p.maxHealth = card.maxHealth + (isMimic ? 2 : 0) + (selectingPlayer === 2 ? 3 : 0);
-                p.health = p.maxHealth;
-                p.totalDice = card.totalDice;
-                p.attackDice = card.attackDice;
-                p.defenseDice = card.defenseDice;
-                p._extraAttacksRemaining = card.id === CHAR.EMBER_HERO ? 1 : 0;
-                selectedCards[selectingPlayer] = true;
-                log(p.name + ' 选择了 ' + p.character.name, 'player' + selectingPlayer);
+                const player = createPlayer(1, '勇者', playerChar, false);
+                const aiCharId = getRandomNormalCharacter();
+                const aiCharData = CHARACTERS[aiCharId];
+                const ai = createPlayer(2, 'AI 对手', aiCharData, true, diff);
+                players[1] = player;
+                players[2] = ai;
+                G.phase = 'playing';
+                G.turn = 1;
+                G.currentPlayer = 1;
+                G.subState = 'idle';
+                G.currentAction = null;
+                G.waitingForDefense = false;
+                G.attackData = null;
+                G.allDice = [];
+                G.selectedIndices = [];
+                G._attackerSelection = [];
+                G._defenderSelection = [];
+                G.prevCourseIdx = -1;
+                G.currentCourseIdx = Math.floor(Math.random() * COURSES.length);
+                const course = COURSES[G.currentCourseIdx];
+                if (course.apply) { course.apply(players[1]);
+                    course.apply(players[2]); }
+                const cd = $('course-display');
+                if (cd) cd.textContent = `当前课程: ${course.name}（${course.desc}）`;
+                const tc = $('turn-counter');
+                if (tc) tc.textContent = '回合数: 1';
+                const dr = $('dice-result');
+                if (dr) dr.innerHTML = '';
+                const ar = $('action-result');
+                if (ar) ar.textContent = '战斗开始！勇者先手';
+                const gl = $('game-log');
+                if (gl) gl.innerHTML = '';
+                log('===== 第 ' + current + '/' + total + ' 场战斗开始 =====', 'system');
+                log('勇者选择了 ' + player.character.name + '，AI选择了 ' + ai.character.name, 'system');
                 refreshAllUI();
+                updateButtons();
+            }
 
-                if (selectedCards[1] && selectedCards[2]) {
-                    const modal = $('char-modal');
-                    if (modal) modal.style.display = 'none';
-                    G.phase = 'playing';
-                    G.turn = 1;
-                    const tc = $('turn-counter');
-                    if (tc) tc.textContent = '回合数: 1';
-                    G.currentCourseIdx = Math.floor(Math.random() * COURSES.length);
-                    G.prevCourseIdx = -1;
-                    const course = COURSES[G.currentCourseIdx];
-                    if (course.apply) { course.apply(players[1]);
-                        course.apply(players[2]); }
-                    const cd = $('course-display');
-                    if (cd) cd.textContent = `当前课程: ${course.name}（${course.desc}）`;
-                    log('游戏开始！先手回合', 'system');
-                    const ar = $('action-result');
-                    if (ar) ar.textContent = players[1].name + ' 的回合，请选择操作';
-                    refreshAllUI();
-                    updateButtons();
+            function showResult(winner, loser) {
+                const modal = $('result-modal');
+                const title = $('result-title');
+                const body = $('result-body');
+                if (!modal || !title || !body) return;
+                const isPlayerWin = (winner.num === 1);
+                title.textContent = isPlayerWin ? '🎉 胜利！' : '💀 败北...';
+                body.innerHTML = `
+                    <div style="font-size:1.5rem;margin:10px 0;">${winner.name} 获胜</div>
+                    <div>${winner.name} 剩余生命: ${winner.health}/${winner.maxHealth}</div>
+                    <div>${loser.name} 剩余生命: ${loser.health}/${loser.maxHealth}</div>
+                `;
+                modal.classList.remove('hidden');
+
+                const continueBtn = $('result-continue');
+                const menuBtn = $('result-menu');
+                if (isPlayerWin) {
+                    if (currentBattle < totalBattles) {
+                        continueBtn.textContent = '下一场战斗';
+                        continueBtn.onclick = () => {
+                            modal.classList.add('hidden');
+                            currentBattle++;
+                            startNextBattle();
+                        };
+                    } else {
+                        continueBtn.textContent = '🎊 冒险完成！';
+                        continueBtn.onclick = () => {
+                            modal.classList.add('hidden');
+                            alert('恭喜你完成了所有战斗！返回主菜单。');
+                            window.location.href = 'index.html';
+                        };
+                    }
                 } else {
-                    selectingPlayer = 2;
-                    const title = $('char-modal-title');
-                    if (title) title.textContent = '后手选择角色卡';
-                    renderCharOptions();
-                    log('请后手选择角色卡', 'system');
+                    continueBtn.textContent = '重新挑战';
+                    continueBtn.onclick = () => {
+                        modal.classList.add('hidden');
+                        startNextBattle();
+                    };
                 }
+                menuBtn.onclick = () => {
+                    modal.classList.add('hidden');
+                    window.location.href = 'index.html';
+                };
+            }
+
+            function startNextBattle() {
+                if (currentBattle > totalBattles) {
+                    alert('所有战斗已完成！');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                const charId = pveConfig.characterId;
+                const isMimic = pveConfig.isMimic || false;
+                const diff = pveConfig.difficulty;
+                const stageDisplay = $('pveStage');
+                if (stageDisplay) stageDisplay.textContent = `第 ${currentBattle} / ${totalBattles===9999?'∞':totalBattles} 场`;
+                const diffNames = ['练习', '普通', '困难', '噩梦'];
+                const diffDisplay = $('pveDifficulty');
+                if (diffDisplay) diffDisplay.textContent = '难度：' + diffNames[diff];
+
+                initBattle(charId, isMimic, diff, totalBattles, currentBattle);
+
+                // 胜利后进入下一场回复 10 点生命
+                if (players[1] && G.phase === 'playing') {
+                    const p = players[1];
+                    const healAmount = 10;
+                    p.health = Math.min(p.maxHealth, p.health + healAmount);
+                    log('勇者回复 ' + healAmount + ' 点生命', 'heal');
+                    refreshAllUI();
+                }
+            }
+
+            // ---------- 重置与返回 ----------
+            function resetGame() {
+                if (G.phase === 'playing' && !confirm('重置会丢失当前战斗进度，确定吗？')) return;
+                pveConfig = loadPVEConfig();
+                if (!pveConfig) return;
+                currentBattle = 1;
+                totalBattles = pveConfig.length === 0 ? 9999 : pveConfig.length;
+                const diffNames = ['练习', '普通', '困难', '噩梦'];
+                const diffDisplay = $('pveDifficulty');
+                if (diffDisplay) diffDisplay.textContent = '难度：' + diffNames[pveConfig.difficulty];
+                const stageDisplay = $('pveStage');
+                if (stageDisplay) stageDisplay.textContent = `第 1 / ${totalBattles===9999?'∞':totalBattles} 场`;
+                startNextBattle();
+            }
+
+            function backToMenu() {
+                if (G.phase === 'playing' && !confirm('返回主菜单会丢失当前进度，确定吗？')) return;
+                window.location.href = 'index.html';
             }
 
             // ---------- 控制台 ----------
@@ -2482,7 +2904,7 @@
                     </div>
                 `;
                 container.innerHTML = courseHtml +
-                    `<div style="display:flex;flex-wrap:wrap;gap:16px;flex:1;">${buildCol(1,'先手')}${buildCol(2,'后手')}</div>`;
+                    `<div style="display:flex;flex-wrap:wrap;gap:16px;flex:1;">${buildCol(1,'玩家')}${buildCol(2,'AI')}</div>`;
 
                 container.querySelectorAll('.console-minus, .console-plus').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -2524,11 +2946,11 @@
 
             const LANG_DATA = {
                 zh: {
-                    title: '银河站立党',
-                    subtitle: '站立与战力谐音，令人忍俊不禁',
+                    title: '⚔️ 冒险战斗',
+                    subtitle: '击败所有敌人，完成试炼',
                     desc: '选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！',
-                    p1: '先手',
-                    p2: '后手',
+                    p1: '勇者',
+                    p2: 'AI 对手',
                     health: '生命值',
                     total: '总骰子',
                     atk: '攻击骰',
@@ -2540,8 +2962,8 @@
                     reroll: '重掷',
                     end: '结束回合',
                     dice: '骰子区域',
-                    log: '游戏日志',
-                    newGame: '新的游戏',
+                    log: '战斗日志',
+                    newGame: '重新开始',
                     settings: '设置',
                     dark: '深色模式',
                     lang: '语言',
@@ -2571,11 +2993,11 @@
                     ],
                 },
                 en: {
-                    title: 'Galaxy Stay / Slay Party',
-                    subtitle: '"Stay" stands for standing, "Slay" stands for power – a pun that makes you grin.',
+                    title: '⚔️ Adventure Battle',
+                    subtitle: 'Defeat all enemies to complete the trial',
                     desc: 'Choose character, roll dice, select attack/defense dice, then end turn!',
-                    p1: 'First Player',
-                    p2: 'Second Player',
+                    p1: 'Hero',
+                    p2: 'AI Opponent',
                     health: 'HP',
                     total: 'Total Dice',
                     atk: 'Attack Dice',
@@ -2587,7 +3009,7 @@
                     reroll: 'Reroll',
                     end: 'End Turn',
                     dice: 'Dice Area',
-                    log: 'Game Log',
+                    log: 'Battle Log',
                     newGame: 'New Game',
                     settings: 'Settings',
                     dark: 'Dark Mode',
@@ -2619,6 +3041,7 @@
                 }
             };
 
+
             function applyLang(lang) {
                 const t = LANG_DATA[lang] || LANG_DATA.zh;
                 const h1 = document.querySelector('.header h1');
@@ -2631,10 +3054,17 @@
                 if (p1) p1.textContent = t.p1;
                 const p2 = $('p2-name');
                 if (p2) p2.textContent = t.p2;
+
+
                 document.querySelectorAll('.health-text').forEach(el => {
                     const span = el.querySelector('span');
-                    if (span) el.innerHTML = t.health + '：<span id="' + span.id + '">99</span>';
+                    if (span) {
+                        const spanId = span.id;
+                        const currentValue = span.textContent; 
+                        el.innerHTML = t.health + '：<span id="' + spanId + '">' + currentValue + '</span>';
+                    }
                 });
+
                 const statLabels = document.querySelectorAll('.stat-label');
                 const labels = [t.total, t.atk, t.def];
                 statLabels.forEach((el, i) => { if (i < 3) el.textContent = labels[i % 3]; });
@@ -2689,91 +3119,18 @@
                 localStorage.setItem('gameLang', lang);
             }
 
-            // ---------- 重置游戏 ----------
-            function resetGame() {
-                if (G.phase === 'playing' && !confirm('游戏进行中，重置会丢失进度，确定吗？')) return;
-
-                players[1] = createPlayer(1, '先手');
-                players[2] = createPlayer(2, '后手');
-                selectedCards = { 1: false, 2: false };
-                selectingPlayer = 1;
-                selectedCardId = CHAR.MIMIC;
-                G.phase = 'idle';
-                G.turn = 1;
-                G.currentPlayer = 1;
-                G.subState = 'idle';
-                G.currentAction = null;
-                G.waitingForDefense = false;
-                G.attackData = null;
-                G.allDice = [];
-                G.selectedIndices = [];
-                G.prevCourseIdx = -1;
-                G.currentCourseIdx = 0;
-                G.isRerolling = false;
-                G._attackerSelection = [];
-                G._defenderSelection = [];
-                _uiCache.p1 = {};
-                _uiCache.p2 = {};
-
-                const dr = $('dice-result');
-                if (dr) dr.innerHTML = '';
-                const ar = $('action-result');
-                if (ar) ar.textContent = '等待开始...';
-                const gl = $('game-log');
-                if (gl) gl.innerHTML = '<div class="log-entry system">游戏已重置，请选择角色开始新对局。</div>';
-                const tc = $('turn-counter');
-                if (tc) tc.textContent = '回合数: 1';
-                const cd = $('course-display');
-                if (cd) cd.textContent = '当前课程: 无';
-                const title = $('char-modal-title');
-                if (title) title.textContent = '先手选择角色卡';
-                const modal = $('char-modal');
-                if (modal) modal.style.display = 'flex';
-
-                renderCharOptions();
-                disableAllButtons();
-                refreshAllUI();
-
-                const savedLang = localStorage.getItem('gameLang') || 'zh';
-                applyLang(savedLang);
-
-                log('请先手选择角色卡', 'system');
-            }
-
-            // ---------- 初始化 ----------
-            function init() {
-                if (!$('card-options') || !$('instructions-area')) {
-                    console.error('关键DOM元素缺失，请检查HTML');
-                    return;
-                }
-
-                initTheme();
-
-                const savedLang = localStorage.getItem('gameLang') || 'zh';
-                const langSel = $('langSelect');
-                if (langSel) langSel.value = savedLang;
-
-                applyLang(savedLang);
-                resetGame();
-                renderCharOptions();
-                bindEvents();
-                setupDiceInteraction();
-                renderConsole();
-                updateSelectionSummary();
-            }
-
             // ---------- 事件绑定 ----------
             function bindEvents() {
-                const confirmBtn = $('char-confirm');
-                if (confirmBtn) confirmBtn.addEventListener('click', confirmCharacter);
-                const closeBtn = $('char-modal-close');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        if (selectedCards[1] && !selectedCards[2]) return;
-                        const modal = $('char-modal');
-                        if (modal) modal.style.display = 'none';
-                    });
-                }
+                const p1a = $('p1-attack');
+                if (p1a) p1a.addEventListener('click', () => startAttack(1));
+                const p1d = $('p1-defend');
+                if (p1d) p1d.addEventListener('click', () => startDefense(1));
+                const p1s = $('p1-special');
+                if (p1s) p1s.addEventListener('click', () => useSpecialDice(1));
+                const p1r = $('p1-reroll');
+                if (p1r) p1r.addEventListener('click', () => rerollSelected(1));
+                const p1e = $('p1-end-turn');
+                if (p1e) p1e.addEventListener('click', () => endTurn(1));
 
                 const spClose = $('special-modal-close');
                 if (spClose) spClose.addEventListener('click', () => { const m = $('special-modal'); if (m) m.classList.add(
@@ -2790,30 +3147,11 @@
                     });
                 }
 
-                const p1a = $('p1-attack');
-                if (p1a) p1a.addEventListener('click', () => startAttack(1));
-                const p1d = $('p1-defend');
-                if (p1d) p1d.addEventListener('click', () => startDefense(1));
-                const p1s = $('p1-special');
-                if (p1s) p1s.addEventListener('click', () => useSpecialDice(1));
-                const p1r = $('p1-reroll');
-                if (p1r) p1r.addEventListener('click', () => rerollSelected(1));
-                const p1e = $('p1-end-turn');
-                if (p1e) p1e.addEventListener('click', () => endTurn(1));
-
-                const p2a = $('p2-attack');
-                if (p2a) p2a.addEventListener('click', () => startAttack(2));
-                const p2d = $('p2-defend');
-                if (p2d) p2d.addEventListener('click', () => startDefense(2));
-                const p2s = $('p2-special');
-                if (p2s) p2s.addEventListener('click', () => useSpecialDice(2));
-                const p2r = $('p2-reroll');
-                if (p2r) p2r.addEventListener('click', () => rerollSelected(2));
-                const p2e = $('p2-end-turn');
-                if (p2e) p2e.addEventListener('click', () => endTurn(2));
-
                 const newBtn = $('new-game-btn');
                 if (newBtn) newBtn.addEventListener('click', resetGame);
+
+                const backBtn = $('backToMenuBtn');
+                if (backBtn) backBtn.addEventListener('click', backToMenu);
 
                 const gear = $('settingsGearBtn');
                 if (gear) gear.addEventListener('click', () => { const m = $('settings-modal'); if (m) m.classList.remove(
@@ -2842,6 +3180,7 @@
                 if (langSelect) {
                     langSelect.addEventListener('change', () => {
                         applyLang(langSelect.value);
+                        refreshAllUI(); // 刷新UI确保显示同步
                     });
                 }
 
@@ -2870,6 +3209,30 @@
             }
 
             // ---------- 启动 ----------
+            function init() {
+                pveConfig = loadPVEConfig();
+                if (!pveConfig) return;
+                currentBattle = 1;
+                totalBattles = pveConfig.length === 0 ? 9999 : pveConfig.length;
+                const diffNames = ['练习', '普通', '困难', '噩梦'];
+                const diffDisplay = $('pveDifficulty');
+                if (diffDisplay) diffDisplay.textContent = '难度：' + diffNames[pveConfig.difficulty];
+                const stageDisplay = $('pveStage');
+                if (stageDisplay) stageDisplay.textContent = `第 1 / ${totalBattles===9999?'∞':totalBattles} 场`;
+
+                initTheme();
+                const savedLang = localStorage.getItem('gameLang') || 'zh';
+                const langSel = $('langSelect');
+                if (langSel) langSel.value = savedLang;
+                applyLang(savedLang);
+
+                startNextBattle();
+                bindEvents();
+                setupDiceInteraction();
+                renderConsole();
+                updateAIBonusDisplay();
+            }
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', init);
             } else {

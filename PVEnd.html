@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>银河站立党 · 单人冒险模式</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Microsoft YaHei', system-ui, sans-serif;
+    }
+
+    body {
+      background: #f5f5f5;
+      color: #1e293b;
+      line-height: 1.5;
+      padding: 20px;
+      transition: background 0.2s, color 0.2s;
+      font-size: 16px;
+    }
+
+    body.dark-mode {
+      background: #1e2a3a;
+      color: #e2e8f0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 18px 22px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e9eef3;
+      transition: all 0.2s ease;
+    }
+
+    body.dark-mode .card {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #e2e8f0;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      color: #2c3e50;
+      font-weight: 700;
+    }
+
+    body.dark-mode h1 {
+      color: #facc15;
+    }
+
+    .subtitle {
+      color: #5b6e8c;
+      font-size: 1rem;
+    }
+
+    .settings-gear {
+      position: absolute;
+      top: 6px;
+      right: 12px;
+      background: rgba(255, 248, 225, 0.9);
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    body.dark-mode .settings-gear {
+      background: #0f172a;
+      color: #facc15;
+    }
+
+    .home-button {
+      position: absolute;
+      top: 6px;
+      left: 12px;
+      background: rgba(255,255,240,0.9);
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #2c3e50;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    body.dark-mode .home-button {
+      background: #0f172a;
+      color: #facc15;
+    }
+
+    .config-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .config-card {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .config-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2c3e50;
+    }
+
+    body.dark-mode .config-title {
+      color: #facc15;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-opt {
+      background: #eef2ff;
+      border: none;
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.2s;
+      color: #1e293b;
+    }
+
+    body.dark-mode .btn-opt {
+      background: #1e293b;
+      color: #cbd5e6;
+    }
+
+    .btn-opt.active {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .btn-opt:hover:not(.active) {
+      background: #dbeafe;
+    }
+
+    .hero-selection-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      background: #f8fafc;
+      border-radius: 24px;
+      padding: 16px 22px;
+      border: 1px solid #e9eef3;
+      margin: 16px 0;
+    }
+
+    body.dark-mode .hero-selection-area {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    .hero-info {
+      flex: 2;
+    }
+
+    .hero-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2c3e50;
+    }
+
+    body.dark-mode .hero-name {
+      color: #facc15;
+    }
+
+    .hero-stats {
+      color: #5b6e8c;
+      font-size: 0.9rem;
+    }
+
+    .btn-select-hero {
+      background: #3b82f6;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .btn-select-hero:hover {
+      background: #2563eb;
+    }
+
+    .start-adventure {
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .btn-start {
+      background: #2ecc71;
+      border: none;
+      padding: 10px 40px;
+      border-radius: 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(46,204,113,0.25);
+      transition: 0.2s;
+    }
+
+    .btn-start:hover {
+      background: #27ae60;
+    }
+
+    .info-panel {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 14px 20px;
+      margin-top: 20px;
+      border-left: 4px solid #3498db;
+    }
+
+    body.dark-mode .info-panel {
+      background: #0f172a;
+      border-left-color: #3b82f6;
+    }
+
+    #configDisplay {
+      font-weight: 500;
+    }
+    #enemyBonusDisplay {
+      margin-top: 4px;
+      font-weight: 500;
+      color: #e67e22;
+    }
+    body.dark-mode #enemyBonusDisplay {
+      color: #fbbf24;
+    }
+
+    /* 规则解释区域 */
+    .instructions {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 18px 22px;
+      margin-top: 28px;
+      border-left: 4px solid #3498db;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    body.dark-mode .instructions {
+      background: #0f172a;
+      border-left-color: #3b82f6;
+    }
+
+    .instructions h3 {
+      color: #2c3e50;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    body.dark-mode .instructions h3 {
+      color: #facc15;
+    }
+
+    .instructions ul {
+      padding-left: 20px;
+      color: #555;
+      list-style-type: disc;
+    }
+
+    body.dark-mode .instructions ul {
+      color: #cbd5e6;
+    }
+
+    .instructions li {
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.75rem;
+      color: #6c7a91;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 16px;
+    }
+
+    /* 模态框 */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      width: 90%;
+      max-width: 880px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    body.dark-mode .modal-content {
+      background: #1e293b;
+      color: #e2e8f0;
+    }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      color: #2c3e50;
+    }
+
+    body.dark-mode .modal-title {
+      color: #facc15;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 1.6rem;
+      line-height: 1;
+    }
+
+    .characters-grid-modal {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .character-card-modal {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: 0.15s;
+      text-align: center;
+      position: relative;
+    }
+
+    body.dark-mode .character-card-modal {
+      background: #1e293b;
+    }
+
+    .character-card-modal:hover:not(.locked) {
+      border-color: #3b82f6;
+      transform: translateY(-2px);
+    }
+
+    .character-card-modal.selected {
+      border-color: #3b82f6;
+      background: #eef2ff;
+    }
+
+    body.dark-mode .character-card-modal.selected {
+      background: #1e3a8a;
+    }
+
+    .character-card-modal.locked {
+      opacity: 0.6;
+      filter: grayscale(0.2);
+      cursor: not-allowed;
+    }
+
+    .character-card-modal .char-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 4px;
+    }
+
+    body.dark-mode .character-card-modal .char-name {
+      color: #f1f5f9;
+    }
+
+    .character-card-modal .char-stats {
+      font-size: 0.8rem;
+      color: #7f8c8d;
+      margin-bottom: 4px;
+    }
+
+    body.dark-mode .character-card-modal .char-stats {
+      color: #94a3b8;
+    }
+
+    .character-card-modal .char-effect {
+      font-size: 0.75rem;
+      font-style: italic;
+      color: #7f8c8d;
+    }
+
+    body.dark-mode .character-card-modal .char-effect {
+      color: #94a3b8;
+    }
+
+    .character-card-modal .locked-badge {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: #94a3b8;
+      color: white;
+      font-size: 0.6rem;
+      padding: 1px 8px;
+      border-radius: 12px;
+    }
+
+    .character-card-modal .star-mark {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-confirm {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 6px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      background: #95a5a6;
+      color: white;
+      border: none;
+      padding: 6px 20px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-confirm:hover {
+      background: #27ae60;
+    }
+    .btn-cancel:hover {
+      background: #7f8d8d;
+    }
+
+    /* 设置 */
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #eef2f8;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: 0.2s;
+      border-radius: 30px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px; width: 16px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: 0.2s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: #2ecc71; }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    select {
+      padding: 2px 10px;
+      border-radius: 16px;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    .font-slider-row {
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .font-value {
+      background: #f1f5f9;
+      padding: 0 10px;
+      border-radius: 16px;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .btn-unlock-settings, .btn-lock-settings {
+      border: none;
+      padding: 4px 16px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .btn-unlock-settings {
+      background: #f59e0b;
+    }
+    .btn-unlock-settings:hover {
+      background: #d97706;
+    }
+
+    .btn-lock-settings {
+      background: #ef4444;
+    }
+    .btn-lock-settings:hover {
+      background: #dc2626;
+    }
+
+    .settings-buttons-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @media (max-width: 680px) {
+      .characters-grid-modal {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+      .instructions {
+        grid-template-columns: 1fr;
+      }
+      .settings-buttons-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="main-container">
+  <div class="header">
+    <a href="index.html" class="home-button" title="返回主页">🏠</a>
+    <h1 data-i18n="pve-title">单人冒险 · 银河试炼</h1>
+    <p class="subtitle" data-i18n="pve-sub">选择英雄，设定难度与征程长度</p>
+    <button class="settings-gear" id="settingsGearBtn" aria-label="设置">⚙️</button>
+  </div>
+
+  <div class="config-section">
+    <div class="config-card card">
+      <div class="config-title" data-i18n="difficulty-label">难度</div>
+      <div class="btn-group" id="difficultyGroup">
+        <button class="btn-opt" data-diff="0" data-i18n="diff0">练习</button>
+        <button class="btn-opt" data-diff="1" data-i18n="diff1">普通</button>
+        <button class="btn-opt" data-diff="2" data-i18n="diff2">困难</button>
+        <button class="btn-opt" data-diff="3" data-i18n="diff3">噩梦</button>
+      </div>
+    </div>
+    <div class="config-card card">
+      <div class="config-title" data-i18n="length-label">关卡长度</div>
+      <div class="btn-group" id="lengthGroup">
+        <button class="btn-opt" data-length="3">3 战</button>
+        <button class="btn-opt" data-length="5">5 战</button>
+        <button class="btn-opt" data-length="7">7 战</button>
+        <button class="btn-opt" data-length="0">无尽</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-selection-area">
+    <div class="hero-info">
+      <div class="hero-name" id="currentHeroName">未选择</div>
+      <div class="hero-stats" id="currentHeroStats"></div>
+    </div>
+    <button class="btn-select-hero" id="openHeroModalBtn" data-i18n="select-hero-btn">选择角色</button>
+  </div>
+
+  <div class="start-adventure">
+    <button class="btn-start" id="startAdventureBtn" data-i18n="start-adventure">开始冒险</button>
+  </div>
+
+  <div class="info-panel" id="infoPanel">
+    <div id="configDisplay">当前配置：难度 普通 | 长度 3战 | 角色：未选择</div>
+    <div id="enemyBonusDisplay">敌方加成：无</div>
+  </div>
+
+  <!-- 规则 & 状态解释 -->
+  <div class="instructions" id="instructionsContainer">
+    <div>
+      <h3 data-i18n="rules-title">基本规则</h3>
+      <ul data-i18n="rules-list">
+        <li>双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。</li>
+        <li>共有12种角色，每种有不同技能和属性。</li>
+        <li>攻击值 = 攻击选中骰子点数 + 力量层数</li>
+        <li>防御值 = 防御选中骰子点数 + 坚固层数</li>
+        <li>造成伤害值 = (攻击值 - 防御方防御值) × 其它效果</li>
+        <li>变量骰子可在任意时间使用，提供特殊效果。</li>
+      </ul>
+    </div>
+    <div>
+      <h3 data-i18n="status-title">状态解释</h3>
+      <ul data-i18n="status-list">
+        <li><strong>你已中毒！</strong>：防御时每层造成1点伤害，触发后层数-1。若攻击造成伤害，攻击方下次防御中毒后额外解除1层。</li>
+        <li><strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。</li>
+        <li><strong>力量/坚固</strong>：每层+1点对应攻击/防御值。</li>
+        <li><strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。</li>
+        <li><strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。</li>
+        <li><strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。</li>
+        <li><strong>虚弱</strong>：攻击伤害减30%，触发后消失。</li>
+        <li><strong>666</strong>：掷骰时固定获得一个6点（可叠加）。</li>
+        <li><strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。</li>
+        <li><strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <span data-i18n="pve-footer">每场战斗后自动保存，击败首领可解锁隐藏角色</span>
+  </div>
+</div>
+
+<!-- 角色选择模态框 -->
+<div class="modal-overlay" id="heroModal" style="display:none;">
+  <div class="modal-content">
+    <div class="modal-title">
+      <span data-i18n="modal-title">选择英雄</span>
+      <span class="modal-close" id="closeHeroModal">&times;</span>
+    </div>
+    <div class="characters-grid-modal" id="heroModalGrid"></div>
+    <div class="modal-buttons">
+      <button class="btn-cancel" id="cancelHeroBtn" data-i18n="cancel-btn">取消</button>
+      <button class="btn-confirm" id="confirmHeroBtn" data-i18n="confirm-btn">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 设置模态框（含解锁/锁定隐藏按钮） -->
+<div class="modal-overlay" id="settings-modal" style="display:none;">
+  <div class="modal-content" style="max-width:480px;">
+    <div class="modal-title">
+      <span data-i18n="settings-title">设置</span>
+      <span class="modal-close" id="close-settings-btn">&times;</span>
+    </div>
+    <div class="setting-row">
+      <span data-i18n="dark-mode-label">深色模式</span>
+      <label class="toggle-switch"><input type="checkbox" id="darkModeToggle"><span class="slider"></span></label>
+    </div>
+    <div class="setting-row">
+      <span data-i18n="language-label">语言</span>
+      <select id="languageSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
+    </div>
+    <div class="setting-row font-slider-row">
+      <span data-i18n="font-size-label">字体大小</span>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span data-i18n="font-small">A-</span>
+        <input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16">
+        <span id="fontSizeValue" class="font-value">16px</span>
+        <span data-i18n="font-large">A+</span>
+      </div>
+    </div>
+    <!-- 解锁/锁定隐藏角色按钮（两列） -->
+    <div class="setting-row" style="border-bottom: none; justify-content: center;">
+      <div class="settings-buttons-row">
+        <button class="btn-unlock-settings" id="unlockInSettingsBtn" data-i18n="unlock-all">解锁所有隐藏</button>
+        <button class="btn-lock-settings" id="lockInSettingsBtn" data-i18n="lock-all">锁定所有隐藏</button>
+      </div>
+    </div>
+    <div class="modal-buttons" style="margin-top:12px;">
+      <button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ===== 角色数据（详细技能） =====
+  const normalCharacters = {
+    1: { id: 1, name: "烬城勇者", maxHealth: 32, totalDice: 5, attackDice: 3, defenseDice: 2,
+        effect_zh: "三角猛攻：攻击时若三个骰子点数相同，可额外进行一次攻击，并获得“菜就多练”和3层力量（每回合限一次）。",
+        effect_en: "Triple Strike: If three dice show the same value, gain an extra attack, plus 'Practice More' and +3 Power (once per turn)." },
+    2: { id: 2, name: "魔女", maxHealth: 23, totalDice: 5, attackDice: 4, defenseDice: 2,
+        effect_zh: "双月加持：攻击时若所有攻击骰子均为偶数，造成伤害×2。",
+        effect_en: "Twin Moons: If all attack dice are even, damage is doubled." },
+    3: { id: 3, name: "宗师", maxHealth: 28, totalDice: 6, attackDice: 4, defenseDice: 1,
+        effect_zh: "贯甲一击：攻击时若至少有2个骰子点数为4，则本次攻击无视对方防御值。",
+        effect_en: "Armor Piercing: If at least 2 dice show 4, ignore enemy defense." },
+    4: { id: 4, name: "猎人", maxHealth: 22, totalDice: 4, attackDice: 3, defenseDice: 3,
+        effect_zh: "以守为攻：防御时若防御总和大于攻击总和，则造成差值伤害；否则反击防御点数的1/3（至少1点）。",
+        effect_en: "Counterstrike: If defense sum > attack sum, deal the difference; otherwise deal floor(defense sum/3) (min 1)." },
+    5: { id: 5, name: "毒师", maxHealth: 26, totalDice: 5, attackDice: 3, defenseDice: 3,
+        effect_zh: "蚀骨奇毒：攻击时每有一个奇数骰子，给对手施加1层中毒；若全为偶数，则施加1层“我下的毒”。",
+        effect_en: "Corrosive Venom: Each odd die adds 1 Poison; if all even, apply 1 stack of 'My Poison'." },
+    6: { id: 6, name: "幸运儿", maxHealth: 28, totalDice: 6, attackDice: 3, defenseDice: 2,
+        effect_zh: "虹彩恩赐：攻击时累计掷出3个6点，增加1次变量骰子使用次数并回复2点生命。",
+        effect_en: "Rainbow Blessing: Accumulate 3 sixes on attack to gain +1 Special Dice use and heal 2 HP." },
+    7: { id: 7, name: "战狂", maxHealth: 27, totalDice: 5, attackDice: 4, defenseDice: 1,
+        effect_zh: "嗜血凯旋：每次攻击回复本次攻击值30%的生命（向下取整）。",
+        effect_en: "Bloodthirsty Triumph: Heal 30% of your attack damage (rounded down) after each attack." },
+    8: { id: 8, name: "角斗士", maxHealth: 30, totalDice: 4, attackDice: 2, defenseDice: 2,
+        effect_zh: "斗场裁决：攻击后将力量层数设为本次攻击值的50%；若选定的骰子全为6点，则设为100%并额外回复5点生命。",
+        effect_en: "Arena Verdict: Set Power to 50% of attack sum; if all selected dice are 6, set to 100% and heal 5 HP." },
+    9: { id: 9, name: "教官", maxHealth: 29, totalDice: 5, attackDice: 3, defenseDice: 2,
+        effect_zh: "因势导力：攻击后，每有一种不同点数的骰子，获得1层力量。",
+        effect_en: "Adaptive: After attacking, gain +1 Power for each distinct dice value among your attack dice." },
+    10: { id: 10, name: "北风骑士", maxHealth: 28, totalDice: 5, attackDice: 3, defenseDice: 2,
+        effect_zh: "寒风低语：攻击时，每个未被选中的6点骰子，给对手施加1层“可精了”并造成1点伤害。",
+        effect_en: "Whisper of Breeze: Each unselected 6 die applies 1 'Too Smart' and deals 1 damage to the enemy." },
+    11: { id: 11, name: "赌徒", maxHealth: 30, totalDice: 4, attackDice: 3, defenseDice: 2,
+        effect_zh: "生死豪赌：骰子变为8面骰；攻击时选中的骰子点数会重新随机（变为除当前选中点数以外的值）。若攻击总和小于10，增加1次重掷次数。",
+        effect_en: "High Stakes: Dice become d8. Selected dice are rerolled to different values. If sum < 10, gain +1 reroll." },
+    12: { id: 12, name: "百变怪", maxHealth: 0, totalDice: 0, attackDice: 0, defenseDice: 0,
+        effect_zh: "随机扮演一位其他普通角色（不会变为隐藏角色），确认后变为该角色，且血量上限+2。",
+        effect_en: "Mimic: Randomly mimic another non-hidden character, gain +2 max HP after transformation." }
+  };
+
+  const hiddenCharacters = {
+    13: { id: 13, name: "幻影刺客 ★", maxHealth: 25, totalDice: 6, attackDice: 4, defenseDice: 2,
+        effect_zh: "暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×3。",
+        effect_en: "Shadow Strike: If all attack dice are prime (2,3,5,7), damage is tripled." },
+    14: { id: 14, name: "不朽古龙 ★", maxHealth: 40, totalDice: 7, attackDice: 3, defenseDice: 4,
+        effect_zh: "龙鳞护体：每次受到伤害减少2点（可叠加），且每回合开始回复2点生命。",
+        effect_en: "Dragon Scales: Reduce each instance of damage by 2, and heal 2 HP at start of each turn." },
+    15: { id: 15, name: "星辰主宰 ★", maxHealth: 35, totalDice: 6, attackDice: 4, defenseDice: 2,
+        effect_zh: "星落：每回合开始时对敌方造成3点真实伤害（无视防御与减伤）。",
+        effect_en: "Starfall: Deal 3 true damage to the enemy at the start of each of your turns." }
+  };
+
+  const allCharacters = { ...normalCharacters, ...hiddenCharacters };
+
+  // ===== 状态 =====
+  let currentDifficulty = 1;
+  let currentLength = 3;
+  let selectedCharacterId = null;
+  let currentLang = 'zh';
+  let unlockedHiddenIds = [];
+
+  // ===== 难度敌方加成配置（详细版） =====
+  const difficultyBonuses = {
+    0: { zh: '无加成', en: 'No bonus' },
+    1: { zh: '生命值 +5', en: 'HP +5' },
+    2: { zh: '生命值 +5，力量 +1，坚固 +1', en: 'HP +5, Power +1, Armor +1' },
+    3: { zh: '生命值 +15，力量 +2，坚固 +2，变量骰子 +1', en: 'HP +15, Power +2, Armor +2, Special Dice +1' }
+  };
+
+  // ===== 存储 =====
+  function loadUnlocked() {
+    const stored = localStorage.getItem('pveUnlockedHidden');
+    unlockedHiddenIds = stored ? JSON.parse(stored) : [];
+  }
+  function saveUnlocked() { localStorage.setItem('pveUnlockedHidden', JSON.stringify(unlockedHiddenIds)); }
+  function isCharacterUnlocked(id) { return id <= 12 || unlockedHiddenIds.includes(id); }
+
+  // 解锁所有隐藏
+  function unlockAllHidden() {
+    const allHiddenIds = Object.keys(hiddenCharacters).map(Number);
+    let anyNew = false;
+    for (let id of allHiddenIds) {
+      if (!unlockedHiddenIds.includes(id)) {
+        unlockedHiddenIds.push(id);
+        anyNew = true;
+      }
+    }
+    if (!anyNew) {
+      showToast(currentLang === 'zh' ? '所有隐藏角色已解锁！' : 'All hidden already unlocked!');
+      return;
+    }
+    saveUnlocked();
+    if (selectedCharacterId && isCharacterUnlocked(selectedCharacterId)) {
+      // 保持选择
+    }
+    if (document.getElementById('heroModal').style.display === 'flex') renderHeroModalGrid();
+    showToast(currentLang === 'zh' ? '所有隐藏角色已解锁！' : 'All hidden characters unlocked!');
+  }
+
+  // 锁定所有隐藏（新增）
+  function lockAllHidden() {
+    if (!confirm(currentLang === 'zh' ? '确定要锁定所有已解锁的隐藏角色吗？' : 'Are you sure you want to lock all unlocked hidden characters?')) {
+      return;
+    }
+    const allHiddenIds = Object.keys(hiddenCharacters).map(Number);
+    const anyUnlocked = allHiddenIds.some(id => unlockedHiddenIds.includes(id));
+    if (!anyUnlocked) {
+      showToast(currentLang === 'zh' ? '所有隐藏角色已被锁定' : 'All hidden already locked');
+      return;
+    }
+    unlockedHiddenIds = [];
+    saveUnlocked();
+    if (selectedCharacterId && selectedCharacterId > 12 && !isCharacterUnlocked(selectedCharacterId)) {
+      selectedCharacterId = null;
+    }
+    updateHeroDisplay();
+    updateInfoPanel();
+    if (document.getElementById('heroModal').style.display === 'flex') renderHeroModalGrid();
+    showToast(currentLang === 'zh' ? '所有隐藏角色已锁定' : 'All hidden characters locked');
+  }
+
+  function showToast(msg) {
+    const toast = document.createElement('div');
+    toast.textContent = msg;
+    Object.assign(toast.style, {
+      position: 'fixed', bottom: '70px', right: '16px',
+      background: '#2ecc71', color: 'white', padding: '6px 16px',
+      borderRadius: '30px', zIndex: '2000', fontWeight: '500'
+    });
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 1800);
+  }
+
+  // ===== UI更新 =====
+  function updateHeroDisplay() {
+    const nameEl = document.getElementById('currentHeroName');
+    const statsEl = document.getElementById('currentHeroStats');
+    if (!selectedCharacterId) {
+      nameEl.textContent = currentLang === 'zh' ? '未选择' : 'Not selected';
+      statsEl.textContent = '';
+      return;
+    }
+    const ch = allCharacters[selectedCharacterId];
+    if (!ch) return;
+    nameEl.textContent = ch.name;
+    let stats = '';
+    if (selectedCharacterId === 12) {
+      stats = currentLang === 'zh' ? '属性随机 · 血量+2' : 'Random stats · +2 HP';
+    } else {
+      stats = `生命:${ch.maxHealth}  总骰:${ch.totalDice}  攻:${ch.attackDice}  防:${ch.defenseDice}`;
+    }
+    statsEl.textContent = stats;
+  }
+
+  function updateInfoPanel() {
+    const diffNames = ['练习','普通','困难','噩梦'];
+    const diffEn = ['Practice','Normal','Hard','Nightmare'];
+    const diff = currentLang === 'zh' ? diffNames[currentDifficulty] : diffEn[currentDifficulty];
+    const lenDesc = currentLength === 0 ? (currentLang === 'zh' ? '无尽' : 'Endless') : (currentLang === 'zh' ? `${currentLength} 战` : `${currentLength} battles`);
+    const charName = selectedCharacterId ? (allCharacters[selectedCharacterId]?.name || (currentLang === 'zh' ? '未选择' : 'None')) : (currentLang === 'zh' ? '未选择角色' : 'No hero');
+    
+    const configDisplay = document.getElementById('configDisplay');
+    if (configDisplay) {
+      configDisplay.textContent = `当前配置：难度 ${diff} | 长度 ${lenDesc} | 角色：${charName}`;
+    }
+
+    // 更新敌方加成（使用详细描述）
+    const bonusDisplay = document.getElementById('enemyBonusDisplay');
+    if (bonusDisplay) {
+      const bonusText = difficultyBonuses[currentDifficulty]?.[currentLang] || difficultyBonuses[0][currentLang];
+      bonusDisplay.textContent = `敌方加成：${bonusText}`;
+    }
+  }
+
+  function renderHeroModalGrid() {
+    const grid = document.getElementById('heroModalGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const ordered = [...Object.keys(normalCharacters).map(Number), ...Object.keys(hiddenCharacters).map(Number)];
+    for (const id of ordered) {
+      const ch = allCharacters[id];
+      if (!ch) continue;
+      const unlocked = isCharacterUnlocked(id);
+      const card = document.createElement('div');
+      card.className = 'character-card-modal';
+      if (!unlocked) card.classList.add('locked');
+      if (selectedCharacterId === id && unlocked) card.classList.add('selected');
+      const statsText = (id === 12) ? (currentLang === 'zh' ? '属性随机 · 血量+2' : 'Random stats · +2 HP') : `生命:${ch.maxHealth}  总骰:${ch.totalDice}  攻:${ch.attackDice}  防:${ch.defenseDice}`;
+      const effectText = currentLang === 'zh' ? ch.effect_zh : ch.effect_en;
+      card.innerHTML = `
+        <div class="char-name">${ch.name}</div>
+        <div class="char-stats">${statsText}</div>
+        <div class="char-effect">${effectText}</div>
+        ${!unlocked ? `<div class="locked-badge">${currentLang === 'zh' ? '未解锁' : 'Locked'}</div>` : ''}
+      `;
+      if (unlocked) {
+        card.addEventListener('click', () => {
+          document.querySelectorAll('#heroModalGrid .character-card-modal').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedCharacterId = id;
+        });
+      }
+      grid.appendChild(card);
+    }
+  }
+
+  // ===== 百变怪逻辑 =====
+  function getFinalCharacterId() {
+    if (selectedCharacterId !== 12) return selectedCharacterId;
+    const normalIds = [1,2,3,4,5,6,7,8,9,10,11];
+    const randomIndex = Math.floor(Math.random() * normalIds.length);
+    return normalIds[randomIndex];
+  }
+
+  // ===== 开始冒险 =====
+  function startAdventure() {
+    if (!selectedCharacterId) {
+      alert(currentLang === 'zh' ? '请先选择一个角色' : 'Please select a character');
+      return;
+    }
+    if (!isCharacterUnlocked(selectedCharacterId)) {
+      alert(currentLang === 'zh' ? '该角色尚未解锁！' : 'This character is locked!');
+      return;
+    }
+    let finalId = selectedCharacterId;
+    let isMimic = false;
+    if (selectedCharacterId === 12) {
+      finalId = getFinalCharacterId();
+      isMimic = true;
+    }
+    const config = {
+      difficulty: currentDifficulty,
+      length: currentLength,
+      characterId: finalId,
+      isMimic: isMimic,
+      originalChoice: selectedCharacterId,
+      timestamp: Date.now()
+    };
+    localStorage.setItem('pveAdventureConfig', JSON.stringify(config));
+    // 跳转到战斗页面
+    window.location.href = 'PVEzd.html';
+  }
+
+  // ===== 多语言 =====
+  const i18n = {
+    zh: {
+      "pve-title": "单人冒险 · 银河试炼",
+      "pve-sub": "选择英雄，设定难度与征程长度",
+      "diff0": "练习", "diff1": "普通", "diff2": "困难", "diff3": "噩梦",
+      "select-hero-btn": "选择角色",
+      "start-adventure": "开始冒险",
+      "pve-info": "当前配置：难度 普通 | 长度 3战 | 未选择角色",
+      "pve-footer": "每场战斗后自动保存，击败首领可解锁隐藏角色",
+      "modal-title": "选择英雄",
+      "cancel-btn": "取消", "confirm-btn": "确认",
+      "settings-title": "设置", "dark-mode-label": "深色模式", "language-label": "语言",
+      "font-size-label": "字体大小", "font-small": "A-", "font-large": "A+", "close-btn": "关闭",
+      "unlock-all": "解锁所有隐藏",
+      "lock-all": "锁定所有隐藏",
+      "difficulty-label": "难度", "length-label": "关卡长度",
+      "rules-title": "基本规则",
+      "rules-list": [
+        "双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。",
+        "共有12种角色，每种有不同技能和属性。",
+        "攻击值 = 攻击选中骰子点数 + 力量层数",
+        "防御值 = 防御选中骰子点数 + 坚固层数",
+        "造成伤害值 = (攻击值 - 防御方防御值) × 其它效果",
+        "变量骰子可在任意时间使用，提供特殊效果。"
+      ],
+      "status-title": "状态解释",
+      "status-list": [
+        "<strong>你已中毒！</strong>：防御时每层造成1点伤害，触发后层数-1。若攻击造成伤害，攻击方下次防御中毒后额外解除1层。",
+        "<strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。",
+        "<strong>力量/坚固</strong>：每层+1点对应攻击/防御值。",
+        "<strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。",
+        "<strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。",
+        "<strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。",
+        "<strong>虚弱</strong>：攻击伤害减30%，触发后消失。",
+        "<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。",
+        "<strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。",
+        "<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。"
+      ]
+    },
+    en: {
+      "pve-title": "Solo Adventure · Galaxy Trial",
+      "pve-sub": "Pick hero, set difficulty and campaign length",
+      "diff0": "Practice", "diff1": "Normal", "diff2": "Hard", "diff3": "Nightmare",
+      "select-hero-btn": "Select Hero",
+      "start-adventure": "Start Adventure",
+      "pve-info": "Current: Difficulty Normal | Length 3 battles | No hero",
+      "pve-footer": "Progress saved after each battle. Defeat bosses to unlock hidden.",
+      "modal-title": "Choose Hero",
+      "cancel-btn": "Cancel", "confirm-btn": "Confirm",
+      "settings-title": "Settings", "dark-mode-label": "Dark Mode", "language-label": "Language",
+      "font-size-label": "Font Size", "font-small": "A-", "font-large": "A+", "close-btn": "Close",
+      "unlock-all": "Unlock All Hidden",
+      "lock-all": "Lock All Hidden",
+      "difficulty-label": "Difficulty", "length-label": "Campaign Length",
+      "rules-title": "Basic Rules",
+      "rules-list": [
+        "Players alternate attack/defense, choose attack or defense dice each turn.",
+        "12 characters with unique skills and stats.",
+        "Attack = selected dice sum + Power stacks",
+        "Defense = selected dice sum + Armor stacks",
+        "Damage = (Attack - Defense) × other effects",
+        "Special dice can be used anytime for unique effects."
+      ],
+      "status-title": "Status Glossary",
+      "status-list": [
+        "<strong>Poisoned!</strong>: Each stack deals 1 damage when defending, then -1 stack. If attacker dealt damage, attacker removes 1 extra poison layer on next defense.",
+        "<strong>My Poison</strong>: Poison damage × (1+ stacks), never decays.",
+        "<strong>Power/Armor</strong>: Each stack adds +1 to attack/defense.",
+        "<strong>Too Smart</strong>: Selectable dice -1 (min 1), consumed after use.",
+        "<strong>Hard Armor</strong>: Incoming damage -25% (including DoT), disappears after trigger.",
+        "<strong>Last Stand</strong>: Survive lethal damage with 1 HP and gain Weak (2 uses per game).",
+        "<strong>Weakness</strong>: Attack damage -30%, disappears after trigger.",
+        "<strong>666</strong>: Gain a fixed 6 when rolling (stackable).",
+        "<strong>Practice More</strong>: +1 selectable attack dice, disappears after use.",
+        "<strong>Strong Foundation</strong>: Damage +20% (min +1), consumed after attack."
+      ]
+    }
+  };
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    const texts = i18n[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (texts[key]) {
+        if (Array.isArray(texts[key])) {
+          // 规则列表单独处理
+        } else {
+          el.textContent = texts[key];
+        }
+      }
+    });
+    // 规则列表
+    const rulesList = document.querySelector('[data-i18n="rules-list"]');
+    const statusList = document.querySelector('[data-i18n="status-list"]');
+    if (rulesList && texts['rules-list']) {
+      rulesList.innerHTML = texts['rules-list'].map(item => `<li>${item}</li>`).join('');
+    }
+    if (statusList && texts['status-list']) {
+      statusList.innerHTML = texts['status-list'].map(item => `<li>${item}</li>`).join('');
+    }
+    if (document.getElementById('heroModal').style.display === 'flex') renderHeroModalGrid();
+    updateHeroDisplay();
+    updateInfoPanel();
+    // 设置按钮文字
+    const unlockBtn = document.getElementById('unlockInSettingsBtn');
+    const lockBtn = document.getElementById('lockInSettingsBtn');
+    if (unlockBtn) unlockBtn.textContent = texts['unlock-all'] || 'Unlock All Hidden';
+    if (lockBtn) lockBtn.textContent = texts['lock-all'] || 'Lock All Hidden';
+    localStorage.setItem('pveLang', lang);
+  }
+
+  // ===== 初始化 =====
+  function initTheme() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.body.classList.add('dark-mode');
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.checked = isDark;
+    toggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode', toggle.checked);
+      localStorage.setItem('darkMode', toggle.checked);
+    });
+  }
+
+  function initFontSize() {
+    const slider = document.getElementById('fontSizeSlider');
+    const valSpan = document.getElementById('fontSizeValue');
+    const saved = localStorage.getItem('gameFontSize');
+    let size = saved ? parseInt(saved) : 16;
+    document.body.style.fontSize = size + 'px';
+    slider.value = size;
+    valSpan.textContent = size + 'px';
+    slider.addEventListener('input', () => {
+      const v = parseInt(slider.value);
+      document.body.style.fontSize = v + 'px';
+      valSpan.textContent = v + 'px';
+      localStorage.setItem('gameFontSize', v);
+    });
+  }
+
+  function initLanguage() {
+    const saved = localStorage.getItem('pveLang') || 'zh';
+    document.getElementById('languageSelect').value = saved;
+    applyLanguage(saved);
+    document.getElementById('languageSelect').addEventListener('change', (e) => applyLanguage(e.target.value));
+  }
+
+  function initModals() {
+    const settingsModal = document.getElementById('settings-modal');
+    const gear = document.getElementById('settingsGearBtn');
+    const closeSettings = document.getElementById('close-settings-btn');
+    const settingsClose = document.getElementById('settings-close-btn');
+    gear.onclick = () => settingsModal.style.display = 'flex';
+    const closeS = () => settingsModal.style.display = 'none';
+    closeSettings.onclick = closeS;
+    settingsClose.onclick = closeS;
+    settingsModal.addEventListener('click', (e) => { if (e.target === settingsModal) closeS(); });
+
+    const heroModal = document.getElementById('heroModal');
+    const openBtn = document.getElementById('openHeroModalBtn');
+    const closeHero = document.getElementById('closeHeroModal');
+    const cancelHero = document.getElementById('cancelHeroBtn');
+    const confirmHero = document.getElementById('confirmHeroBtn');
+    openBtn.onclick = () => { renderHeroModalGrid(); heroModal.style.display = 'flex'; };
+    const closeH = () => heroModal.style.display = 'none';
+    closeHero.onclick = closeH;
+    cancelHero.onclick = closeH;
+    confirmHero.onclick = () => {
+      if (selectedCharacterId && isCharacterUnlocked(selectedCharacterId)) {
+        updateHeroDisplay(); updateInfoPanel(); closeH();
+      } else {
+        alert(currentLang === 'zh' ? '请选择一个已解锁的角色' : 'Please select an unlocked character');
+      }
+    };
+    heroModal.addEventListener('click', (e) => { if (e.target === heroModal) closeH(); });
+  }
+
+  function initButtons() {
+    const diffBtns = document.querySelectorAll('#difficultyGroup .btn-opt');
+    diffBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        diffBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDifficulty = parseInt(btn.dataset.diff);
+        updateInfoPanel();
+      });
+    });
+    const lenBtns = document.querySelectorAll('#lengthGroup .btn-opt');
+    lenBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        lenBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLength = parseInt(btn.dataset.length);
+        updateInfoPanel();
+      });
+    });
+    document.querySelector('#difficultyGroup .btn-opt[data-diff="1"]')?.classList.add('active');
+    document.querySelector('#lengthGroup .btn-opt[data-length="3"]')?.classList.add('active');
+
+    document.getElementById('unlockInSettingsBtn').addEventListener('click', unlockAllHidden);
+    document.getElementById('lockInSettingsBtn').addEventListener('click', lockAllHidden);
+
+    document.getElementById('startAdventureBtn').addEventListener('click', startAdventure);
+  }
+
+  loadUnlocked();
+  initTheme();
+  initFontSize();
+  initLanguage();
+  initModals();
+  initButtons();
+  updateHeroDisplay();
+  updateInfoPanel();
+})();
+</script>
+</body>
+</html>

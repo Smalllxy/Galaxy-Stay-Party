@@ -104,12 +104,6 @@
       border-color: #475569;
     }
 
-    body.dark-mode .font-value {
-      background: #0f172a;
-      border-color: #475569;
-      color: #e2e8f0;
-    }
-
     body.dark-mode .btn-cancel {
       background: #475569;
       color: white;
@@ -471,6 +465,10 @@
       border-bottom: 1px solid #eef2f8;
     }
 
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
     .setting-label {
       font-weight: 600;
       font-size: 1.05rem;
@@ -528,21 +526,6 @@
       border: 1px solid #cbd5e1;
       font-size: 0.9rem;
       cursor: pointer;
-    }
-
-    .font-slider-row {
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .font-value {
-      background: #f1f5f9;
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-weight: 600;
-      min-width: 50px;
-      text-align: center;
     }
 
     .btn-confirm {
@@ -628,12 +611,12 @@
       <div class="card-badge" data-i18n="badge-ready">✅ 现已开放</div>
       <div class="mode-status" data-i18n="enter-pvp">进入战场 →</div>
     </div>
-    <div class="mode-card" id="pveModeCard">
+    <div class="mode-card available" id="pveModeCard">
       <div class="card-icon">🤖⚡</div>
       <div class="mode-title" data-i18n="mode-pve-title">单人冒险 · PVE</div>
       <div class="mode-desc" data-i18n="mode-pve-desc">挑战智能AI，隐藏角色，梯度难度，淬炼你的骰术与决策。</div>
-      <div class="card-badge" data-i18n="badge-dev">✨ 开发中</div>
-      <div class="mode-status coming-soon" data-i18n="soon-status">即将开放</div>
+      <div class="card-badge" data-i18n="badge-ready">✅ 现已开放</div>
+      <div class="mode-status" data-i18n="enter-pvp">进入战场 →</div>
     </div>
     <div class="mode-card" id="coopModeCard">
       <div class="card-icon">👥🛡️</div>
@@ -724,17 +707,14 @@
       <span class="setting-label" data-i18n="language-label">语言 / Language</span>
       <select id="languageSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
     </div>
-    <div class="setting-row font-slider-row">
-      <span class="setting-label" data-i18n="font-size-label">字体大小</span>
-      <div style="display:flex; align-items:center; gap:12px;"><span data-i18n="font-small">A-</span><input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16"><span id="fontSizeValue" class="font-value">16px</span><span data-i18n="font-large">A+</span></div>
-    </div>
+    <!-- 字体大小调整已移除 -->
     <div class="modal-buttons"><button class="btn-confirm" id="settings-close-btn" data-i18n="close-btn">关闭</button></div>
   </div>
 </div>
 
 <script>
   (function() {
-    // ---------- 多语言完整映射（包含规则双关 & 谐音梗 + 新增关注作者按钮）----------
+    // ---------- 多语言完整映射----------
     const i18nMap = {
       zh: {
         "home-title": "🌌 银河站立党",
@@ -742,11 +722,11 @@
         "mode-pvp-title": "经典对决 · PVP",
         "mode-pvp-desc": "本地双人对战，12种独特角色，技能联动，攻防心理战，掷出制胜之路。",
         "mode-pve-title": "单人冒险 · PVE",
-        "mode-pve-desc": "挑战智能AI，剧情章节，梯度难度，淬炼你的骰术与决策。",
+        "mode-pve-desc": "挑战智能AI，隐藏角色，梯度难度，淬炼你的骰术与决策。",
         "mode-2v1-title": "二对一 · 合作讨伐",
-        "mode-2v1-desc": "双人联手挑战史诗首领，技能配合，羁绊加成，逆转战局。",
+        "mode-2v1-desc": "双人联手挑战史诗首领，技能配合，卡牌加成，逆转战局。",
         "mode-online-title": "联机竞技场 · 在线",
-        "mode-online-desc": "全球实时匹配，赛季排行榜，银河王者之争。",
+        "mode-online-desc": "实时匹配，网络对战，银河王者之争。",
         "badge-ready": "✅ 现已开放",
         "badge-dev": "✨ 开发中",
         "soon-status": "即将开放",
@@ -760,7 +740,7 @@
         "feature4-title": "攻防博弈",
         "feature4-desc": "力量/坚固/中毒/强基计划，深度策略构筑",
         "basic-rules-title": "📜 基本规则",
-        "status-rules-title": "🌀 状态解释（原著完整版）",
+        "status-rules-title": "🌀 状态解释",
         "rule1": "双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。",
         "rule2": "共有12种角色，每种有不同技能和属性。",
         "rule3": "攻击值 = 攻击选中骰子点数 + 力量层数",
@@ -791,15 +771,12 @@
         "settings-title": "设置",
         "dark-mode-label": "深色模式",
         "language-label": "语言",
-        "font-size-label": "字体大小",
-        "font-small": "A-",
-        "font-large": "A+",
         "close-btn": "关闭",
         "follow-author-btn": "关注作者"
       },
       en: {
         "home-title": "🌌 Galaxy Stay & Slay Party",
-        "home-sub": "Stand & Slay – a pun that makes you grin. Dice & wits on the galactic stage.",
+        "home-sub": "Stay & Slay – a pun that makes you grin. Dice & wits on the galactic stage.",
         "mode-pvp-title": "Classic Duel · PVP",
         "mode-pvp-desc": "Local two-player battle, 12 unique characters, skill combos, offense/defense mind games.",
         "mode-pve-title": "Solo Adventure · PVE",
@@ -848,13 +825,10 @@
         "status-caiduo-desc": ": +1 optional attack dice when attacking, disappears after use.",
         "status-strongplan": "Strong Foundation",
         "status-strongplan-desc": ": Damage +20% (min +1), consumed after attack.",
-        "footer-text": "✨ Galaxy Stay & Slay Party – Stand & Slay pun, more modes incoming ✨",
+        "footer-text": "✨ Galaxy Stay & Slay Party – Stay & Slay pun, more modes incoming ✨",
         "settings-title": "Settings",
         "dark-mode-label": "Dark Mode",
         "language-label": "Language",
-        "font-size-label": "Font Size",
-        "font-small": "A-",
-        "font-large": "A+",
         "close-btn": "Close",
         "follow-author-btn": "Follow Author"
       }
@@ -867,8 +841,6 @@
     const settingsCloseBtn = document.getElementById('settings-close-btn');
     const darkModeToggle = document.getElementById('darkModeToggle');
     const langSelect = document.getElementById('languageSelect');
-    const fontSizeSlider = document.getElementById('fontSizeSlider');
-    const fontSizeValueSpan = document.getElementById('fontSizeValue');
 
     // 主题初始化
     function initTheme() {
@@ -912,24 +884,6 @@
       applyLanguage(saved);
     }
 
-    // 字体调节全局生效
-    function initFontSize() {
-      const saved = localStorage.getItem('gameFontSize');
-      let fontSize = saved ? parseInt(saved) : 16;
-      if (isNaN(fontSize)) fontSize = 16;
-      document.body.style.fontSize = fontSize + 'px';
-      if (fontSizeSlider) fontSizeSlider.value = fontSize;
-      if (fontSizeValueSpan) fontSizeValueSpan.innerText = fontSize + 'px';
-    }
-    if (fontSizeSlider) {
-      fontSizeSlider.addEventListener('input', (e) => {
-        const val = parseInt(e.target.value);
-        document.body.style.fontSize = val + 'px';
-        if (fontSizeValueSpan) fontSizeValueSpan.innerText = val + 'px';
-        localStorage.setItem('gameFontSize', val);
-      });
-    }
-
     // 设置弹窗逻辑
     function openSettings() { settingsModal.style.display = 'flex'; }
     function closeSettings() { settingsModal.style.display = 'none'; }
@@ -952,9 +906,16 @@
       });
     }
 
-    // 开发中模式温和提示
+    // PVE 跳转到配置页面（单人冒险选择界面）
+    const pveCard = document.getElementById('pveModeCard');
+    if (pveCard) {
+      pveCard.addEventListener('click', (e) => {
+        window.location.href = 'PVEnd.html';
+      });
+    }
+
+    // 其他开发中模式温和提示
     const devModes = [
-      { id: 'pveModeCard', name: 'PVE 单人冒险' },
       { id: 'coopModeCard', name: '2V1 合作讨伐' },
       { id: 'onlineModeCard', name: '联机竞技场' }
     ];
@@ -970,7 +931,6 @@
 
     initTheme();
     initLanguage();
-    initFontSize();
   })();
 </script>
 </body>
