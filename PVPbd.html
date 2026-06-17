@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
-    <title>银河站立党 · 选择自由版</title>
+    <title>银河站立党 · 本地PVP</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%233498db' rx='20'/%3E%3Ccircle cx='30' cy='30' r='8' fill='white'/%3E%3Ccircle cx='70' cy='70' r='8' fill='white'/%3E%3Ccircle cx='70' cy='30' r='8' fill='white'/%3E%3Ccircle cx='30' cy='70' r='8' fill='white'/%3E%3C/svg%3E" />
     <style>
         /* ===== CSS 变量（主题系统） ===== */
@@ -1115,12 +1115,21 @@
         </div>
     </div>
 
-    <!-- ===== 设置模态框 ===== -->
+    <!-- ===== 设置模态框（已修复） ===== -->
     <div class="modal-overlay hidden" id="settings-modal">
         <div class="modal-content" style="max-width:450px;">
-            <div class="modal-title">设置 <span class="close-btn" id="settings-close">&times;</span></div>
-            <div class="setting-row"><span class="setting-label">深色模式</span><label class="toggle-switch"><input type="checkbox" id="darkToggle" /><span class="slider"></span></label></div>
-            <div class="setting-row"><span class="setting-label">语言</span><select id="langSelect"><option value="zh">简体中文</option><option value="en">English</option></select></div>
+            <div class="modal-title">
+                <span id="settings-title-text">设置</span>
+                <span class="close-btn" id="settings-close">&times;</span>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label" id="settings-dark-label">深色模式</span>
+                <label class="toggle-switch"><input type="checkbox" id="darkToggle" /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label" id="settings-lang-label">语言</span>
+                <select id="langSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
+            </div>
             <div class="setting-row" style="justify-content:center;border-bottom:none;padding-top:4px;">
                 <a href="https://space.bilibili.com/630895916" target="_blank" rel="noopener noreferrer" class="author-link">🅱️ 关注作者 ↗</a>
             </div>
@@ -1149,9 +1158,9 @@
 
     <script>
         // ================================================================
-        //  银河站立党 · 最终修复版（含自由选择骰子）
-        //  5.4.10：移除选择数量上限限制，允许任意选中/取消，仅结束回合时校验
-        //  机制：中毒保持原版（一次性结算，只减1层）
+        //  银河站立党 · 最终修复版
+        //  修复：语法错误（COURSES数组多余','）及硬甲减伤上调至30%（含dot）
+        //  版本：5.5.1
         // ================================================================
 
         (function() {
@@ -1380,17 +1389,17 @@
                 mimic: () => ({}),
             };
 
-            // ---------- 课程 ----------
+            // ---------- 课程（修复：移除多余的 , ]） ----------
             const COURSES = [{
                 name: '体育',
                 desc: '力量+2',
                 apply: (p) => { p.power += 2; },
-                undo: (p) => { p.power -= 2; },
+                undo: () => {},
             }, {
                 name: '化学',
                 desc: '中毒+2',
                 apply: (p) => { addStatus(p, STATUS.POISON, 2); },
-                undo: (p) => { removeStatus(p, STATUS.POISON, 2); },
+                undo: () => {},
             }, {
                 name: '自习',
                 desc: '无特殊效果',
@@ -1403,30 +1412,27 @@
                     p.health = Math.min(p.maxHealth, p.health + 3);
                     [STATUS.POISON, STATUS.KEJING, STATUS.WEAK, STATUS.DUDU].forEach(e => removeStatus(p, e, 1));
                 },
-                undo: (p) => {
-                    p.health = Math.max(1, p.health - 3);
-                    [STATUS.POISON, STATUS.KEJING, STATUS.WEAK, STATUS.DUDU].forEach(e => addStatus(p, e, 1));
-                },
+                undo: () => {},
             }, {
                 name: '信息技术',
                 desc: '变量骰子+1',
                 apply: (p) => { p.specialDiceUses += 1; },
-                undo: (p) => { p.specialDiceUses = Math.max(0, p.specialDiceUses - 1); },
+                undo: () => {},
             }, {
                 name: '语文',
                 desc: '菜就多练，攻击骰+1',
                 apply: (p) => { addStatus(p, STATUS.CAI_DUO, 1); },
-                undo: (p) => { removeStatus(p, STATUS.CAI_DUO, 1); },
+                undo: () => {},
             }, {
                 name: '数学',
                 desc: '-3血',
                 apply: (p) => { p.health = Math.max(1, p.health - 3); },
-                undo: (p) => { p.health = Math.min(p.maxHealth, p.health + 3); },
+                undo: () => {},
             }, {
                 name: '物理',
                 desc: '报名强基计划，伤害提升',
                 apply: (p) => { addStatus(p, STATUS.STRONG_PLAN, 1); },
-                undo: (p) => { removeStatus(p, STATUS.STRONG_PLAN, 1); },
+                undo: () => {},
             }, {
                 name: '历史',
                 desc: '总骰子数+1',
@@ -1436,8 +1442,8 @@
                 name: '地理',
                 desc: '坚固+1',
                 apply: (p) => { p.armor += 1; },
-                undo: (p) => { p.armor = Math.max(0, p.armor - 1); },
-            }, ];
+                undo: () => {},
+            }];   // <--- 修复：删除了多余的逗号和}]
 
             // ---------- 特殊骰子 ----------
             const SPECIAL_EFFECTS = {
@@ -1464,7 +1470,7 @@
                 },
                 hard_armor: {
                     title: '很硬的甲',
-                    desc: '下回合受伤减少25%（包括dot），获得1层坚固',
+                    desc: '下回合受伤减少30%（包括dot），获得1层坚固',
                     exec: (p) => { p.armor += 1;
                         addStatus(p, STATUS.HARD_ARMOR, 1);
                         return true; },
@@ -1814,10 +1820,11 @@
                         damage = nd; }
                 }
 
+                // ===== 硬甲减免（直接伤害）上调至 30% =====
                 let finalDamage = damage;
                 let reduced = 0;
                 if (getStatus(def, STATUS.HARD_ARMOR) > 0 && damage > 0) {
-                    reduced = Math.floor(damage * 0.25);
+                    reduced = Math.floor(damage * 0.3);   // 从0.25改为0.3
                     finalDamage = damage - reduced;
                     log(def.name + ' 很硬的甲 减免 ' + reduced + ' 点伤害', 'effect');
                 }
@@ -1838,13 +1845,13 @@
                     removeStatus(def, STATUS.HARD_ARMOR, 1);
                 }
 
-                // === 中毒结算（一次性总伤害，只减1层） ===
+                // === 中毒结算（也受硬甲减免，改为30%） ===
                 const poisonBefore = getStatus(def, STATUS.POISON);
                 const dudokuBefore = getStatus(def, STATUS.DUDU);
                 if (poisonBefore > 0) {
                     let poisonDmg = poisonBefore * (1 + dudokuBefore);
                     if (getStatus(def, STATUS.HARD_ARMOR) > 0) {
-                        poisonDmg = Math.floor(poisonDmg * 0.75);
+                        poisonDmg = Math.floor(poisonDmg * 0.7);   // 从0.75改为0.7
                     }
                     def.health = Math.max(0, def.health - poisonDmg);
                     log(def.name + ' 中毒损失 ' + poisonDmg + ' 点生命', 'effect');
@@ -1970,7 +1977,7 @@
                 }, 480);
             }
 
-            // ---- 重掷功能（保持不变） ----
+            // ---- 重掷功能 ----
             function rerollSelected(pn) {
                 if (G.isRerolling) return;
                 if (G.phase !== 'playing' || G.currentPlayer !== pn) return;
@@ -2007,7 +2014,7 @@
                 }, 400);
             }
 
-            // ---- 结束回合（增加数量校验） ----
+            // ---- 结束回合 ----
             function endTurn(pn) {
                 if (G.phase !== 'playing') return;
                 if (G.waitingForDefense && G.attackData && G.attackData.defNum !== pn) {
@@ -2204,7 +2211,7 @@
                     cache.statusHtml = statusHtml;
                 }
 
-                // 更新选择信息（显示当前选择数量和上限，如果超出则提示）
+                // 更新选择信息
                 const maxSel = G.currentAction === 'attack' ? getMaxSelectable(players[G.currentPlayer], 'attack') :
                     (G.currentAction === 'defend' && G.attackData ? getMaxSelectable(players[G.attackData.defNum],
                         'defend') : 0);
@@ -2318,7 +2325,7 @@
                 }
             }
 
-            // ---------- 骰子交互（移除数量上限限制） ----------
+            // ---------- 骰子交互 ----------
             function setupDiceInteraction() {
                 const dr = $('dice-result');
                 if (!dr) return;
@@ -2330,7 +2337,6 @@
                     const idx = parseInt(dice.dataset.index);
                     if (isNaN(idx) || idx >= G.allDice.length) return;
 
-                    // 切换选择状态（不加任何数量限制）
                     if (G.selectedIndices.includes(idx)) {
                         G.selectedIndices = G.selectedIndices.filter(i => i !== idx);
                     } else {
@@ -2338,7 +2344,6 @@
                     }
                     G.subState = 'waiting';
                     updateButtons();
-                    // 更新骰子显示样式
                     const allDice = document.querySelectorAll('#dice-result .dice');
                     allDice.forEach((el, i) => {
                         el.classList.toggle('selected', G.selectedIndices.includes(i));
@@ -2562,7 +2567,7 @@
                         '<strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。',
                         '<strong>力量/坚固</strong>：每层+1点对应攻击/防御值。',
                         '<strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。',
-                        '<strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。',
+                        '<strong>很硬的甲</strong>：受伤减少30%（包括dot），触发后消失。',
                         '<strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。',
                         '<strong>虚弱</strong>：攻击伤害减30%，触发后消失。',
                         '<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。',
@@ -2609,7 +2614,7 @@
                         '<strong>My Poison</strong>: Poison dmg ×(1+stacks), never decays.',
                         '<strong>Power/Armor</strong>: +1 atk/def per stack.',
                         '<strong>Too Smart</strong>: Selectable dice -1 (min 1), consumes 1 stack.',
-                        '<strong>Hard Armor</strong>: Reduce dmg by 25%, disappears after trigger.',
+                        '<strong>Hard Armor</strong>: Reduce dmg by 30%, including DoT, disappears after trigger.',
                         '<strong>Last Stand</strong>: Survive lethal dmg with 1 HP, gain Weak (2 uses).',
                         '<strong>Weakened</strong>: Attack dmg -30%, disappears after trigger.',
                         '<strong>666</strong>: Guarantee one 6 on roll (stackable).',
@@ -2668,14 +2673,17 @@
                 if (lpTitle) lpTitle.textContent = t.log;
                 const newBtn = $('new-game-btn');
                 if (newBtn) newBtn.textContent = t.newGame;
-                const settingsTitle = document.querySelector('#settings-modal .modal-title span:first-child');
+
+                // 设置面板
+                const settingsTitle = $('settings-title-text');
                 if (settingsTitle) settingsTitle.textContent = t.settings;
-                const darkLabel = document.querySelector('.setting-row:first-child .setting-label');
+                const darkLabel = $('settings-dark-label');
                 if (darkLabel) darkLabel.textContent = t.dark;
-                const langLabel = document.querySelector('.setting-row:nth-child(2) .setting-label');
+                const langLabel = $('settings-lang-label');
                 if (langLabel) langLabel.textContent = t.lang;
                 const doneBtn = $('settings-done');
                 if (doneBtn) doneBtn.textContent = t.close;
+
                 const authorSpan = document.querySelector('.author-link span:last-child');
                 if (authorSpan) authorSpan.textContent = '关注作者';
 

@@ -269,7 +269,62 @@
       color: #fbbf24;
     }
 
-    /* 规则解释区域 */
+    /* 解锁条件卡片 - 与1.0.4保持一致 */
+    .unlock-info {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 16px 22px;
+      margin-top: 16px;
+      border-left: 4px solid #f59e0b;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 30px;
+      align-items: center;
+    }
+
+    body.dark-mode .unlock-info {
+      background: #0f172a;
+      border-left-color: #fbbf24;
+    }
+
+    .unlock-info .label {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.95rem;
+    }
+
+    body.dark-mode .unlock-info .label {
+      color: #facc15;
+    }
+
+    .unlock-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    body.dark-mode .unlock-item {
+      color: #e2e8f0;
+    }
+
+    .unlock-item .badge {
+      background: #2ecc71;
+      color: white;
+      padding: 0 10px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      line-height: 1.8;
+    }
+
+    .unlock-item .star {
+      color: #f59e0b;
+      font-weight: 700;
+    }
+
+    /* 规则解释区域 - 详细版匹配1.0.4 */
     .instructions {
       background: #f8fafc;
       border-radius: 20px;
@@ -451,11 +506,6 @@
       border-radius: 12px;
     }
 
-    .character-card-modal .star-mark {
-      color: #f59e0b;
-      font-weight: 700;
-    }
-
     .modal-buttons {
       display: flex;
       justify-content: flex-end;
@@ -537,19 +587,6 @@
       font-size: 0.9rem;
     }
 
-    .font-slider-row {
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .font-value {
-      background: #f1f5f9;
-      padding: 0 10px;
-      border-radius: 16px;
-      min-width: 40px;
-      text-align: center;
-    }
-
     .btn-unlock-settings, .btn-lock-settings {
       border: none;
       padding: 4px 16px;
@@ -592,6 +629,11 @@
       .settings-buttons-row {
         flex-direction: column;
         align-items: stretch;
+      }
+      .unlock-info {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
       }
     }
   </style>
@@ -643,17 +685,28 @@
     <div id="enemyBonusDisplay">敌方加成：无</div>
   </div>
 
+  <!-- 解锁条件提示 -->
+  <div class="unlock-info" id="unlockInfo">
+    <span class="label">🏆 隐藏角色解锁条件</span>
+    <span class="unlock-item"><span class="badge">普通</span> 3战 → <span class="star">★</span> 幻影刺客</span>
+    <span class="unlock-item"><span class="badge" style="background:#f59e0b;">困难</span> 5战 → <span class="star">★</span> 不朽古龙</span>
+    <span class="unlock-item"><span class="badge" style="background:#ef4444;">噩梦</span> 7战 → <span class="star">★</span> 星辰主宰</span>
+  </div>
+
   <!-- 规则 & 状态解释 -->
   <div class="instructions" id="instructionsContainer">
     <div>
       <h3 data-i18n="rules-title">基本规则</h3>
       <ul data-i18n="rules-list">
         <li>双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。</li>
-        <li>共有12种角色，每种有不同技能和属性。</li>
+        <li>共有12种基础角色 + 3种隐藏角色，每种有不同技能和属性。</li>
         <li>攻击值 = 攻击选中骰子点数 + 力量层数</li>
         <li>防御值 = 防御选中骰子点数 + 坚固层数</li>
-        <li>造成伤害值 = (攻击值 - 防御方防御值) × 其它效果</li>
-        <li>变量骰子可在任意时间使用，提供特殊效果。</li>
+        <li>造成伤害值 = (攻击值 - 防御方防御值) × 其它效果（如角色技能、虚弱、强基计划等）</li>
+        <li>变量骰子可在任意时间使用，提供特殊效果（如重掷次数、回复、中毒、护甲、藏一手、力量+666等）。</li>
+        <li><strong>噩梦难度</strong>：我方跳过第一次行动，且敌方获得更大加成。</li>
+        <li><strong>连续战斗</strong>：每场战斗后勇者恢复 13 点生命，+5生命上限，变量骰子 +2；敌方随波次逐渐增强（生命、力量、坚固累加）。</li>
+        <li><strong>波次增幅</strong>：AI 随波次获得生命、力量、坚固的累加成长（前期平缓，后期显著）。</li>
       </ul>
     </div>
     <div>
@@ -693,7 +746,7 @@
   </div>
 </div>
 
-<!-- 设置模态框（含解锁/锁定隐藏按钮） -->
+<!-- 设置模态框（含解锁/锁定隐藏按钮，无字体大小） -->
 <div class="modal-overlay" id="settings-modal" style="display:none;">
   <div class="modal-content" style="max-width:480px;">
     <div class="modal-title">
@@ -708,16 +761,7 @@
       <span data-i18n="language-label">语言</span>
       <select id="languageSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
     </div>
-    <div class="setting-row font-slider-row">
-      <span data-i18n="font-size-label">字体大小</span>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span data-i18n="font-small">A-</span>
-        <input type="range" id="fontSizeSlider" min="12" max="20" step="1" value="16">
-        <span id="fontSizeValue" class="font-value">16px</span>
-        <span data-i18n="font-large">A+</span>
-      </div>
-    </div>
-    <!-- 解锁/锁定隐藏角色按钮（两列） -->
+    <!-- 字体大小已移除 -->
     <div class="setting-row" style="border-bottom: none; justify-content: center;">
       <div class="settings-buttons-row">
         <button class="btn-unlock-settings" id="unlockInSettingsBtn" data-i18n="unlock-all">解锁所有隐藏</button>
@@ -732,7 +776,7 @@
 
 <script>
 (function() {
-  // ===== 角色数据（详细技能） =====
+  // ===== 角色数据 =====
   const normalCharacters = {
     1: { id: 1, name: "烬城勇者", maxHealth: 32, totalDice: 5, attackDice: 3, defenseDice: 2,
         effect_zh: "三角猛攻：攻击时若三个骰子点数相同，可额外进行一次攻击，并获得“菜就多练”和3层力量（每回合限一次）。",
@@ -772,19 +816,28 @@
         effect_en: "Mimic: Randomly mimic another non-hidden character, gain +2 max HP after transformation." }
   };
 
+  // 隐藏角色
   const hiddenCharacters = {
     13: { id: 13, name: "幻影刺客 ★", maxHealth: 25, totalDice: 6, attackDice: 4, defenseDice: 2,
-        effect_zh: "暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×3。",
-        effect_en: "Shadow Strike: If all attack dice are prime (2,3,5,7), damage is tripled." },
+        effect_zh: "暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+1。",
+        effect_en: "Shadow Strike: If all attack dice are prime (2,3,5,7), damage is multiplied by 2.5 and gain +1 Power." },
     14: { id: 14, name: "不朽古龙 ★", maxHealth: 40, totalDice: 7, attackDice: 3, defenseDice: 4,
-        effect_zh: "龙鳞护体：每次受到伤害减少2点（可叠加），且每回合开始回复2点生命。",
-        effect_en: "Dragon Scales: Reduce each instance of damage by 2, and heal 2 HP at start of each turn." },
+        effect_zh: "龙鳞护体：每回合开始回复3点生命，并获得1层力量和1层坚固。",
+        effect_en: "Dragon Scales: Heal 3 HP at the start of each turn, gain +1 Power and +1 Armor." },
     15: { id: 15, name: "星辰主宰 ★", maxHealth: 35, totalDice: 6, attackDice: 4, defenseDice: 2,
-        effect_zh: "星落：每回合开始时对敌方造成3点真实伤害（无视防御与减伤）。",
-        effect_en: "Starfall: Deal 3 true damage to the enemy at the start of each of your turns." }
+        effect_zh: "星落：进入战斗和每造成5点伤害获得1点星魂，每回合结束时对敌方造成等量伤害。",
+        effect_en: "Starfall: Gain 1 Star Soul at battle start and for every 5 damage dealt. Deal true damage equal to Star Souls at end of each turn." }
   };
 
   const allCharacters = { ...normalCharacters, ...hiddenCharacters };
+
+  // ===== 难度敌方加成配置 =====
+  const difficultyBonuses = {
+    0: { zh: '无加成', en: 'No bonus' },
+    1: { zh: '生命值 +5', en: 'HP +5' },
+    2: { zh: '生命值 +5，力量 +1，坚固 +1', en: 'HP +5, Power +1, Armor +1' },
+    3: { zh: '生命值 +15，力量 +2，坚固 +2，变量骰子 +1', en: 'HP +15, Power +2, Armor +2, Special Dice +1' }
+  };
 
   // ===== 状态 =====
   let currentDifficulty = 1;
@@ -792,14 +845,6 @@
   let selectedCharacterId = null;
   let currentLang = 'zh';
   let unlockedHiddenIds = [];
-
-  // ===== 难度敌方加成配置（详细版） =====
-  const difficultyBonuses = {
-    0: { zh: '无加成', en: 'No bonus' },
-    1: { zh: '生命值 +5', en: 'HP +5' },
-    2: { zh: '生命值 +5，力量 +1，坚固 +1', en: 'HP +5, Power +1, Armor +1' },
-    3: { zh: '生命值 +15，力量 +2，坚固 +2，变量骰子 +1', en: 'HP +15, Power +2, Armor +2, Special Dice +1' }
-  };
 
   // ===== 存储 =====
   function loadUnlocked() {
@@ -831,7 +876,7 @@
     showToast(currentLang === 'zh' ? '所有隐藏角色已解锁！' : 'All hidden characters unlocked!');
   }
 
-  // 锁定所有隐藏（新增）
+  // 锁定所有隐藏
   function lockAllHidden() {
     if (!confirm(currentLang === 'zh' ? '确定要锁定所有已解锁的隐藏角色吗？' : 'Are you sure you want to lock all unlocked hidden characters?')) {
       return;
@@ -892,13 +937,12 @@
     const diff = currentLang === 'zh' ? diffNames[currentDifficulty] : diffEn[currentDifficulty];
     const lenDesc = currentLength === 0 ? (currentLang === 'zh' ? '无尽' : 'Endless') : (currentLang === 'zh' ? `${currentLength} 战` : `${currentLength} battles`);
     const charName = selectedCharacterId ? (allCharacters[selectedCharacterId]?.name || (currentLang === 'zh' ? '未选择' : 'None')) : (currentLang === 'zh' ? '未选择角色' : 'No hero');
-    
+
     const configDisplay = document.getElementById('configDisplay');
     if (configDisplay) {
       configDisplay.textContent = `当前配置：难度 ${diff} | 长度 ${lenDesc} | 角色：${charName}`;
     }
 
-    // 更新敌方加成（使用详细描述）
     const bonusDisplay = document.getElementById('enemyBonusDisplay');
     if (bonusDisplay) {
       const bonusText = difficultyBonuses[currentDifficulty]?.[currentLang] || difficultyBonuses[0][currentLang];
@@ -971,11 +1015,11 @@
       timestamp: Date.now()
     };
     localStorage.setItem('pveAdventureConfig', JSON.stringify(config));
-    // 跳转到战斗页面
+    // 跳转到战斗页面（1.0.4）
     window.location.href = 'PVEzd.html';
   }
 
-  // ===== 多语言 =====
+  // ===== 多语言=====
   const i18n = {
     zh: {
       "pve-title": "单人冒险 · 银河试炼",
@@ -988,18 +1032,21 @@
       "modal-title": "选择英雄",
       "cancel-btn": "取消", "confirm-btn": "确认",
       "settings-title": "设置", "dark-mode-label": "深色模式", "language-label": "语言",
-      "font-size-label": "字体大小", "font-small": "A-", "font-large": "A+", "close-btn": "关闭",
+      "close-btn": "关闭",
       "unlock-all": "解锁所有隐藏",
       "lock-all": "锁定所有隐藏",
       "difficulty-label": "难度", "length-label": "关卡长度",
       "rules-title": "基本规则",
       "rules-list": [
         "双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。",
-        "共有12种角色，每种有不同技能和属性。",
+        "共有12种基础角色 + 3种隐藏角色，每种有不同技能和属性。",
         "攻击值 = 攻击选中骰子点数 + 力量层数",
         "防御值 = 防御选中骰子点数 + 坚固层数",
-        "造成伤害值 = (攻击值 - 防御方防御值) × 其它效果",
-        "变量骰子可在任意时间使用，提供特殊效果。"
+        "造成伤害值 = (攻击值 - 防御方防御值) × 其它效果（如角色技能、虚弱、强基计划等）",
+        "变量骰子可在任意时间使用，提供特殊效果（如重掷次数、回复、中毒、护甲、藏一手、力量+666等）。",
+        "噩梦难度：我方跳过第一回合，且敌方获得更大加成。",
+        "连续战斗：每场战斗后勇者恢复 13 点生命，+5生命上限，变量骰子 +2；敌方随波次逐渐增强（生命、力量、坚固累加）。",
+        "波次增幅：AI 随波次获得生命、力量、坚固的累加成长（前期平缓，后期显著）。"
       ],
       "status-title": "状态解释",
       "status-list": [
@@ -1012,7 +1059,7 @@
         "<strong>虚弱</strong>：攻击伤害减30%，触发后消失。",
         "<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。",
         "<strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。",
-        "<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。"
+        "<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。",
       ]
     },
     en: {
@@ -1026,18 +1073,21 @@
       "modal-title": "Choose Hero",
       "cancel-btn": "Cancel", "confirm-btn": "Confirm",
       "settings-title": "Settings", "dark-mode-label": "Dark Mode", "language-label": "Language",
-      "font-size-label": "Font Size", "font-small": "A-", "font-large": "A+", "close-btn": "Close",
+      "close-btn": "Close",
       "unlock-all": "Unlock All Hidden",
       "lock-all": "Lock All Hidden",
       "difficulty-label": "Difficulty", "length-label": "Campaign Length",
       "rules-title": "Basic Rules",
       "rules-list": [
         "Players alternate attack/defense, choose attack or defense dice each turn.",
-        "12 characters with unique skills and stats.",
+        "12 base characters + 3 hidden characters with unique skills.",
         "Attack = selected dice sum + Power stacks",
         "Defense = selected dice sum + Armor stacks",
-        "Damage = (Attack - Defense) × other effects",
-        "Special dice can be used anytime for unique effects."
+        "Damage = (Attack - Defense) × other modifiers (skills, Weakness, Strong Plan, etc.)",
+        "Special dice can be used anytime for unique effects (rerolls, heal, poison, armor, Last Stand, +Power+666).",
+        "Nightmare: AI goes first, and enemy gains larger bonuses.",
+        "Consecutive battles: Hero recovers 13 HP and +2 Special Dice after each battle; enemy gains cumulative bonuses (HP, Power, Armor) with waves.",
+        "Wave scaling: AI gains cumulative HP, Power, Armor growth with each wave (gentle early, significant later)."
       ],
       "status-title": "Status Glossary",
       "status-list": [
@@ -1050,7 +1100,7 @@
         "<strong>Weakness</strong>: Attack damage -30%, disappears after trigger.",
         "<strong>666</strong>: Gain a fixed 6 when rolling (stackable).",
         "<strong>Practice More</strong>: +1 selectable attack dice, disappears after use.",
-        "<strong>Strong Foundation</strong>: Damage +20% (min +1), consumed after attack."
+        "<strong>Strong Foundation</strong>: Damage +20% (min +1), consumed after attack.",
       ]
     }
   };
@@ -1080,7 +1130,6 @@
     if (document.getElementById('heroModal').style.display === 'flex') renderHeroModalGrid();
     updateHeroDisplay();
     updateInfoPanel();
-    // 设置按钮文字
     const unlockBtn = document.getElementById('unlockInSettingsBtn');
     const lockBtn = document.getElementById('lockInSettingsBtn');
     if (unlockBtn) unlockBtn.textContent = texts['unlock-all'] || 'Unlock All Hidden';
@@ -1097,22 +1146,6 @@
     toggle.addEventListener('change', () => {
       document.body.classList.toggle('dark-mode', toggle.checked);
       localStorage.setItem('darkMode', toggle.checked);
-    });
-  }
-
-  function initFontSize() {
-    const slider = document.getElementById('fontSizeSlider');
-    const valSpan = document.getElementById('fontSizeValue');
-    const saved = localStorage.getItem('gameFontSize');
-    let size = saved ? parseInt(saved) : 16;
-    document.body.style.fontSize = size + 'px';
-    slider.value = size;
-    valSpan.textContent = size + 'px';
-    slider.addEventListener('input', () => {
-      const v = parseInt(slider.value);
-      document.body.style.fontSize = v + 'px';
-      valSpan.textContent = v + 'px';
-      localStorage.setItem('gameFontSize', v);
     });
   }
 
@@ -1183,7 +1216,6 @@
 
   loadUnlocked();
   initTheme();
-  initFontSize();
   initLanguage();
   initModals();
   initButtons();

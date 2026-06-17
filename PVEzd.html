@@ -83,914 +83,172 @@
             --color-blue: #60a5fa;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-        }
-        body {
-            background: var(--bg-body);
-            color: var(--text-primary);
-            font-size: var(--font-base);
-            line-height: 1.6;
-            padding: 10px;
-            max-width: 1200px;
-            margin: 0 auto;
-            transition: background 0.2s, color 0.2s;
-        }
-        @media (max-width: 480px) {
-            body {
-                padding: 5px;
-                font-size: 14px;
-            }
-        }
-        a {
-            color: var(--color-primary);
-            text-decoration: none;
-        }
-        button {
-            cursor: pointer;
-            font-size: 0.9rem;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 16px;
-            font-weight: 600;
-            transition: background 0.2s, transform 0.1s, opacity 0.2s;
-        }
-        button:active {
-            transform: scale(0.97);
-        }
-        button:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            transform: none;
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI','Microsoft YaHei',sans-serif; }
+        body { background:var(--bg-body); color:var(--text-primary); font-size:var(--font-base); line-height:1.6; padding:10px; max-width:1200px; margin:0 auto; transition:background 0.2s,color 0.2s; }
+        @media (max-width:480px){ body { padding:5px; font-size:14px; } }
+        a { color:var(--color-primary); text-decoration:none; }
+        button { cursor:pointer; font-size:0.9rem; border:none; border-radius:5px; padding:10px 16px; font-weight:600; transition:background 0.2s,transform 0.1s,opacity 0.2s; }
+        button:active { transform:scale(0.97); }
+        button:disabled { opacity:0.45; cursor:not-allowed; transform:none; }
+
+        .game-container { display:flex; flex-direction:column; gap:16px; width:100%; }
+        @media (min-width:768px) {
+            .game-container { flex-direction:row; align-items:stretch; }
+            .player-section { flex:1; min-width:0; }
+            .game-center { flex:1.6; min-width:0; }
+            .log-panel { flex:1; min-width:0; max-height:350px; }
         }
 
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            width: 100%;
-        }
-        @media (min-width: 768px) {
-            .game-container {
-                flex-direction: row;
-                align-items: stretch;
-            }
-            .player-section {
-                flex: 1;
-                min-width: 0;
-            }
-            .game-center {
-                flex: 1.6;
-                min-width: 0;
-            }
-            .log-panel {
-                flex: 1;
-                min-width: 0;
-                max-height: 350px;
-            }
-        }
+        .header { text-align:center; margin-bottom:20px; padding-bottom:12px; border-bottom:1px solid var(--border-dark); position:relative; }
+        .header h1 { color:var(--text-primary); font-size:2.2rem; margin-bottom:2px; }
+        .header h6 { color:var(--text-secondary); font-weight:400; font-size:0.95rem; margin-bottom:2px; }
+        .header .subtitle { color:var(--text-secondary); font-size:1rem; }
+        .home-button,.settings-gear,.back-select-btn { position:absolute; top:8px; background:var(--bg-card); border:1px solid var(--border-light); border-radius:50%; width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:var(--shadow-card); transition:transform 0.2s,background 0.2s; color:var(--text-primary); text-decoration:none; }
+        .home-button { left:12px; }
+        .back-select-btn { left:64px; font-size:20px; }
+        .settings-gear { right:12px; font-size:26px; }
+        .home-button:hover,.settings-gear:hover,.back-select-btn:hover { transform:scale(1.06) rotate(6deg); background:var(--bg-panel); }
 
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-dark);
-            position: relative;
-        }
-        .header h1 {
-            color: var(--text-primary);
-            font-size: 2.2rem;
-            margin-bottom: 2px;
-        }
-        .header h6 {
-            color: var(--text-secondary);
-            font-weight: 400;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
-        }
-        .header .subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-        }
-        .home-button,
-        .settings-gear {
-            position: absolute;
-            top: 8px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: var(--shadow-card);
-            transition: transform 0.2s, background 0.2s;
-            color: var(--text-primary);
-            text-decoration: none;
-        }
-        .home-button {
-            left: 12px;
-        }
-        .settings-gear {
-            right: 12px;
-            font-size: 26px;
-        }
-        .home-button:hover,
-        .settings-gear:hover {
-            transform: scale(1.06) rotate(6deg);
-            background: var(--bg-panel);
-        }
+        .player-section,.dice-panel,.log-panel { background:var(--bg-panel); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow-card); border:1px solid var(--border-light); transition:background 0.2s,border 0.2s; }
+        .panel-title { font-size:1.2rem; font-weight:600; color:var(--text-primary); text-align:center; padding-bottom:10px; border-bottom:2px solid var(--border-light); margin-bottom:16px; }
 
-        .player-section,
-        .dice-panel,
-        .log-panel {
-            background: var(--bg-panel);
-            border-radius: var(--radius);
-            padding: 16px 18px;
-            box-shadow: var(--shadow-card);
-            border: 1px solid var(--border-light);
-            transition: background 0.2s, border 0.2s;
-        }
-        .panel-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--border-light);
-            margin-bottom: 16px;
-        }
+        .player-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:8px; border-bottom:2px solid var(--border-light); }
+        .player-name { font-size:1.3rem; font-weight:700; color:var(--text-primary); }
+        .turn-indicator { background:var(--color-primary); color:#fff; padding:3px 14px; border-radius:20px; font-size:0.8rem; font-weight:600; display:none; }
+        .turn-indicator.active { display:inline-block; }
 
-        .player-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-light);
-        }
-        .player-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-        .turn-indicator {
-            background: var(--color-primary);
-            color: #fff;
-            padding: 3px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: none;
-        }
-        .turn-indicator.active {
-            display: inline-block;
-        }
+        .health-container { margin-bottom:12px; }
+        .health-text { font-weight:600; color:var(--text-primary); margin-bottom:3px; font-size:0.95rem; }
+        .health-bar { height:18px; background:var(--border-light); border-radius:12px; overflow:hidden; border:1px solid var(--border-med); }
+        .health-fill { height:100%; width:100%; background:var(--color-success); transition:width 0.35s ease,background 0.3s; border-radius:12px; }
 
-        .health-container {
-            margin-bottom: 12px;
-        }
-        .health-text {
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 3px;
-            font-size: 0.95rem;
-        }
-        .health-bar {
-            height: 18px;
-            background: var(--border-light);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-med);
-        }
-        .health-fill {
-            height: 100%;
-            width: 100%;
-            background: var(--color-success);
-            transition: width 0.35s ease, background 0.3s;
-            border-radius: 12px;
-        }
+        .stats-container { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+        .stat-box { text-align:center; padding:8px 4px; background:var(--bg-status); border-radius:var(--radius-sm); border:1px solid var(--border-light); }
+        .stat-label { font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; }
+        .stat-value { font-size:1.3rem; font-weight:700; color:var(--text-primary); }
 
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 12px 0;
-        }
-        .stat-box {
-            text-align: center;
-            padding: 8px 4px;
-            background: var(--bg-status);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            transition: background 0.2s;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .stat-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
+        .character-card { background:var(--bg-char); border-radius:var(--radius-sm); padding:12px; margin-top:10px; border:1px dashed var(--border-med); text-align:center; }
+        .character-name { font-size:1.1rem; font-weight:700; margin-bottom:4px; }
+        .character-effect { font-size:0.85rem; color:var(--text-secondary); }
 
-        .character-card {
-            background: var(--bg-char);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            margin-top: 10px;
-            border: 1px dashed var(--border-med);
-            text-align: center;
-            transition: background 0.2s;
-        }
-        .character-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-        .character-effect {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
+        .status-effects { margin-top:10px; padding:10px 12px; background:var(--bg-status); border-radius:var(--radius-sm); border:1px solid var(--border-light); min-height:44px; }
+        .status-title { font-weight:600; font-size:0.85rem; color:var(--text-primary); margin-bottom:4px; }
+        .status-item { font-size:0.82rem; color:var(--text-primary); display:inline-block; background:var(--bg-card); padding:2px 10px; border-radius:12px; margin:2px 4px 2px 0; border:1px solid var(--border-light); }
 
-        .status-effects {
-            margin-top: 10px;
-            padding: 10px 12px;
-            background: var(--bg-status);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            transition: background 0.2s;
-            min-height: 44px;
-        }
-        .status-title {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-        .status-item {
-            font-size: 0.82rem;
-            color: var(--text-primary);
-            display: inline-block;
-            background: var(--bg-card);
-            padding: 2px 10px;
-            border-radius: 12px;
-            margin: 2px 4px 2px 0;
-            border: 1px solid var(--border-light);
-        }
+        .player-actions { margin-top:12px; padding:10px 12px; background:var(--bg-action); border-radius:var(--radius-sm); border:1px solid var(--border-light); }
+        .action-title { font-weight:600; font-size:0.85rem; color:var(--text-primary); text-align:center; margin-bottom:8px; }
+        .player-action-buttons { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:8px; }
+        .btn-attack { background:var(--color-danger); color:#fff; }
+        .btn-attack:hover:not(:disabled) { background:#c0392b; }
+        .btn-defend { background:var(--color-primary); color:#fff; }
+        .btn-defend:hover:not(:disabled) { background:var(--color-blue); }
+        .btn-special { background:var(--color-warning); color:#fff; }
+        .btn-special:hover:not(:disabled) { background:#d68910; }
+        .btn-reroll { background:var(--color-purple); color:#fff; }
+        .btn-reroll:hover:not(:disabled) { background:#8e44ad; }
+        .btn-end-turn { background:#95a5a6; color:#fff; width:100%; margin-top:4px; }
+        .btn-end-turn:hover:not(:disabled) { background:#7f8d8d; }
+        .special-dice-count { display:inline-block; background:rgba(255,255,255,0.25); padding:0 8px; border-radius:12px; font-size:0.8rem; margin-left:4px; }
+        .dice-selection-info { text-align:center; font-size:0.8rem; color:var(--text-secondary); margin-top:6px; min-height:22px; }
 
-        .player-actions {
-            margin-top: 12px;
-            padding: 10px 12px;
-            background: var(--bg-action);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            transition: background 0.2s;
-        }
-        .action-title {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .player-action-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .btn-attack {
-            background: var(--color-danger);
-            color: #fff;
-        }
-        .btn-attack:hover:not(:disabled) {
-            background: #c0392b;
-        }
-        .btn-defend {
-            background: var(--color-primary);
-            color: #fff;
-        }
-        .btn-defend:hover:not(:disabled) {
-            background: var(--color-blue);
-        }
-        .btn-special {
-            background: var(--color-warning);
-            color: #fff;
-        }
-        .btn-special:hover:not(:disabled) {
-            background: #d68910;
-        }
-        .btn-reroll {
-            background: var(--color-purple);
-            color: #fff;
-        }
-        .btn-reroll:hover:not(:disabled) {
-            background: #8e44ad;
-        }
-        .btn-end-turn {
-            background: #95a5a6;
-            color: #fff;
-            width: 100%;
-            margin-top: 4px;
-        }
-        .btn-end-turn:hover:not(:disabled) {
-            background: #7f8d8d;
-        }
-        .special-dice-count {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.25);
-            padding: 0 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 4px;
-        }
-        .dice-selection-info {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 6px;
-            min-height: 22px;
-        }
+        .dice-display { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; min-height:60px; padding:8px 0; }
+        .dice { width:52px; height:52px; background:var(--bg-dice); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,0.12); border:2px solid var(--border-light); cursor:pointer; transition:border 0.15s,background 0.15s,transform 0.15s; color:var(--text-primary); user-select:none; }
+        .dice:hover:not(.rolling) { transform:translateY(-2px); }
+        .dice.selected { background:var(--color-primary); border-color:var(--color-blue); color:#fff; }
+        .dice.rolling { animation:diceShake 0.45s ease-out; }
+        @keyframes diceShake { 0%{transform:rotate(0deg) scale(1);}20%{transform:rotate(30deg) scale(1.08);}40%{transform:rotate(-20deg) scale(0.95);}60%{transform:rotate(15deg) scale(1.04);}80%{transform:rotate(-8deg) scale(0.98);}100%{transform:rotate(0deg) scale(1);} }
 
-        .dice-display {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            min-height: 60px;
-            padding: 8px 0;
-        }
-        .dice {
-            width: 52px;
-            height: 52px;
-            background: var(--bg-dice);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-            border: 2px solid var(--border-light);
-            cursor: pointer;
-            transition: border 0.15s, background 0.15s, transform 0.15s;
-            color: var(--text-primary);
-            user-select: none;
-        }
-        .dice:hover:not(.rolling) {
-            transform: translateY(-2px);
-        }
-        .dice.selected {
-            background: var(--color-primary);
-            border-color: var(--color-blue);
-            color: #fff;
-        }
-        .dice.rolling {
-            animation: diceShake 0.45s ease-out;
-        }
-        @keyframes diceShake {
-            0% { transform: rotate(0deg) scale(1); }
-            20% { transform: rotate(30deg) scale(1.08); }
-            40% { transform: rotate(-20deg) scale(0.95); }
-            60% { transform: rotate(15deg) scale(1.04); }
-            80% { transform: rotate(-8deg) scale(0.98); }
-            100% { transform: rotate(0deg) scale(1); }
-        }
+        #selection-summary { text-align:center; font-size:0.9rem; color:var(--text-secondary); margin-top:8px; padding:6px 10px; background:var(--bg-log); border-radius:var(--radius-sm); border:1px solid var(--border-light); min-height:30px; line-height:1.6; }
+        #selection-summary strong { color:var(--text-primary); }
+        .result-display { background:var(--bg-result); border-radius:var(--radius-sm); padding:16px 12px; margin-top:12px; border:1px solid var(--border-light); text-align:center; font-size:1rem; min-height:60px; display:flex; align-items:center; justify-content:center; color:var(--text-primary); }
 
-        #selection-summary {
-            text-align: center;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 8px;
-            padding: 6px 10px;
-            background: var(--bg-log);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            min-height: 30px;
-            line-height: 1.6;
-            transition: background 0.2s;
-        }
-        #selection-summary strong {
-            color: var(--text-primary);
-        }
+        .log-content { flex:1; overflow-y:auto; max-height:220px; padding:10px 12px; background:var(--bg-log); border-radius:var(--radius-sm); border:1px solid var(--border-light); margin-top:8px; }
+        .log-entry { padding:6px 10px; margin-bottom:6px; background:var(--bg-card); border-radius:5px; border-left:4px solid var(--color-primary); font-size:0.85rem; color:var(--text-primary); }
+        .log-entry.player1 { border-left-color:var(--color-danger); }
+        .log-entry.player2 { border-left-color:var(--color-primary); }
+        .log-entry.system { border-left-color:var(--color-success); }
+        .log-entry.effect { border-left-color:var(--color-warning); }
+        .log-entry.damage { border-left-color:var(--color-danger); }
+        .log-entry.heal { border-left-color:var(--color-success); }
+        .log-buttons { margin-top:10px; text-align:center; }
+        .new-game-btn { background:var(--bg-log); border:1px solid var(--border-light); padding:8px 28px; border-radius:30px; font-weight:600; color:var(--text-primary); transition:background 0.2s; }
+        .new-game-btn:hover { background:var(--color-primary); color:#fff; }
 
-        .result-display {
-            background: var(--bg-result);
-            border-radius: var(--radius-sm);
-            padding: 16px 12px;
-            margin-top: 12px;
-            border: 1px solid var(--border-light);
-            text-align: center;
-            font-size: 1rem;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-            color: var(--text-primary);
-        }
+        .action-buttons-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
 
-        .log-content {
-            flex: 1;
-            overflow-y: auto;
-            max-height: 220px;
-            padding: 10px 12px;
-            background: var(--bg-log);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            margin-top: 8px;
-            transition: background 0.2s;
-        }
-        .log-entry {
-            padding: 6px 10px;
-            margin-bottom: 6px;
-            background: var(--bg-card);
-            border-radius: 5px;
-            border-left: 4px solid var(--color-primary);
-            font-size: 0.85rem;
-            color: var(--text-primary);
-            transition: background 0.2s;
-        }
-        .log-entry.player1 {
-            border-left-color: var(--color-danger);
-        }
-        .log-entry.player2 {
-            border-left-color: var(--color-primary);
-        }
-        .log-entry.system {
-            border-left-color: var(--color-success);
-        }
-        .log-entry.effect {
-            border-left-color: var(--color-warning);
-        }
-        .log-entry.damage {
-            border-left-color: var(--color-danger);
-        }
-        .log-entry.heal {
-            border-left-color: var(--color-success);
-        }
-        .log-buttons {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .new-game-btn {
-            background: var(--bg-log);
-            border: 1px solid var(--border-light);
-            padding: 8px 28px;
-            border-radius: 30px;
-            font-weight: 600;
-            color: var(--text-primary);
-            transition: background 0.2s;
-        }
-        .new-game-btn:hover {
-            background: var(--color-primary);
-            color: #fff;
-        }
+        #turn-counter,#course-display { font-size:1.1rem; font-weight:600; background:var(--bg-card); padding:6px 14px; border-radius:var(--radius-sm); text-align:center; margin-bottom:6px; border:1px solid var(--border-light); color:var(--text-primary); }
 
-        #turn-counter,
-        #course-display {
-            font-size: 1.1rem;
-            font-weight: 600;
-            background: var(--bg-card);
-            padding: 6px 14px;
-            border-radius: var(--radius-sm);
-            text-align: center;
-            margin-bottom: 6px;
-            border: 1px solid var(--border-light);
-            color: var(--text-primary);
-            transition: background 0.2s;
-        }
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(2px); padding:16px; animation:modalFade 0.2s ease; }
+        @keyframes modalFade { from{opacity:0;transform:scale(0.96);} to{opacity:1;transform:scale(1);} }
+        .modal-content { background:var(--bg-modal); border-radius:var(--radius); padding:20px 24px; width:100%; max-width:620px; max-height:85vh; overflow-y:auto; box-shadow:var(--shadow-modal); border:1px solid var(--border-light); }
+        .modal-title { font-size:1.4rem; font-weight:700; color:var(--text-primary); display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid var(--border-light); }
+        .modal-title .close-btn { cursor:pointer; font-size:1.8rem; line-height:1; color:var(--text-secondary); transition:color 0.2s; }
+        .modal-title .close-btn:hover { color:var(--color-danger); }
 
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            backdrop-filter: blur(2px);
-            padding: 16px;
-            animation: modalFade 0.2s ease;
-        }
-        @keyframes modalFade {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        .modal-content {
-            background: var(--bg-modal);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            width: 100%;
-            max-width: 620px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-modal);
-            border: 1px solid var(--border-light);
-            transition: background 0.2s;
-        }
-        .modal-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--border-light);
-        }
-        .modal-title .close-btn {
-            cursor: pointer;
-            font-size: 1.8rem;
-            line-height: 1;
-            color: var(--text-secondary);
-            transition: color 0.2s;
-        }
-        .modal-title .close-btn:hover {
-            color: var(--color-danger);
-        }
+        .card-options { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px; }
+        @media (max-width:640px){ .card-options { grid-template-columns:repeat(2,1fr); } }
+        @media (max-width:480px){ .card-options { grid-template-columns:1fr; } }
+        .card-option { padding:14px 12px; background:var(--bg-option); border-radius:var(--radius-sm); border:2px solid var(--border-light); cursor:pointer; transition:border 0.2s,background 0.2s,transform 0.15s; text-align:center; }
+        .card-option:hover { transform:translateY(-3px); box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+        .card-option.selected { border-color:var(--color-primary); background:var(--bg-option-hover); }
+        .card-name { font-weight:700; font-size:1rem; margin-bottom:4px; color:var(--text-primary); }
+        .card-stats { font-size:0.8rem; color:var(--text-secondary); margin-bottom:4px; }
+        .card-effect { font-size:0.75rem; color:var(--text-secondary); font-style:italic; }
 
-        .card-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        @media (max-width: 640px) {
-            .card-options {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @media (max-width: 480px) {
-            .card-options {
-                grid-template-columns: 1fr;
-            }
-        }
-        .card-option {
-            padding: 14px 12px;
-            background: var(--bg-option);
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border-light);
-            cursor: pointer;
-            transition: border 0.2s, background 0.2s, transform 0.15s;
-            text-align: center;
-        }
-        .card-option:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        .card-option.selected {
-            border-color: var(--color-primary);
-            background: var(--bg-option-hover);
-        }
-        .card-name {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        .card-stats {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-        .card-effect {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-style: italic;
-        }
+        .special-dice-options { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin:16px 0; }
+        @media (max-width:480px){ .special-dice-options { grid-template-columns:1fr; } }
+        .special-option { padding:14px 12px; background:var(--bg-special-option); border-radius:var(--radius-sm); border:2px solid var(--border-light); cursor:pointer; text-align:center; transition:border 0.2s,background 0.2s,transform 0.15s; }
+        .special-option:hover { transform:translateY(-2px); }
+        .special-option.selected { border-color:var(--color-warning); background:var(--bg-special-hover); }
+        .special-option-title { font-weight:700; font-size:0.95rem; color:var(--text-primary); }
+        .special-option-desc { font-size:0.8rem; color:var(--text-secondary); }
 
-        .special-dice-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 16px 0;
-        }
-        @media (max-width: 480px) {
-            .special-dice-options {
-                grid-template-columns: 1fr;
-            }
-        }
-        .special-option {
-            padding: 14px 12px;
-            background: var(--bg-special-option);
-            border-radius: var(--radius-sm);
-            border: 2px solid var(--border-light);
-            cursor: pointer;
-            text-align: center;
-            transition: border 0.2s, background 0.2s, transform 0.15s;
-        }
-        .special-option:hover {
-            transform: translateY(-2px);
-        }
-        .special-option.selected {
-            border-color: var(--color-warning);
-            background: var(--bg-special-hover);
-        }
-        .special-option-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-        }
-        .special-option-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
+        .modal-buttons { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:16px; }
+        .btn-confirm { background:var(--color-success); color:#fff; padding:10px 32px; border-radius:30px; font-weight:700; font-size:1rem; }
+        .btn-confirm:hover:not(:disabled) { background:#27ae60; }
+        .btn-cancel { background:#95a5a6; color:#fff; padding:10px 28px; border-radius:30px; font-weight:600; }
+        .btn-cancel:hover:not(:disabled) { background:#7f8d8d; }
 
-        .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 16px;
-        }
-        .btn-confirm {
-            background: var(--color-success);
-            color: #fff;
-            padding: 10px 32px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        .btn-confirm:hover:not(:disabled) {
-            background: #27ae60;
-        }
-        .btn-cancel {
-            background: #95a5a6;
-            color: #fff;
-            padding: 10px 28px;
-            border-radius: 30px;
-            font-weight: 600;
-        }
-        .btn-cancel:hover:not(:disabled) {
-            background: #7f8d8d;
-        }
+        .setting-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border-light); }
+        .setting-row:last-child { border-bottom:none; }
+        .setting-label { font-weight:600; font-size:1rem; color:var(--text-primary); }
+        .toggle-switch { position:relative; display:inline-block; width:48px; height:24px; flex-shrink:0; }
+        .toggle-switch input { opacity:0; width:0; height:0; }
+        .slider { position:absolute; inset:0; background:var(--bg-toggle); border-radius:30px; transition:background 0.3s; cursor:pointer; }
+        .slider::before { content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:transform 0.3s; }
+        input:checked + .slider { background:var(--bg-toggle-checked); }
+        input:checked + .slider::before { transform:translateX(24px); }
+        select { padding:4px 12px; border-radius:20px; background:var(--bg-card); color:var(--text-primary); border:1px solid var(--border-light); font-size:0.95rem; cursor:pointer; }
+        .author-link { display:inline-flex; align-items:center; gap:6px; background:var(--bg-option); padding:4px 16px; border-radius:40px; font-weight:500; font-size:0.9rem; color:var(--text-primary); border:1px solid var(--border-light); transition:all 0.2s; }
+        .author-link:hover { transform:translateY(-2px); border-color:var(--color-primary); }
 
-        .setting-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-        .setting-row:last-child {
-            border-bottom: none;
-        }
-        .setting-label {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text-primary);
-        }
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 48px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            inset: 0;
-            background: var(--bg-toggle);
-            border-radius: 30px;
-            transition: background 0.3s;
-            cursor: pointer;
-        }
-        .slider::before {
-            content: '';
-            position: absolute;
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: #fff;
-            border-radius: 50%;
-            transition: transform 0.3s;
-        }
-        input:checked + .slider {
-            background: var(--bg-toggle-checked);
-        }
-        input:checked + .slider::before {
-            transform: translateX(24px);
-        }
-        select {
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
-            font-size: 0.95rem;
-            cursor: pointer;
-        }
-        .author-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-option);
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
-            transition: all 0.2s;
-        }
-        .author-link:hover {
-            transform: translateY(-2px);
-            border-color: var(--color-primary);
-        }
+        .instructions { background:var(--bg-instructions); border-radius:var(--radius-sm); padding:18px 22px; margin-top:16px; border-left:4px solid var(--color-primary); display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        @media (max-width:640px){ .instructions { grid-template-columns:1fr; } }
+        .instructions h3 { color:var(--text-primary); margin-bottom:8px; font-size:1.05rem; font-weight:700; border-bottom:1px solid var(--border-light); padding-bottom:4px; }
+        .instructions ul { padding-left:22px; color:var(--text-light); font-size:0.9rem; line-height:1.8; list-style-type:disc; }
+        .instructions li { margin-bottom:6px; }
 
-        .instructions {
-            background: var(--bg-instructions);
-            border-radius: var(--radius-sm);
-            padding: 18px 22px;
-            margin-top: 16px;
-            border-left: 4px solid var(--color-primary);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            transition: background 0.2s;
-        }
-        @media (max-width: 640px) {
-            .instructions {
-                grid-template-columns: 1fr;
-            }
-        }
-        .instructions h3 {
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 4px;
-        }
-        .instructions ul {
-            padding-left: 22px;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            line-height: 1.8;
-            list-style-type: disc;
-        }
-        .instructions li {
-            margin-bottom: 6px;
-        }
+        .hidden-console-hotspot { position:fixed; bottom:0; right:0; width:60px; height:60px; background:transparent; cursor:pointer; z-index:999; }
+        #console-modal .modal-content { max-width:700px; }
+        #console-modal .cheat-col { background:var(--bg-option) !important; border-radius:var(--radius-sm); border:1px solid var(--border-light); padding:14px; flex:1; min-width:200px; }
+        #console-modal .cheat-col h3 { margin-top:0; margin-bottom:10px; font-size:1rem; border-left:4px solid var(--color-primary); padding-left:10px; color:var(--text-primary); }
+        .console-row { display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); border-radius:30px; padding:4px 10px; margin-bottom:6px; border:1px solid var(--border-light); }
+        .console-row:hover { background:var(--bg-option-hover); }
+        .console-row span:first-child { font-size:0.8rem; color:var(--text-secondary); }
+        .console-row .console-val { background:var(--bg-log); padding:2px 10px; border-radius:20px; min-width:40px; text-align:center; font-weight:700; font-size:0.9rem; color:var(--text-primary); border:1px solid var(--border-light); }
+        .console-minus,.console-plus { background:var(--bg-option); border:1px solid var(--border-light); color:var(--text-primary); width:28px; height:28px; border-radius:30px; font-weight:700; font-size:1.1rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; }
+        .console-minus:hover,.console-plus:hover { background:var(--border-light); }
 
-        .hidden-console-hotspot {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            width: 60px;
-            height: 60px;
-            background: transparent;
-            cursor: pointer;
-            z-index: 999;
-        }
-        #console-modal .modal-content {
-            max-width: 700px;
-        }
-        #console-modal .cheat-col {
-            background: var(--bg-option) !important;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-light);
-            padding: 14px;
-            flex: 1;
-            min-width: 200px;
-        }
-        #console-modal .cheat-col h3 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 1rem;
-            border-left: 4px solid var(--color-primary);
-            padding-left: 10px;
-            color: var(--text-primary);
-        }
-        .console-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-card);
-            border-radius: 30px;
-            padding: 4px 10px;
-            margin-bottom: 6px;
-            border: 1px solid var(--border-light);
-            transition: background 0.2s;
-        }
-        .console-row:hover {
-            background: var(--bg-option-hover);
-        }
-        .console-row span:first-child {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        .console-row .console-val {
-            background: var(--bg-log);
-            padding: 2px 10px;
-            border-radius: 20px;
-            min-width: 40px;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
-        }
-        .console-minus,
-        .console-plus {
-            background: var(--bg-option);
-            border: 1px solid var(--border-light);
-            color: var(--text-primary);
-            width: 28px;
-            height: 28px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-        }
-        .console-minus:hover,
-        .console-plus:hover {
-            background: var(--border-light);
-        }
+        .pve-progress { display:flex; justify-content:space-between; align-items:center; background:var(--bg-card); border:1px solid var(--border-light); border-radius:var(--radius-sm); padding:8px 16px; margin-bottom:12px; font-weight:600; color:var(--text-primary); flex-wrap:wrap; gap:6px; }
+        .pve-progress .stage { font-size:1rem; }
+        .pve-progress .difficulty { font-size:0.9rem; color:var(--text-secondary); }
+        .btn-back-menu { background:var(--color-danger); color:#fff; border:none; padding:4px 14px; border-radius:20px; font-weight:600; font-size:0.8rem; cursor:pointer; transition:background 0.2s; }
+        .btn-back-menu:hover { background:var(--color-red); }
 
-        /* ===== PVE 特有样式 ===== */
-        .pve-progress {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-sm);
-            padding: 8px 16px;
-            margin-bottom: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .pve-progress .stage {
-            font-size: 1rem;
-        }
-        .pve-progress .difficulty {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-        .btn-back-menu {
-            background: var(--color-danger);
-            color: #fff;
-            border: none;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .btn-back-menu:hover {
-            background: var(--color-red);
-        }
+        .ai-status { margin-top:12px; padding:8px 12px; background:var(--bg-status); border-radius:var(--radius-sm); text-align:center; font-size:0.85rem; color:var(--text-secondary); border:1px solid var(--border-light); }
+        .ai-bonus { font-size:0.8rem; color:var(--text-secondary); background:var(--bg-log); border-radius:var(--radius-sm); padding:4px 10px; margin-top:4px; border:1px solid var(--border-light); text-align:center; }
 
-        .ai-status {
-            margin-top: 12px;
-            padding: 8px 12px;
-            background: var(--bg-status);
-            border-radius: var(--radius-sm);
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-light);
-        }
-        .ai-bonus {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            background: var(--bg-log);
-            border-radius: var(--radius-sm);
-            padding: 4px 10px;
-            margin-top: 4px;
-            border: 1px solid var(--border-light);
-            text-align: center;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display:none !important; }
     </style>
 </head>
 <body>
@@ -998,6 +256,7 @@
     <!-- ===== 头部 ===== -->
     <div class="header">
         <a href="index.html" class="home-button" title="返回主页">🏠</a>
+        <a href="PVEnd.html" class="back-select-btn" title="返回选择">📋</a>
         <h1>⚔️ 冒险战斗</h1>
         <h6>击败所有敌人，完成试炼</h6>
         <p class="subtitle">选择角色，投掷骰子，选择攻击/防御骰子，然后结束回合！</p>
@@ -1014,7 +273,6 @@
 
     <!-- ===== 游戏主体 ===== -->
     <div class="game-container">
-
         <!-- 玩家区 -->
         <div class="player-section" id="player1-section">
             <div class="player-header">
@@ -1055,18 +313,21 @@
         <div class="game-center">
             <div id="turn-counter">回合数: 1</div>
             <div id="course-display">当前课程: 无</div>
-
             <div class="dice-panel">
                 <div class="panel-title">骰子区域</div>
                 <div class="dice-display" id="dice-result"></div>
                 <div id="selection-summary">等待双方选择...</div>
                 <div class="result-display" id="action-result">等待操作...</div>
             </div>
-
             <div class="log-panel">
                 <div class="panel-title">战斗日志</div>
                 <div class="log-content" id="game-log"><div class="log-entry system">战斗开始！</div></div>
-                <div class="log-buttons"><button class="new-game-btn" id="new-game-btn">重新开始</button></div>
+                <div class="log-buttons">
+                    <div class="action-buttons-row">
+                        <button class="new-game-btn" id="new-game-btn">重新开始</button>
+                        <button class="new-game-btn" id="next-battle-btn" style="display:none;">进入下一场</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1101,7 +362,7 @@
     <!-- ===== 规则说明 ===== -->
     <div class="instructions" id="instructions-area"></div>
 
-    <!-- ===== 模态框：特殊骰子 ===== -->
+    <!-- ===== 模态框 ===== -->
     <div class="modal-overlay hidden" id="special-modal">
         <div class="modal-content">
             <div class="modal-title">选择变量骰子效果 <span id="special-remaining"></span><span class="close-btn" id="special-modal-close">&times;</span></div>
@@ -1113,19 +374,14 @@
         </div>
     </div>
 
-    <!-- ===== 模态框：战斗结果 ===== -->
     <div class="modal-overlay hidden" id="result-modal">
         <div class="modal-content">
-            <div class="modal-title" id="result-title">战斗结束</div>
+            <div class="modal-title" id="result-title">战斗结束 <span class="close-btn" id="result-close">&times;</span></div>
             <div id="result-body" style="text-align:center;margin:16px 0;"></div>
-            <div class="modal-buttons">
-                <button class="btn-cancel" id="result-continue">继续</button>
-                <button class="btn-confirm" id="result-menu">返回主菜单</button>
-            </div>
+            <div class="modal-buttons" id="result-buttons"></div>
         </div>
     </div>
 
-    <!-- ===== 设置模态框 ===== -->
     <div class="modal-overlay hidden" id="settings-modal">
         <div class="modal-content" style="max-width:450px;">
             <div class="modal-title">设置 <span class="close-btn" id="settings-close">&times;</span></div>
@@ -1138,7 +394,6 @@
         </div>
     </div>
 
-    <!-- ===== 开发者控制台 ===== -->
     <div class="modal-overlay hidden" id="console-modal">
         <div class="modal-content">
             <div class="modal-title">开发者控制台 <span class="close-btn" id="console-close">&times;</span></div>
@@ -1151,177 +406,60 @@
         </div>
     </div>
 
-    <!-- ===== 控制台热区 ===== -->
     <div class="hidden-console-hotspot" id="console-hotspot" title="开发者控制台"></div>
 
     <script>
         (function() {
             'use strict';
-
-            // ---------- 安全 DOM 获取 ----------
             const $ = (id) => document.getElementById(id);
-
-            // ---------- 常量 ----------
-            const STATUS = {
-                POISON: 'poison',
-                DUDU: 'dudu',
-                KEJING: 'kejing',
-                CAI_DUO: 'caiDuo',
-                HARD_ARMOR: 'hardArmor',
-                LAST_STAND: 'lastStand',
-                WEAK: 'weak',
-                STRONG_PLAN: 'strongPlan',
-                POWER: 'power',
-                ARMOR: 'armor',
-                SIX_SIX_SIX: 'sixSixSix',
-            };
-            const STATUS_DISPLAY = {
-                [STATUS.POISON]: '你已中毒！',
-                [STATUS.DUDU]: '我下的毒',
-                [STATUS.KEJING]: '可精了',
-                [STATUS.CAI_DUO]: '菜就多练',
-                [STATUS.HARD_ARMOR]: '很硬的甲',
-                [STATUS.LAST_STAND]: '藏一手',
-                [STATUS.WEAK]: '虚弱',
-                [STATUS.STRONG_PLAN]: '强基计划',
-            };
-            const CHAR = {
-                EMBER_HERO: 1,
-                WITCH: 2,
-                MASTER: 3,
-                HUNTER: 4,
-                TOXICOLOGIST: 5,
-                LUCKY: 6,
-                BERSERKER: 7,
-                GLADIATOR: 8,
-                INSTRUCTOR: 9,
-                NORTHWIND_KNIGHT: 10,
-                GAMBLER: 11,
-                MIMIC: 12,
-            };
 
             // ---------- 角色数据 ----------
             const CHARACTERS = {
-                [CHAR.EMBER_HERO]: {
-                    id: CHAR.EMBER_HERO,
-                    name: '烬城勇者',
-                    maxHealth: 32,
-                    totalDice: 5,
-                    attackDice: 3,
-                    defenseDice: 2,
+                1: { id: 1, name: '烬城勇者', maxHealth: 32, totalDice: 5, attackDice: 3, defenseDice: 2,
                     effect: '三角猛攻：攻击时三个点数相同可额外攻击一次，并获得“菜就多练”并力量+3（每回合限一次）',
-                    skill: 'emberHero',
-                },
-                [CHAR.WITCH]: {
-                    id: CHAR.WITCH,
-                    name: '魔女',
-                    maxHealth: 23,
-                    totalDice: 5,
-                    attackDice: 4,
-                    defenseDice: 2,
+                    skill: 'emberHero' },
+                2: { id: 2, name: '魔女', maxHealth: 23, totalDice: 5, attackDice: 4, defenseDice: 2,
                     effect: '双月加持：攻击时若攻击骰子全为偶数，造成伤害×2',
-                    skill: 'witch',
-                },
-                [CHAR.MASTER]: {
-                    id: CHAR.MASTER,
-                    name: '宗师',
-                    maxHealth: 28,
-                    totalDice: 6,
-                    attackDice: 4,
-                    defenseDice: 1,
+                    skill: 'witch' },
+                3: { id: 3, name: '宗师', maxHealth: 28, totalDice: 6, attackDice: 4, defenseDice: 1,
                     effect: '贯甲一击：攻击时有至少2个骰子为4点，无视对方防御值',
-                    skill: 'master',
-                },
-                [CHAR.HUNTER]: {
-                    id: CHAR.HUNTER,
-                    name: '猎人',
-                    maxHealth: 22,
-                    totalDice: 4,
-                    attackDice: 3,
-                    defenseDice: 3,
+                    skill: 'master' },
+                4: { id: 4, name: '猎人', maxHealth: 22, totalDice: 4, attackDice: 3, defenseDice: 3,
                     effect: '以守为攻：防御时总点数大于敌方攻击点数，则造成差值伤害；否则反击防御点数的1/3（至少1点）',
-                    skill: 'hunter',
-                },
-                [CHAR.TOXICOLOGIST]: {
-                    id: CHAR.TOXICOLOGIST,
-                    name: '毒师',
-                    maxHealth: 26,
-                    totalDice: 5,
-                    attackDice: 3,
-                    defenseDice: 3,
+                    skill: 'hunter' },
+                5: { id: 5, name: '毒师', maxHealth: 26, totalDice: 5, attackDice: 3, defenseDice: 3,
                     effect: '蚀骨奇毒：攻击时每有一个奇数骰子，攻击结束后挂一层中毒；若全为偶数，则立即施加1层“我下的毒”',
-                    skill: 'toxicologist',
-                },
-                [CHAR.LUCKY]: {
-                    id: CHAR.LUCKY,
-                    name: '幸运儿',
-                    maxHealth: 28,
-                    totalDice: 6,
-                    attackDice: 3,
-                    defenseDice: 2,
+                    skill: 'toxicologist' },
+                6: { id: 6, name: '幸运儿', maxHealth: 28, totalDice: 6, attackDice: 3, defenseDice: 2,
                     effect: '虹彩恩赐：攻击时累计掷出3个6点，增加一次变量骰子使用次数并回复2点生命',
-                    skill: 'lucky',
-                },
-                [CHAR.BERSERKER]: {
-                    id: CHAR.BERSERKER,
-                    name: '战狂',
-                    maxHealth: 27,
-                    totalDice: 5,
-                    attackDice: 4,
-                    defenseDice: 1,
+                    skill: 'lucky' },
+                7: { id: 7, name: '战狂', maxHealth: 27, totalDice: 5, attackDice: 4, defenseDice: 1,
                     effect: '嗜血凯旋：每次攻击回复攻击值的30%生命',
-                    skill: 'berserker',
-                },
-                [CHAR.GLADIATOR]: {
-                    id: CHAR.GLADIATOR,
-                    name: '角斗士',
-                    maxHealth: 30,
-                    totalDice: 4,
-                    attackDice: 2,
-                    defenseDice: 2,
+                    skill: 'berserker' },
+                8: { id: 8, name: '角斗士', maxHealth: 30, totalDice: 4, attackDice: 2, defenseDice: 2,
                     effect: '斗场裁决：攻击后将力量层数设置为本次攻击值的50%；若选定的骰子点数全为6，则设置为100%并回复5点生命',
-                    skill: 'gladiator',
-                },
-                [CHAR.INSTRUCTOR]: {
-                    id: CHAR.INSTRUCTOR,
-                    name: '教官',
-                    maxHealth: 29,
-                    totalDice: 5,
-                    attackDice: 3,
-                    defenseDice: 2,
+                    skill: 'gladiator' },
+                9: { id: 9, name: '教官', maxHealth: 29, totalDice: 5, attackDice: 3, defenseDice: 2,
                     effect: '因势导力：攻击后每有一种不同点数的骰子，攻击后力量+1',
-                    skill: 'instructor',
-                },
-                [CHAR.NORTHWIND_KNIGHT]: {
-                    id: CHAR.NORTHWIND_KNIGHT,
-                    name: '北风骑士',
-                    maxHealth: 28,
-                    totalDice: 5,
-                    attackDice: 3,
-                    defenseDice: 2,
+                    skill: 'instructor' },
+                10: { id: 10, name: '北风骑士', maxHealth: 28, totalDice: 5, attackDice: 3, defenseDice: 2,
                     effect: '寒风低语：攻击时每有一个未被选中的6点，给对手施加一层“可精了”并造成1点伤害',
-                    skill: 'northwind',
-                },
-                [CHAR.GAMBLER]: {
-                    id: CHAR.GAMBLER,
-                    name: '赌徒',
-                    maxHealth: 30,
-                    totalDice: 4,
-                    attackDice: 3,
-                    defenseDice: 2,
+                    skill: 'northwind' },
+                11: { id: 11, name: '赌徒', maxHealth: 30, totalDice: 4, attackDice: 3, defenseDice: 2,
                     effect: '生死豪赌：骰子变为8面骰；攻击时选中的骰子会变成除本次攻击选中的点数种类以外的随机点数。若攻击值总和小于10，则增加1次重掷次数',
-                    skill: 'gambler',
-                },
-                [CHAR.MIMIC]: {
-                    id: CHAR.MIMIC,
-                    name: '百变怪',
-                    maxHealth: 0,
-                    totalDice: 0,
-                    attackDice: 0,
-                    defenseDice: 0,
+                    skill: 'gambler' },
+                12: { id: 12, name: '百变怪', maxHealth: 0, totalDice: 0, attackDice: 0, defenseDice: 0,
                     effect: '随机扮演一位其他角色，确认后变为该角色，且血量+2',
-                    skill: 'mimic',
-                },
+                    skill: 'mimic' },
+                13: { id: 13, name: '幻影刺客 ★', maxHealth: 25, totalDice: 6, attackDice: 4, defenseDice: 2,
+                    effect: '暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+1',
+                    skill: 'shadowStrike' },
+                14: { id: 14, name: '不朽古龙 ★', maxHealth: 40, totalDice: 7, attackDice: 3, defenseDice: 4,
+                    effect: '龙鳞护体：每回合开始回复3点生命，并获得1层力量和1层坚固',
+                    skill: 'dragonScales' },
+                15: { id: 15, name: '星辰主宰 ★', maxHealth: 35, totalDice: 6, attackDice: 4, defenseDice: 2,
+                    effect: '星落：进入战斗和每造成5点伤害获得1点星魂，每回合结束时对敌方造成等量真实伤害',
+                    skill: 'starfall' }
             };
 
             // ---------- 技能处理器 ----------
@@ -1378,19 +516,266 @@
                 },
                 gambler: (att, dice) => ({ gambler: true, dice }),
                 mimic: () => ({}),
+                shadowStrike: (att, dice) => {
+                    const primes = [2, 3, 5, 7];
+                    if (dice.length > 0 && dice.every(v => primes.includes(v))) {
+                        return { shadowStrike: true, powerGain: 1 };
+                    }
+                    return {};
+                },
+                dragonScales: () => ({}),
+                starfall: () => ({})
             };
+
+            // ---------- 常量 ----------
+            const STATUS = {
+                POISON: 'poison',
+                DUDU: 'dudu',
+                KEJING: 'kejing',
+                CAI_DUO: 'caiDuo',
+                HARD_ARMOR: 'hardArmor',
+                LAST_STAND: 'lastStand',
+                WEAK: 'weak',
+                STRONG_PLAN: 'strongPlan',
+                POWER: 'power',
+                ARMOR: 'armor',
+                SIX_SIX_SIX: 'sixSixSix',
+            };
+            const STATUS_DISPLAY = {
+                [STATUS.POISON]: '你已中毒！',
+                [STATUS.DUDU]: '我下的毒',
+                [STATUS.KEJING]: '可精了',
+                [STATUS.CAI_DUO]: '菜就多练',
+                [STATUS.HARD_ARMOR]: '很硬的甲',
+                [STATUS.LAST_STAND]: '藏一手',
+                [STATUS.WEAK]: '虚弱',
+                [STATUS.STRONG_PLAN]: '强基计划',
+            };
+            const CHAR = {
+                EMBER_HERO: 1,
+                WITCH: 2,
+                MASTER: 3,
+                HUNTER: 4,
+                TOXICOLOGIST: 5,
+                LUCKY: 6,
+                BERSERKER: 7,
+                GLADIATOR: 8,
+                INSTRUCTOR: 9,
+                NORTHWIND_KNIGHT: 10,
+                GAMBLER: 11,
+                MIMIC: 12,
+            };
+
+            // ---------- 工具函数 ----------
+            function getStatus(p, key) { return p.statusEffects[key] || 0; }
+
+            function setStatus(p, key, val) {
+                if (val <= 0) delete p.statusEffects[key];
+                else p.statusEffects[key] = val;
+            }
+
+            function addStatus(p, key, delta = 1) {
+                const cur = getStatus(p, key);
+                setStatus(p, key, cur + delta);
+            }
+
+            function removeStatus(p, key, delta = 1) {
+                const cur = getStatus(p, key);
+                setStatus(p, key, Math.max(0, cur - delta));
+            }
+
+            function getMaxSelectable(p, type) {
+                let base = type === 'attack' ? p.attackDice : p.defenseDice;
+                if (getStatus(p, STATUS.CAI_DUO) > 0 && type === 'attack') base++;
+                if (getStatus(p, STATUS.KEJING) > 0) base = Math.max(1, base - 1);
+                return base;
+            }
+
+            function rollDice(count, p) {
+                const vals = [];
+                const isGambler = p.character.id === CHAR.GAMBLER;
+                const maxVal = isGambler ? 8 : 6;
+                for (let i = 0; i < count; i++) {
+                    vals.push(Math.floor(Math.random() * maxVal) + 1);
+                }
+                const fixedSix = p._fixedSixStacks || 0;
+                for (let i = 0; i < fixedSix; i++) {
+                    vals.push(6);
+                }
+                p._fixedSixStacks = 0;
+                for (let i = 0; i < p._extraSixCount; i++) vals.push(6);
+                p._extraSixCount = 0;
+                return vals;
+            }
+
+            function log(msg, type = 'system') {
+                const el = $('game-log');
+                if (!el) return;
+                const e = document.createElement('div');
+                e.className = 'log-entry ' + type;
+                const t = new Date();
+                const ts = String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
+                e.textContent = '[' + ts + '] ' + msg;
+                el.appendChild(e);
+                e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+
+            // ---------- 波次增幅函数（新：兼顾前期与后期） ----------
+            function getWaveBonus(wave) {
+                // 生命：2.5 * wave^1.3，力量/坚固：1.5 * wave^1.1
+                const hp = Math.floor(2.5 * Math.pow(wave, 1.3));
+                const power = Math.floor(1.5 * Math.pow(wave, 1.1));
+                const armor = Math.floor(1.5 * Math.pow(wave, 1.1));
+                return { hp, power, armor };
+            }
+
+            // ---------- 玩家创建 ----------
+            function createPlayer(num, name, characterData, isAI = false, aiDifficulty = 0, waveBonus = 0) {
+                const p = {
+                    num,
+                    name,
+                    health: characterData.maxHealth,
+                    maxHealth: characterData.maxHealth,
+                    totalDice: characterData.totalDice,
+                    attackDice: characterData.attackDice,
+                    defenseDice: characterData.defenseDice,
+                    character: {
+                        id: characterData.id,
+                        name: characterData.name,
+                        effect: characterData.effect,
+                        skill: characterData.skill,
+                    },
+                    specialDiceUses: 2,
+                    statusEffects: {},
+                    power: 0,
+                    armor: 0,
+                    _lastStandUsed: 0,
+                    _fixedSixStacks: 0,
+                    _extraSixCount: 0,
+                    _sixCount: 0,
+                    _extraAttacksRemaining: characterData.id === CHAR.EMBER_HERO ? 1 : 0,
+                    maxRerolls: 1,
+                    rerollsUsedThisTurn: 0,
+                    _extraPoisonRemove: 0,
+                    _gamblerBuff: 0,
+                    _hasExtraAttack: false,
+                    isAI,
+                    aiDifficulty,
+                    bonusDesc: '',
+                    _starSoul: 0,
+                    _damageCounter: 0,
+                };
+
+                if (isAI && aiDifficulty > 0) {
+                    let parts = [];
+                    let hpBonus = 0,
+                        powerBonus = 0,
+                        armorBonus = 0,
+                        specialBonus = 0;
+                    if (aiDifficulty >= 1) { hpBonus += 5; }
+                    if (aiDifficulty >= 2) { powerBonus += 1;
+                        armorBonus += 1; }
+                    if (aiDifficulty >= 3) { hpBonus += 10;
+                        powerBonus += 1;
+                        armorBonus += 1;
+                        specialBonus += 1; }
+                    if (hpBonus > 0) parts.push('生命+' + hpBonus);
+                    if (powerBonus > 0) parts.push('力量+' + powerBonus);
+                    if (armorBonus > 0) parts.push('坚固+' + armorBonus);
+                    if (specialBonus > 0) parts.push('变量骰子+' + specialBonus);
+                    p.maxHealth += hpBonus;
+                    p.health = p.maxHealth;
+                    p.power += powerBonus;
+                    p.armor += armorBonus;
+                    p.specialDiceUses += specialBonus;
+                    p.bonusDesc = parts.join('，');
+                }
+
+                // ---- 波数加成（新函数） ----
+                if (isAI && waveBonus > 0) {
+                    const currentWave = waveBonus + 1;
+                    const bonus = getWaveBonus(currentWave);
+                    const totalHp = bonus.hp;
+                    const totalPow = bonus.power;
+                    const totalArm = bonus.armor;
+                    if (totalHp > 0 || totalPow > 0 || totalArm > 0) {
+                        p.maxHealth += totalHp;
+                        p.health = p.maxHealth;
+                        p.power += totalPow;
+                        p.armor += totalArm;
+                        const waveDesc = `波数加成（累计）：生命+${totalHp}，力量+${totalPow}，坚固+${totalArm}`;
+                        p.bonusDesc = p.bonusDesc ? p.bonusDesc + '，' + waveDesc : waveDesc;
+                    }
+                }
+
+                if (characterData.skill === 'starfall') {
+                    p._starSoul = 1;
+                    p._damageCounter = 0;
+                }
+                return p;
+            }
+
+            // ---------- 游戏状态 ----------
+            const G = {
+                phase: 'idle',
+                turn: 1,
+                currentPlayer: 1,
+                subState: 'idle',
+                currentAction: null,
+                waitingForDefense: false,
+                attackData: null,
+                allDice: [],
+                selectedIndices: [],
+                prevCourseIdx: -1,
+                currentCourseIdx: 0,
+                isRerolling: false,
+                _attackerSelection: [],
+                _defenderSelection: [],
+                _attackerNum: 1,
+                _defenderNum: 2,
+                victoryPending: false,
+            };
+
+            const players = { 1: null, 2: null };
+            let _uiCache = { p1: {}, p2: {} };
+            let pveConfig = null;
+            let currentBattle = 1;
+            let totalBattles = 3;
+            let _specialTargetPlayer = 1;
+
+            // ---------- 选择摘要 ----------
+            function updateSelectionSummary() {
+                const el = $('selection-summary');
+                if (!el) return;
+                const atkPlayer = players[G._attackerNum];
+                const defPlayer = players[G._defenderNum];
+                const atkName = atkPlayer?.name || '未知攻击者';
+                const defName = defPlayer?.name || '未知防御者';
+                let html = '';
+                if (G._attackerSelection && G._attackerSelection.length > 0) {
+                    html += `<strong>${atkName}</strong> 攻击选：${G._attackerSelection.join('、')}  `;
+                } else {
+                    html += `<strong>${atkName}</strong> 攻击选：等待...  `;
+                }
+                if (G._defenderSelection && G._defenderSelection.length > 0) {
+                    html += `<strong>${defName}</strong> 防御选：${G._defenderSelection.join('、')}`;
+                } else {
+                    html += `<strong>${defName}</strong> 防御选：等待...`;
+                }
+                el.innerHTML = html;
+            }
 
             // ---------- 课程 ----------
             const COURSES = [{
                 name: '体育',
                 desc: '力量+2',
                 apply: (p) => { p.power += 2; },
-                undo: (p) => { p.power -= 2; },
+                undo: () => {},
             }, {
                 name: '化学',
                 desc: '中毒+2',
                 apply: (p) => { addStatus(p, STATUS.POISON, 2); },
-                undo: (p) => { removeStatus(p, STATUS.POISON, 2); },
+                undo: () => {},
             }, {
                 name: '自习',
                 desc: '无特殊效果',
@@ -1403,30 +788,27 @@
                     p.health = Math.min(p.maxHealth, p.health + 3);
                     [STATUS.POISON, STATUS.KEJING, STATUS.WEAK, STATUS.DUDU].forEach(e => removeStatus(p, e, 1));
                 },
-                undo: (p) => {
-                    p.health = Math.max(1, p.health - 3);
-                    [STATUS.POISON, STATUS.KEJING, STATUS.WEAK, STATUS.DUDU].forEach(e => addStatus(p, e, 1));
-                },
+                undo: () => {},
             }, {
                 name: '信息技术',
                 desc: '变量骰子+1',
                 apply: (p) => { p.specialDiceUses += 1; },
-                undo: (p) => { p.specialDiceUses = Math.max(0, p.specialDiceUses - 1); },
+                undo: () => {},
             }, {
                 name: '语文',
                 desc: '菜就多练，攻击骰+1',
                 apply: (p) => { addStatus(p, STATUS.CAI_DUO, 1); },
-                undo: (p) => { removeStatus(p, STATUS.CAI_DUO, 1); },
+                undo: () => {},
             }, {
                 name: '数学',
                 desc: '-3血',
                 apply: (p) => { p.health = Math.max(1, p.health - 3); },
-                undo: (p) => { p.health = Math.min(p.maxHealth, p.health + 3); },
+                undo: () => {},
             }, {
                 name: '物理',
                 desc: '报名强基计划，伤害提升',
                 apply: (p) => { addStatus(p, STATUS.STRONG_PLAN, 1); },
-                undo: (p) => { removeStatus(p, STATUS.STRONG_PLAN, 1); },
+                undo: () => {},
             }, {
                 name: '历史',
                 desc: '总骰子数+1',
@@ -1436,7 +818,7 @@
                 name: '地理',
                 desc: '坚固+1',
                 apply: (p) => { p.armor += 1; },
-                undo: (p) => { p.armor = Math.max(0, p.armor - 1); },
+                undo: () => {},
             }, ];
 
             // ---------- 特殊骰子 ----------
@@ -1488,194 +870,6 @@
                 },
             };
 
-            // ---------- 工具函数 ----------
-            function getStatus(p, key) { return p.statusEffects[key] || 0; }
-
-            function setStatus(p, key, val) {
-                if (val <= 0) delete p.statusEffects[key];
-                else p.statusEffects[key] = val;
-            }
-
-            function addStatus(p, key, delta = 1) {
-                const cur = getStatus(p, key);
-                setStatus(p, key, cur + delta);
-            }
-
-            function removeStatus(p, key, delta = 1) {
-                const cur = getStatus(p, key);
-                setStatus(p, key, Math.max(0, cur - delta));
-            }
-
-            function getMaxSelectable(p, type) {
-                let base = type === 'attack' ? p.attackDice : p.defenseDice;
-                if (getStatus(p, STATUS.CAI_DUO) > 0 && type === 'attack') base++;
-                if (getStatus(p, STATUS.KEJING) > 0) base = Math.max(1, base - 1);
-                return base;
-            }
-
-            function rollDice(count, p) {
-                const vals = [];
-                let used = 0;
-                const isGambler = p.character.id === CHAR.GAMBLER;
-                const maxVal = isGambler ? 8 : 6;
-                while (used < p._fixedSixStacks) {
-                    vals.push(6);
-                    used++;
-                }
-                p._fixedSixStacks -= used;
-                for (let i = 0; i < p._extraSixCount; i++) vals.push(6);
-                p._extraSixCount = 0;
-                const remaining = Math.max(0, count - vals.length);
-                for (let i = 0; i < remaining; i++) {
-                    vals.push(Math.floor(Math.random() * maxVal) + 1);
-                }
-                return vals;
-            }
-
-            // ---------- 日志 ----------
-            function log(msg, type = 'system') {
-                const el = $('game-log');
-                if (!el) return;
-                const e = document.createElement('div');
-                e.className = 'log-entry ' + type;
-                const t = new Date();
-                const ts = String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
-                e.textContent = '[' + ts + '] ' + msg;
-                el.appendChild(e);
-                e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-
-            // ---------- 玩家对象 ----------
-            function createPlayer(num, name, characterData, isAI = false, aiDifficulty = 0) {
-                const p = {
-                    num,
-                    name,
-                    health: characterData.maxHealth,
-                    maxHealth: characterData.maxHealth,
-                    totalDice: characterData.totalDice,
-                    attackDice: characterData.attackDice,
-                    defenseDice: characterData.defenseDice,
-                    character: {
-                        id: characterData.id,
-                        name: characterData.name,
-                        effect: characterData.effect,
-                        skill: characterData.skill,
-                    },
-                    specialDiceUses: 2,
-                    statusEffects: {},
-                    power: 0,
-                    armor: 0,
-                    _lastStandUsed: 0,
-                    _fixedSixStacks: 0,
-                    _extraSixCount: 0,
-                    _sixCount: 0,
-                    _extraAttacksRemaining: characterData.id === CHAR.EMBER_HERO ? 1 : 0,
-                    maxRerolls: 1,
-                    rerollsUsedThisTurn: 0,
-                    _extraPoisonRemove: 0,
-                    _gamblerBuff: 0,
-                    _hasExtraAttack: false,
-                    isAI,
-                    aiDifficulty,
-                    bonusDesc: '',
-                };
-
-                if (isAI && aiDifficulty > 0) {
-                    let parts = [];
-                    let hpBonus = 0;
-                    let powerBonus = 0;
-                    let armorBonus = 0;
-                    let specialBonus = 0;
-
-                    if (aiDifficulty >= 1) { hpBonus += 5; }
-                    if (aiDifficulty >= 2) { powerBonus += 1;
-                        armorBonus += 1; }
-                    if (aiDifficulty >= 3) { hpBonus += 10;
-                        powerBonus += 1;
-                        armorBonus += 1;
-                        specialBonus += 1; }
-
-                    if (hpBonus > 0) parts.push('生命+' + hpBonus);
-                    if (powerBonus > 0) parts.push('力量+' + powerBonus);
-                    if (armorBonus > 0) parts.push('坚固+' + armorBonus);
-                    if (specialBonus > 0) parts.push('变量骰子+' + specialBonus);
-
-                    p.maxHealth += hpBonus;
-                    p.health = p.maxHealth;
-                    p.power += powerBonus;
-                    p.armor += armorBonus;
-                    p.specialDiceUses += specialBonus;
-                    p.bonusDesc = parts.join('，');
-                }
-                return p;
-            }
-
-            // ---------- 游戏状态 ----------
-            const G = {
-                phase: 'idle',
-                turn: 1,
-                currentPlayer: 1,
-                subState: 'idle',
-                currentAction: null,
-                waitingForDefense: false,
-                attackData: null,
-                allDice: [],
-                selectedIndices: [],
-                prevCourseIdx: -1,
-                currentCourseIdx: 0,
-                isRerolling: false,
-                _attackerSelection: [],
-                _defenderSelection: [],
-            };
-
-            const players = { 1: null, 2: null };
-            let _uiCache = { p1: {}, p2: {} };
-            let pveConfig = null;
-            let currentBattle = 1;
-            let totalBattles = 3;
-            let _specialTargetPlayer = 1;
-
-            // ---------- 选择摘要 ----------
-            function updateSelectionSummary() {
-                const el = $('selection-summary');
-                if (!el) return;
-                const atkName = players[1]?.name || '勇者';
-                const defName = players[2]?.name || 'AI';
-                let html = '';
-                if (G._attackerSelection && G._attackerSelection.length > 0) {
-                    html += `<strong>${atkName}</strong> 攻击选：${G._attackerSelection.join('、')}  `;
-                } else {
-                    html += `<strong>${atkName}</strong> 攻击选：等待...  `;
-                }
-                if (G._defenderSelection && G._defenderSelection.length > 0) {
-                    html += `<strong>${defName}</strong> 防御选：${G._defenderSelection.join('、')}`;
-                } else {
-                    html += `<strong>${defName}</strong> 防御选：等待...`;
-                }
-                el.innerHTML = html;
-            }
-
-            function updateAIBonusDisplay() {
-                const ai = players[2];
-                if (!ai) return;
-                const detailEl = $('aiBonusDetail');
-                const stageEl = $('aiBonusDisplay');
-                const diffNames = ['练习', '普通', '困难', '噩梦'];
-                const diff = pveConfig ? pveConfig.difficulty : 0;
-
-                if (detailEl) {
-                    detailEl.textContent = ai.bonusDesc ? 'AI 难度加成：' + ai.bonusDesc : 'AI 难度加成：无';
-                }
-                if (stageEl) {
-                    let diffText = diffNames[diff] || '普通';
-                    if (ai.bonusDesc) {
-                        stageEl.textContent = '难度：' + diffText + ' (加成：' + ai.bonusDesc + ')';
-                    } else {
-                        stageEl.textContent = '难度：' + diffText;
-                    }
-                }
-            }
-
             // ---------- 核心战斗逻辑 ----------
             function switchCourse() {
                 if (G.phase !== 'playing') return;
@@ -1709,13 +903,50 @@
                 }
             }
 
+            function triggerStarfallForBoth() {
+                if (G.phase !== 'playing') return;
+                const p1 = players[1];
+                const p2 = players[2];
+                const doStarfall = (attacker) => {
+                    if (!attacker || attacker.character.skill !== 'starfall') return;
+                    const opponent = attacker.num === 1 ? players[2] : players[1];
+                    if (!opponent) return;
+                    const soul = attacker._starSoul || 0;
+                    if (soul > 0) {
+                        opponent.health = Math.max(0, opponent.health - soul);
+                        log(attacker.name + ' 的星落造成 ' + soul + ' 点真实伤害（星魂）', 'damage');
+                        refreshAllUI();
+                        if (opponent.health <= 0) { endGame(attacker.num); }
+                    } else {
+                        log(attacker.name + ' 当前星魂为0，星落无伤害', 'system');
+                    }
+                };
+                doStarfall(p1);
+                if (G.phase === 'ended') return;
+                doStarfall(p2);
+            }
+
+            function triggerDragonScales(p) {
+                if (p.character.skill !== 'dragonScales') return;
+                const heal = 3;
+                p.health = Math.min(p.maxHealth, p.health + heal);
+                p.power += 1;
+                p.armor += 1;
+                log(p.name + ' 的龙鳞护体回复 ' + heal + ' 点生命，力量+1，坚固+1', 'heal');
+                refreshAllUI();
+            }
+
+            function handleTurnStartEffects(p) {
+                triggerDragonScales(p);
+            }
+
             function endGame(winner) {
                 if (G.phase === 'ended') return;
                 G.phase = 'ended';
                 log(players[winner].name + ' 获胜！', 'system');
                 const ar = $('action-result');
                 if (ar) ar.innerHTML =
-                `<div style="color:var(--color-danger);font-size:1.3rem;">${players[winner].name} 获胜！</div>`;
+                    `<div style="color:var(--color-danger);font-size:1.3rem;">${players[winner].name} 获胜！</div>`;
                 disableAllButtons();
                 refreshAllUI();
                 showResult(players[winner], players[winner === 1 ? 2 : 1]);
@@ -1723,6 +954,7 @@
 
             function switchTurn() {
                 if (G.phase !== 'playing') return;
+
                 G.currentPlayer = G.currentPlayer === 1 ? 2 : 1;
                 const p = players[G.currentPlayer];
                 p.rerollsUsedThisTurn = 0;
@@ -1731,18 +963,25 @@
                 G.selectedIndices = [];
                 G._attackerSelection = [];
                 G._defenderSelection = [];
+                G._attackerNum = G.currentPlayer;
+                G._defenderNum = G.currentPlayer === 1 ? 2 : 1;
                 updateSelectionSummary();
                 const dr = $('dice-result');
                 if (dr) dr.innerHTML = '';
                 G.subState = 'idle';
                 G.currentAction = null;
                 G.waitingForDefense = false;
+
                 if (G.currentPlayer === 1) {
                     G.turn++;
                     const tc = $('turn-counter');
                     if (tc) tc.textContent = '回合数: ' + G.turn;
                     switchCourse();
+                    triggerStarfallForBoth();
+                    if (G.phase === 'ended') return;
                 }
+
+                handleTurnStartEffects(p);
                 refreshAllUI();
                 log('轮到 ' + p.name + ' 的回合', 'system');
                 const ar = $('action-result');
@@ -1758,6 +997,8 @@
             function processAttack(selectedDice, attNum) {
                 const att = players[attNum];
                 const def = players[attNum === 1 ? 2 : 1];
+                G._attackerNum = attNum;
+                G._defenderNum = def.num;
                 G._attackerSelection = selectedDice.slice();
                 G._defenderSelection = [];
                 updateSelectionSummary();
@@ -1793,7 +1034,9 @@
                 if (handler) {
                     if (att.character.skill === 'hunter') {} else if (att.character.skill === 'northwind') {
                         skillResult = handler(att, dice, ctx);
-                    } else if (att.character.skill === 'gambler') {} else {
+                    } else if (att.character.skill === 'gambler') {} else if (att.character.skill === 'shadowStrike') {
+                        skillResult = handler(att, dice);
+                    } else {
                         skillResult = handler(att, dice, ctx);
                     }
                 }
@@ -1809,12 +1052,22 @@
                     if (def.health <= 0) { endGame(attNum); return; }
                 }
                 if (skillResult.extraAttack) att._hasExtraAttack = true;
+                if (skillResult.powerGain) {
+                    att.power += skillResult.powerGain;
+                    log(att.name + ' 暗影突袭力量+1', 'effect');
+                }
 
                 let rawSum = dice.reduce((a, b) => a + b, 0) + att.power;
                 const weakened = getStatus(att, STATUS.WEAK) > 0;
                 if (weakened) {
                     log(att.name + ' 处于虚弱，攻击伤害-30%', 'effect');
                     removeStatus(att, STATUS.WEAK, 1);
+                }
+
+                let damageMultiplier = 1;
+                if (skillResult.shadowStrike) {
+                    damageMultiplier = 2.5;
+                    log(att.name + ' 暗影突袭触发，伤害×2.5！', 'effect');
                 }
 
                 log(att.name + ' 攻击点数: ' + rawSum + ' (' + dice.join('+') + (att.power > 0 ? '+力量' + att.power : '') + ')',
@@ -1829,6 +1082,7 @@
                     effectResult: skillResult,
                     attackDice: dice,
                     weakened,
+                    damageMultiplier,
                 };
                 G.waitingForDefense = true;
                 G.allDice = [];
@@ -1860,6 +1114,7 @@
                 if (!G.attackData) return;
                 const att = players[G.attackData.attNum];
                 const def = players[defNum];
+                G._defenderNum = defNum;
                 G._defenderSelection = selectedDice.slice();
                 updateSelectionSummary();
 
@@ -1867,6 +1122,7 @@
                 const eff = G.attackData.effectResult;
                 const atkDice = G.attackData.attackDice;
                 const weakened = G.attackData.weakened;
+                const damageMultiplier = G.attackData.damageMultiplier || 1;
 
                 if (getStatus(def, STATUS.KEJING) > 0) removeStatus(def, STATUS.KEJING, 1);
 
@@ -1887,6 +1143,8 @@
                 let damage = eff.ignoreDefense ? atkSum : Math.max(0, atkSum - defSum);
                 if (att.character.id === CHAR.WITCH && eff.allEven) damage *= 2;
                 if (weakened) damage = Math.floor(damage * 0.7);
+                damage *= damageMultiplier;
+
                 if (getStatus(att, STATUS.STRONG_PLAN) > 0 && damage > 0) {
                     const nd = Math.floor(damage * 1.2);
                     if (nd > damage) { log(att.name + ' 强基计划: ' + damage + ' → ' + nd, 'effect');
@@ -1895,9 +1153,9 @@
 
                 let finalDamage = damage;
                 let reduced = 0;
-                if (getStatus(def, STATUS.HARD_ARMOR) > 0 && damage > 0) {
-                    reduced = Math.floor(damage * 0.25);
-                    finalDamage = damage - reduced;
+                if (getStatus(def, STATUS.HARD_ARMOR) > 0 && finalDamage > 0) {
+                    reduced = Math.floor(finalDamage * 0.25);
+                    finalDamage = finalDamage - reduced;
                     log(def.name + ' 很硬的甲 减免 ' + reduced + ' 点伤害', 'effect');
                 }
 
@@ -1913,8 +1171,21 @@
                 def.health = Math.max(0, def.health - finalDamage);
                 log(def.name + ' 受到 ' + finalDamage + ' 点伤害，剩余 ' + def.health, 'damage');
 
-                if (getStatus(def, STATUS.HARD_ARMOR) > 0 && (damage > 0 || reduced > 0)) {
+                if (getStatus(def, STATUS.HARD_ARMOR) > 0 && (finalDamage > 0 || reduced > 0)) {
                     removeStatus(def, STATUS.HARD_ARMOR, 1);
+                }
+
+                if (att.character.skill === 'starfall' && finalDamage > 0) {
+                    att._damageCounter = (att._damageCounter || 0) + finalDamage;
+                    let gained = 0;
+                    while (att._damageCounter >= 5) {
+                        att._damageCounter -= 5;
+                        att._starSoul = (att._starSoul || 0) + 1;
+                        gained++;
+                    }
+                    if (gained > 0) {
+                        log(att.name + ' 累计造成伤害，星魂+' + gained + '，当前星魂：' + att._starSoul, 'effect');
+                    }
                 }
 
                 const poisonBefore = getStatus(def, STATUS.POISON);
@@ -2203,13 +1474,15 @@
                     });
                     G._attackerSelection = attackRes.selectedValues.slice();
                     G._defenderSelection = [];
+                    G._attackerNum = 2;
+                    G._defenderNum = 1;
                     updateSelectionSummary();
                     G.selectedIndices = sel;
                     setTimeout(() => {
                         if (G.phase === 'playing') {
                             processAttack(attackRes.selectedValues, 2);
                         }
-                    }, 400);
+                    }, 1400);
                 }, 600);
             }
 
@@ -2236,13 +1509,15 @@
                         else el.classList.remove('selected');
                     });
                     G._defenderSelection = defRes.selectedValues.slice();
+                    G._defenderNum = 2;
+                    G._attackerNum = 1;
                     updateSelectionSummary();
                     G.selectedIndices = sel;
                     setTimeout(() => {
                         if (G.phase === 'playing') {
                             processDefense(defRes.selectedValues, 2);
                         }
-                    }, 400);
+                    }, 1400);
                 }, 600);
             }
 
@@ -2254,6 +1529,8 @@
                 G.subState = 'rolling';
                 G.selectedIndices = [];
                 players[1].rerollsUsedThisTurn = 0;
+                G._attackerNum = 1;
+                G._defenderNum = 2;
                 updateButtons();
                 log(players[1].name + ' 开始攻击...', 'player1');
                 const ar = $('action-result');
@@ -2284,6 +1561,8 @@
                 G.subState = 'rolling';
                 G.selectedIndices = [];
                 players[1].rerollsUsedThisTurn = 0;
+                G._defenderNum = 1;
+                G._attackerNum = 2;
                 updateButtons();
                 log(players[1].name + ' 开始防御...', 'player1');
                 const ar = $('action-result');
@@ -2336,8 +1615,10 @@
                     const selVals = G.selectedIndices.map(i => G.allDice[i]);
                     if (G.currentAction === 'attack') {
                         G._attackerSelection = selVals;
+                        G._attackerNum = pn;
                     } else if (G.currentAction === 'defend') {
                         G._defenderSelection = selVals;
+                        G._defenderNum = pn;
                     }
                     updateSelectionSummary();
                     const max = getMaxSelectable(p, G.currentAction);
@@ -2485,6 +1766,7 @@
                 updateButtons();
                 updateSelectionSummary();
                 updateAIBonusDisplay();
+                updateNextBattleBtn();
                 if (G.currentCourseIdx >= 0 && G.currentCourseIdx < COURSES.length) {
                     const c = COURSES[G.currentCourseIdx];
                     const cd = $('course-display');
@@ -2497,6 +1779,34 @@
                     if (el) {
                         if (G.phase === 'playing' && G.currentPlayer === pn) el.classList.add('active');
                         else el.classList.remove('active');
+                    }
+                }
+            }
+
+            function updateNextBattleBtn() {
+                const btn = $('next-battle-btn');
+                if (!btn) return;
+                const show = G.victoryPending && G.phase === 'ended';
+                btn.style.display = show ? 'inline-block' : 'none';
+            }
+
+            function updateAIBonusDisplay() {
+                const ai = players[2];
+                if (!ai) return;
+                const detailEl = $('aiBonusDetail');
+                const stageEl = $('aiBonusDisplay');
+                const diffNames = ['练习', '普通', '困难', '噩梦'];
+                const diff = pveConfig ? pveConfig.difficulty : 0;
+
+                if (detailEl) {
+                    detailEl.textContent = ai.bonusDesc ? 'AI 难度加成：' + ai.bonusDesc : 'AI 难度加成：无';
+                }
+                if (stageEl) {
+                    let diffText = diffNames[diff] || '普通';
+                    if (ai.bonusDesc) {
+                        stageEl.textContent = '难度：' + diffText + ' (加成：' + ai.bonusDesc + ')';
+                    } else {
+                        stageEl.textContent = '难度：' + diffText;
                     }
                 }
             }
@@ -2564,6 +1874,9 @@
                     statusItems.push('藏一手 ×' + p._lastStandUsed + '/2');
                 }
                 if (p._sixCount > 0) statusItems.push('虹彩恩赐 ' + p._sixCount + '/3');
+                if (p.character.skill === 'starfall') {
+                    statusItems.push('星魂 ' + (p._starSoul || 0));
+                }
 
                 const statusKeys = [STATUS.POISON, STATUS.DUDU, STATUS.KEJING, STATUS.CAI_DUO,
                     STATUS.HARD_ARMOR, STATUS.LAST_STAND, STATUS.WEAK, STATUS.STRONG_PLAN
@@ -2701,6 +2014,57 @@
                 }
             }
 
+            // ---------- 隐藏角色解锁 ----------
+            function checkUnlockOnVictory() {
+                const configStr = localStorage.getItem('pveAdventureConfig');
+                if (!configStr) return;
+                try {
+                    const config = JSON.parse(configStr);
+                    const { difficulty, length } = config;
+                    let unlockId = null;
+                    if (difficulty === 1 && length === 3) unlockId = 13;
+                    else if (difficulty === 2 && length === 5) unlockId = 14;
+                    else if (difficulty === 3 && length === 7) unlockId = 15;
+                    if (unlockId) {
+                        let unlocked = JSON.parse(localStorage.getItem('pveUnlockedHidden') || '[]');
+                        if (!unlocked.includes(unlockId)) {
+                            unlocked.push(unlockId);
+                            localStorage.setItem('pveUnlockedHidden', JSON.stringify(unlocked));
+                            const charName = CHARACTERS[unlockId]?.name || '未知角色';
+                            log(`🎉 解锁隐藏角色：${charName}！`, 'system');
+                            showUnlockToast(charName);
+                        }
+                    }
+                } catch (e) { console.warn('解锁检测失败', e); }
+            }
+
+            function showUnlockToast(charName) {
+                const toast = document.createElement('div');
+                toast.textContent = `🎉 解锁隐藏角色：${charName}！`;
+                Object.assign(toast.style, {
+                    position: 'fixed', top: '20%', left: '50%', transform: 'translateX(-50%)',
+                    background: 'var(--color-success)', color: 'white',
+                    padding: '16px 32px', borderRadius: '30px', zIndex: '2000',
+                    fontWeight: 'bold', fontSize: '1.4rem', boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                    animation: 'modalFade 0.3s ease'
+                });
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            }
+
+            // ---------- 敌人选择（排除百变怪） ----------
+            function getRandomEnemyCharacter(currentBattle) {
+                if (currentBattle === 3) return 13;
+                if (currentBattle === 5) return 15;
+                if (currentBattle === 7) return 14;
+                if (currentBattle >= 8) {
+                    const allIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]; // 排除12
+                    return allIds[Math.floor(Math.random() * allIds.length)];
+                }
+                const normalIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+                return normalIds[Math.floor(Math.random() * normalIds.length)];
+            }
+
             // ---------- PVE 初始化 ----------
             function loadPVEConfig() {
                 const configStr = localStorage.getItem('pveAdventureConfig');
@@ -2709,18 +2073,11 @@
                     window.location.href = 'index.html';
                     return null;
                 }
-                try {
-                    return JSON.parse(configStr);
-                } catch (e) {
+                try { return JSON.parse(configStr); } catch (e) {
                     alert('配置解析失败，请重新开始。');
                     window.location.href = 'index.html';
                     return null;
                 }
-            }
-
-            function getRandomNormalCharacter() {
-                const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-                return ids[Math.floor(Math.random() * ids.length)];
             }
 
             function initBattle(characterId, isMimic, diff, total, current) {
@@ -2732,14 +2089,29 @@
                     playerChar.name = '百变怪（' + playerChar.name + '）';
                 }
                 const player = createPlayer(1, '勇者', playerChar, false);
-                const aiCharId = getRandomNormalCharacter();
+                player.maxHealth += 5;
+                player.health = Math.min(player.health, player.maxHealth);
+
+                const aiCharId = getRandomEnemyCharacter(current);
                 const aiCharData = CHARACTERS[aiCharId];
-                const ai = createPlayer(2, 'AI 对手', aiCharData, true, diff);
+                const ai = createPlayer(2, 'AI 对手', aiCharData, true, diff, current - 1);
+
+                if (player.character.skill === 'starfall') {
+                    player._starSoul = (player._starSoul || 0) + 1;
+                }
+                if (ai.character.skill === 'starfall') {
+                    ai._starSoul = (ai._starSoul || 0) + 1;
+                }
+
                 players[1] = player;
                 players[2] = ai;
                 G.phase = 'playing';
                 G.turn = 1;
-                G.currentPlayer = 1;
+                if (diff === 3) {
+                    G.currentPlayer = 2;
+                } else {
+                    G.currentPlayer = 1;
+                }
                 G.subState = 'idle';
                 G.currentAction = null;
                 G.waitingForDefense = false;
@@ -2748,6 +2120,8 @@
                 G.selectedIndices = [];
                 G._attackerSelection = [];
                 G._defenderSelection = [];
+                G._attackerNum = G.currentPlayer;
+                G._defenderNum = G.currentPlayer === 1 ? 2 : 1;
                 G.prevCourseIdx = -1;
                 G.currentCourseIdx = Math.floor(Math.random() * COURSES.length);
                 const course = COURSES[G.currentCourseIdx];
@@ -2760,20 +2134,33 @@
                 const dr = $('dice-result');
                 if (dr) dr.innerHTML = '';
                 const ar = $('action-result');
-                if (ar) ar.textContent = '战斗开始！勇者先手';
+                if (ar) ar.textContent = '战斗开始！' + (G.currentPlayer === 1 ? '勇者先手' : 'AI先手');
                 const gl = $('game-log');
                 if (gl) gl.innerHTML = '';
                 log('===== 第 ' + current + '/' + total + ' 场战斗开始 =====', 'system');
                 log('勇者选择了 ' + player.character.name + '，AI选择了 ' + ai.character.name, 'system');
+
+                if (G.currentPlayer === 2) {
+                    log('噩梦难度：AI 先手！', 'system');
+                    setTimeout(() => {
+                        if (G.phase === 'playing' && G.currentPlayer === 2) {
+                            aiTakeTurn();
+                        }
+                    }, 800);
+                }
+
                 refreshAllUI();
                 updateButtons();
             }
 
+            // ---------- 结果弹窗 ----------
             function showResult(winner, loser) {
                 const modal = $('result-modal');
                 const title = $('result-title');
                 const body = $('result-body');
-                if (!modal || !title || !body) return;
+                const buttonsContainer = $('result-buttons');
+                if (!modal || !title || !body || !buttonsContainer) return;
+
                 const isPlayerWin = (winner.num === 1);
                 title.textContent = isPlayerWin ? '🎉 胜利！' : '💀 败北...';
                 body.innerHTML = `
@@ -2781,67 +2168,74 @@
                     <div>${winner.name} 剩余生命: ${winner.health}/${winner.maxHealth}</div>
                     <div>${loser.name} 剩余生命: ${loser.health}/${loser.maxHealth}</div>
                 `;
+
+                buttonsContainer.innerHTML = '';
+
+                if (isPlayerWin) {
+                    G.victoryPending = true;
+                } else {
+                    G.victoryPending = false;
+                    const restartBtn = document.createElement('button');
+                    restartBtn.className = 'btn-confirm';
+                    restartBtn.textContent = '重新开始';
+                    restartBtn.onclick = () => {
+                        modal.classList.add('hidden');
+                        resetGame();
+                    };
+                    buttonsContainer.appendChild(restartBtn);
+
+                    const menuBtn = document.createElement('button');
+                    menuBtn.className = 'btn-cancel';
+                    menuBtn.textContent = '返回主菜单';
+                    menuBtn.onclick = () => {
+                        modal.classList.add('hidden');
+                        window.location.href = 'index.html';
+                    };
+                    buttonsContainer.appendChild(menuBtn);
+                }
+
                 modal.classList.remove('hidden');
 
-                const continueBtn = $('result-continue');
-                const menuBtn = $('result-menu');
-                if (isPlayerWin) {
-                    if (currentBattle < totalBattles) {
-                        continueBtn.textContent = '下一场战斗';
-                        continueBtn.onclick = () => {
-                            modal.classList.add('hidden');
-                            currentBattle++;
-                            startNextBattle();
-                        };
-                    } else {
-                        continueBtn.textContent = '🎊 冒险完成！';
-                        continueBtn.onclick = () => {
-                            modal.classList.add('hidden');
-                            alert('恭喜你完成了所有战斗！返回主菜单。');
-                            window.location.href = 'index.html';
-                        };
-                    }
-                } else {
-                    continueBtn.textContent = '重新挑战';
-                    continueBtn.onclick = () => {
+                const closeBtn = $('result-close');
+                if (closeBtn) {
+                    closeBtn.onclick = () => {
                         modal.classList.add('hidden');
-                        startNextBattle();
+                        if (isPlayerWin) {
+                            updateNextBattleBtn();
+                        } else {
+                            updateNextBattleBtn();
+                        }
                     };
                 }
-                menuBtn.onclick = () => {
-                    modal.classList.add('hidden');
-                    window.location.href = 'index.html';
+
+                modal.onclick = (e) => {
+                    if (e.target === modal) {
+                        modal.classList.add('hidden');
+                        if (isPlayerWin) {
+                            updateNextBattleBtn();
+                        } else {
+                            updateNextBattleBtn();
+                        }
+                    }
                 };
             }
 
-            function startNextBattle() {
-                if (currentBattle > totalBattles) {
-                    alert('所有战斗已完成！');
+            // ---------- 进入下一场 ----------
+            function goToNextBattle() {
+                if (!G.victoryPending || G.phase !== 'ended') return;
+                G.victoryPending = false;
+                const btn = $('next-battle-btn');
+                if (btn) btn.style.display = 'none';
+                if (currentBattle >= totalBattles) {
+                    alert('🎊 恭喜你完成了所有战斗！返回主菜单。');
                     window.location.href = 'index.html';
                     return;
                 }
-                const charId = pveConfig.characterId;
-                const isMimic = pveConfig.isMimic || false;
-                const diff = pveConfig.difficulty;
-                const stageDisplay = $('pveStage');
-                if (stageDisplay) stageDisplay.textContent = `第 ${currentBattle} / ${totalBattles===9999?'∞':totalBattles} 场`;
-                const diffNames = ['练习', '普通', '困难', '噩梦'];
-                const diffDisplay = $('pveDifficulty');
-                if (diffDisplay) diffDisplay.textContent = '难度：' + diffNames[diff];
-
-                initBattle(charId, isMimic, diff, totalBattles, currentBattle);
-
-                // 胜利后进入下一场回复 10 点生命
-                if (players[1] && G.phase === 'playing') {
-                    const p = players[1];
-                    const healAmount = 10;
-                    p.health = Math.min(p.maxHealth, p.health + healAmount);
-                    log('勇者回复 ' + healAmount + ' 点生命', 'heal');
-                    refreshAllUI();
-                }
+                currentBattle++;
+                startNextBattle();
             }
 
-            // ---------- 重置与返回 ----------
+            // ---------- 重置游戏 ----------
             function resetGame() {
                 if (G.phase === 'playing' && !confirm('重置会丢失当前战斗进度，确定吗？')) return;
                 pveConfig = loadPVEConfig();
@@ -2853,12 +2247,112 @@
                 if (diffDisplay) diffDisplay.textContent = '难度：' + diffNames[pveConfig.difficulty];
                 const stageDisplay = $('pveStage');
                 if (stageDisplay) stageDisplay.textContent = `第 1 / ${totalBattles===9999?'∞':totalBattles} 场`;
+                G.victoryPending = false;
+                const btn = $('next-battle-btn');
+                if (btn) btn.style.display = 'none';
                 startNextBattle();
             }
 
+            // ---------- backToMenu 定义 ----------
             function backToMenu() {
                 if (G.phase === 'playing' && !confirm('返回主菜单会丢失当前进度，确定吗？')) return;
                 window.location.href = 'index.html';
+            }
+
+            // ---------- startNextBattle ----------
+            function startNextBattle() {
+                if (currentBattle > totalBattles) {
+                    alert('所有战斗已完成！');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                const charId = pveConfig.characterId;
+                const isMimic = pveConfig.isMimic || false;
+                const diff = pveConfig.difficulty;
+                const stageDisplay = $('pveStage');
+                if (stageDisplay) stageDisplay.textContent = `第 ${currentBattle} / ${totalBattles===9999?'∞':totalBattles} 场`;
+
+                if (currentBattle === 1) {
+                    initBattle(charId, isMimic, diff, totalBattles, currentBattle);
+                } else {
+                    if (!players[1]) {
+                        initBattle(charId, isMimic, diff, totalBattles, currentBattle);
+                        return;
+                    }
+                    if (G.currentCourseIdx >= 0 && G.currentCourseIdx < COURSES.length) {
+                        const old = COURSES[G.currentCourseIdx];
+                        if (old.undo) { old.undo(players[1]);
+                            old.undo(players[2]); }
+                    }
+                    const aiCharId = getRandomEnemyCharacter(currentBattle);
+                    const aiCharData = CHARACTERS[aiCharId];
+                    const ai = createPlayer(2, 'AI 对手', aiCharData, true, diff, currentBattle - 1);
+
+                    const p = players[1];
+                    p.maxHealth += 5;
+                    p.health = Math.min(p.health, p.maxHealth);
+
+                    if (p.character.skill === 'starfall') {
+                        p._starSoul = (p._starSoul || 0) + 1;
+                    }
+                    if (ai.character.skill === 'starfall') {
+                        ai._starSoul = (ai._starSoul || 0) + 1;
+                    }
+
+                    players[2] = ai;
+
+                    G.phase = 'playing';
+                    G.turn = 1;
+                    if (diff === 3) {
+                        G.currentPlayer = 2;
+                    } else {
+                        G.currentPlayer = 1;
+                    }
+                    G.subState = 'idle';
+                    G.currentAction = null;
+                    G.waitingForDefense = false;
+                    G.attackData = null;
+                    G.allDice = [];
+                    G.selectedIndices = [];
+                    G._attackerSelection = [];
+                    G._defenderSelection = [];
+                    G._attackerNum = G.currentPlayer;
+                    G._defenderNum = G.currentPlayer === 1 ? 2 : 1;
+                    G.prevCourseIdx = -1;
+                    G.currentCourseIdx = Math.floor(Math.random() * COURSES.length);
+                    const newCourse = COURSES[G.currentCourseIdx];
+                    if (newCourse.apply) { newCourse.apply(players[1]);
+                        newCourse.apply(players[2]); }
+                    const cd = $('course-display');
+                    if (cd) cd.textContent = `当前课程: ${newCourse.name}（${newCourse.desc}）`;
+
+                    p.health = Math.min(p.maxHealth, p.health + 13);
+                    p.specialDiceUses += 2;
+
+                    const dr = $('dice-result');
+                    if (dr) dr.innerHTML = '';
+                    const ar = $('action-result');
+                    if (ar) ar.textContent = '战斗开始！' + (G.currentPlayer === 1 ? '勇者先手' : 'AI先手');
+                    const gl = $('game-log');
+                    if (gl) gl.innerHTML = '';
+                    log('===== 第 ' + currentBattle + '/' + totalBattles + ' 场战斗开始 =====', 'system');
+                    log('勇者继续战斗，AI选择了 ' + ai.character.name, 'system');
+
+                    if (G.currentPlayer === 2) {
+                        log('噩梦难度：AI 先手！', 'system');
+                        setTimeout(() => {
+                            if (G.phase === 'playing' && G.currentPlayer === 2) {
+                                aiTakeTurn();
+                            }
+                        }, 800);
+                    }
+
+                    refreshAllUI();
+                    updateButtons();
+                }
+                G.victoryPending = false;
+                const btn = $('next-battle-btn');
+                if (btn) btn.style.display = 'none';
             }
 
             // ---------- 控制台 ----------
@@ -2873,6 +2367,7 @@
                     { key: 'defenseDice', label: '防御骰' },
                     { key: 'specialDiceUses', label: '变量骰子' },
                     { key: 'maxRerolls', label: '重掷上限' },
+                    { key: '_starSoul', label: '星魂（星辰主宰）' },
                 ];
 
                 const buildCol = (pn, title) => {
@@ -2880,7 +2375,8 @@
                     if (!p) return '<div class="cheat-col">等待初始化...</div>';
                     let html = `<div class="cheat-col"><h3>${title}</h3>`;
                     for (const f of fields) {
-                        const val = p[f.key] ?? 0;
+                        let val = p[f.key] ?? 0;
+                        if (f.key === '_starSoul' && p.character.skill !== 'starfall') continue;
                         html += `
                             <div class="console-row">
                                 <span>${f.label}</span>
@@ -2921,6 +2417,8 @@
                             else p.health = Math.min(p.health, p.maxHealth);
                         } else if (key === 'health') {
                             p.health = Math.max(1, Math.min(p.maxHealth, p.health + delta));
+                        } else if (key === '_starSoul') {
+                            p._starSoul = Math.max(0, (p._starSoul || 0) + delta);
                         } else {
                             p[key] = Math.max(0, (p[key] || 0) + delta);
                         }
@@ -3041,7 +2539,6 @@
                 }
             };
 
-
             function applyLang(lang) {
                 const t = LANG_DATA[lang] || LANG_DATA.zh;
                 const h1 = document.querySelector('.header h1');
@@ -3055,12 +2552,11 @@
                 const p2 = $('p2-name');
                 if (p2) p2.textContent = t.p2;
 
-
                 document.querySelectorAll('.health-text').forEach(el => {
                     const span = el.querySelector('span');
                     if (span) {
                         const spanId = span.id;
-                        const currentValue = span.textContent; 
+                        const currentValue = span.textContent;
                         el.innerHTML = t.health + '：<span id="' + spanId + '">' + currentValue + '</span>';
                     }
                 });
@@ -3150,6 +2646,9 @@
                 const newBtn = $('new-game-btn');
                 if (newBtn) newBtn.addEventListener('click', resetGame);
 
+                const nextBtn = $('next-battle-btn');
+                if (nextBtn) nextBtn.addEventListener('click', goToNextBattle);
+
                 const backBtn = $('backToMenuBtn');
                 if (backBtn) backBtn.addEventListener('click', backToMenu);
 
@@ -3180,7 +2679,7 @@
                 if (langSelect) {
                     langSelect.addEventListener('change', () => {
                         applyLang(langSelect.value);
-                        refreshAllUI(); // 刷新UI确保显示同步
+                        refreshAllUI();
                     });
                 }
 
@@ -3231,6 +2730,7 @@
                 setupDiceInteraction();
                 renderConsole();
                 updateAIBonusDisplay();
+                updateNextBattleBtn();
             }
 
             if (document.readyState === 'loading') {
@@ -3238,9 +2738,7 @@
             } else {
                 init();
             }
-
         })();
     </script>
-
 </body>
 </html>
