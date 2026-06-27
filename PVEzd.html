@@ -176,7 +176,11 @@
 
         .action-buttons-row { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
 
-        #turn-counter,#course-display { font-size:1.1rem; font-weight:600; background:var(--bg-card); padding:6px 14px; border-radius:var(--radius-sm); text-align:center; margin-bottom:6px; border:1px solid var(--border-light); color:var(--text-primary); }
+        #turn-counter { font-size:1.1rem; font-weight:600; background:var(--bg-card); padding:6px 14px; border-radius:var(--radius-sm); text-align:center; margin-bottom:6px; border:1px solid var(--border-light); color:var(--text-primary); transition:color 0.3s; }
+        #turn-counter.final-moment { color:var(--color-danger); animation:pulse 1.2s infinite; }
+        @keyframes pulse { 0% { opacity:1; } 50% { opacity:0.6; } 100% { opacity:1; } }
+
+        #course-display { font-size:1.1rem; font-weight:600; background:var(--bg-card); padding:6px 14px; border-radius:var(--radius-sm); text-align:center; margin-bottom:6px; border:1px solid var(--border-light); color:var(--text-primary); }
 
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(2px); padding:16px; animation:modalFade 0.2s ease; }
         @keyframes modalFade { from{opacity:0;transform:scale(0.96);} to{opacity:1;transform:scale(1);} }
@@ -384,9 +388,18 @@
 
     <div class="modal-overlay hidden" id="settings-modal">
         <div class="modal-content" style="max-width:450px;">
-            <div class="modal-title">设置 <span class="close-btn" id="settings-close">&times;</span></div>
-            <div class="setting-row"><span class="setting-label">深色模式</span><label class="toggle-switch"><input type="checkbox" id="darkToggle" /><span class="slider"></span></label></div>
-            <div class="setting-row"><span class="setting-label">语言</span><select id="langSelect"><option value="zh">简体中文</option><option value="en">English</option></select></div>
+            <div class="modal-title">
+                <span id="settings-title-text">设置</span>
+                <span class="close-btn" id="settings-close">&times;</span>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label" id="dark-mode-label">深色模式</span>
+                <label class="toggle-switch"><input type="checkbox" id="darkToggle" /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+                <span class="setting-label" id="lang-label">语言</span>
+                <select id="langSelect"><option value="zh">简体中文</option><option value="en">English</option></select>
+            </div>
             <div class="setting-row" style="justify-content:center;border-bottom:none;padding-top:4px;">
                 <a href="https://space.bilibili.com/630895916" target="_blank" rel="noopener noreferrer" class="author-link">🅱️ 关注作者 ↗</a>
             </div>
@@ -452,13 +465,13 @@
                     effect: '随机扮演一位其他角色，确认后变为该角色，且血量+2',
                     skill: 'mimic' },
                 13: { id: 13, name: '幻影刺客 ★', maxHealth: 25, totalDice: 6, attackDice: 4, defenseDice: 2,
-                    effect: '暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+1',
+                    effect: '暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+2',
                     skill: 'shadowStrike' },
                 14: { id: 14, name: '不朽古龙 ★', maxHealth: 40, totalDice: 7, attackDice: 3, defenseDice: 4,
-                    effect: '龙鳞护体：每回合开始回复3点生命，并获得1层力量和1层坚固',
+                    effect: '龙鳞逆袭：攻击后力量+2并回复3点生命；受伤时坚固+1（上限3层）并造成等量真实伤害反击',
                     skill: 'dragonScales' },
                 15: { id: 15, name: '星辰主宰 ★', maxHealth: 35, totalDice: 6, attackDice: 4, defenseDice: 2,
-                    effect: '星落：进入战斗和每造成5点伤害获得1点星魂，每回合结束时对敌方造成等量真实伤害',
+                    effect: '星落：进入战斗和每造成4点伤害获得1点星魂，每回合结束时对敌方造成等量真实伤害',
                     skill: 'starfall' }
             };
 
@@ -519,11 +532,11 @@
                 shadowStrike: (att, dice) => {
                     const primes = [2, 3, 5, 7];
                     if (dice.length > 0 && dice.every(v => primes.includes(v))) {
-                        return { shadowStrike: true, powerGain: 1 };
+                        return { shadowStrike: true, powerGain: 2 };
                     }
                     return {};
                 },
-                dragonScales: () => ({}),
+                dragonScales: () => ({}), // 古龙技能在攻击和受击时单独处理
                 starfall: () => ({})
             };
 
@@ -540,6 +553,7 @@
                 POWER: 'power',
                 ARMOR: 'armor',
                 SIX_SIX_SIX: 'sixSixSix',
+                FINAL_MOMENT: 'finalMoment',
             };
             const STATUS_DISPLAY = {
                 [STATUS.POISON]: '你已中毒！',
@@ -550,6 +564,7 @@
                 [STATUS.LAST_STAND]: '藏一手',
                 [STATUS.WEAK]: '虚弱',
                 [STATUS.STRONG_PLAN]: '强基计划',
+                [STATUS.FINAL_MOMENT]: '最终时刻',
             };
             const CHAR = {
                 EMBER_HERO: 1,
@@ -620,13 +635,17 @@
                 e.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
 
-            // ---------- 波次增幅函数（新：兼顾前期与后期） ----------
-            function getWaveBonus(wave) {
-                // 生命：2.5 * wave^1.3，力量/坚固：1.5 * wave^1.1
-                const hp = Math.floor(2.5 * Math.pow(wave, 1.3));
-                const power = Math.floor(1.5 * Math.pow(wave, 1.1));
-                const armor = Math.floor(1.5 * Math.pow(wave, 1.1));
-                return { hp, power, armor };
+            // ---------- 波次增幅函数 ----------
+            function getWaveBonus(wave, difficulty) {
+                const hpBase = 2.0 + difficulty * 0.5;
+                const statBase = 1.0 + difficulty * 0.3;
+                const hpExp = 1.1 + difficulty * 0.1;
+                const statExp = 1.0 + difficulty * 0.05;
+                return {
+                    hp: Math.floor(hpBase * Math.pow(wave, hpExp)),
+                    power: Math.floor(statBase * Math.pow(wave, statExp)),
+                    armor: Math.floor(statBase * Math.pow(wave, statExp))
+                };
             }
 
             // ---------- 玩家创建 ----------
@@ -664,37 +683,13 @@
                     bonusDesc: '',
                     _starSoul: 0,
                     _damageCounter: 0,
+                    // 古龙专用：标记本回合是否已触发攻击效果
+                    _dragonScalesUsedThisTurn: false,
                 };
 
-                if (isAI && aiDifficulty > 0) {
-                    let parts = [];
-                    let hpBonus = 0,
-                        powerBonus = 0,
-                        armorBonus = 0,
-                        specialBonus = 0;
-                    if (aiDifficulty >= 1) { hpBonus += 5; }
-                    if (aiDifficulty >= 2) { powerBonus += 1;
-                        armorBonus += 1; }
-                    if (aiDifficulty >= 3) { hpBonus += 10;
-                        powerBonus += 1;
-                        armorBonus += 1;
-                        specialBonus += 1; }
-                    if (hpBonus > 0) parts.push('生命+' + hpBonus);
-                    if (powerBonus > 0) parts.push('力量+' + powerBonus);
-                    if (armorBonus > 0) parts.push('坚固+' + armorBonus);
-                    if (specialBonus > 0) parts.push('变量骰子+' + specialBonus);
-                    p.maxHealth += hpBonus;
-                    p.health = p.maxHealth;
-                    p.power += powerBonus;
-                    p.armor += armorBonus;
-                    p.specialDiceUses += specialBonus;
-                    p.bonusDesc = parts.join('，');
-                }
-
-                // ---- 波数加成（新函数） ----
-                if (isAI && waveBonus > 0) {
+                if (isAI) {
                     const currentWave = waveBonus + 1;
-                    const bonus = getWaveBonus(currentWave);
+                    const bonus = getWaveBonus(currentWave, aiDifficulty);
                     const totalHp = bonus.hp;
                     const totalPow = bonus.power;
                     const totalArm = bonus.armor;
@@ -703,8 +698,12 @@
                         p.health = p.maxHealth;
                         p.power += totalPow;
                         p.armor += totalArm;
-                        const waveDesc = `波数加成（累计）：生命+${totalHp}，力量+${totalPow}，坚固+${totalArm}`;
+                        const waveDesc = `难度+波次加成：生命+${totalHp}，力量+${totalPow}，坚固+${totalArm}`;
                         p.bonusDesc = p.bonusDesc ? p.bonusDesc + '，' + waveDesc : waveDesc;
+                    }
+                    if (aiDifficulty >= 3) {
+                        p.specialDiceUses += 1;
+                        p.bonusDesc = p.bonusDesc ? p.bonusDesc + '，变量骰子+1' : '变量骰子+1';
                     }
                 }
 
@@ -770,12 +769,12 @@
                 name: '体育',
                 desc: '力量+2',
                 apply: (p) => { p.power += 2; },
-                undo: () => {},
+                undo: (p) => { p.power = Math.max(0, p.power - 2); },
             }, {
                 name: '化学',
                 desc: '中毒+2',
                 apply: (p) => { addStatus(p, STATUS.POISON, 2); },
-                undo: () => {},
+                undo: (p) => { removeStatus(p, STATUS.POISON, 2); },
             }, {
                 name: '自习',
                 desc: '无特殊效果',
@@ -788,27 +787,29 @@
                     p.health = Math.min(p.maxHealth, p.health + 3);
                     [STATUS.POISON, STATUS.KEJING, STATUS.WEAK, STATUS.DUDU].forEach(e => removeStatus(p, e, 1));
                 },
-                undo: () => {},
+                undo: (p) => {
+                    p.health = Math.max(1, p.health - 3);
+                },
             }, {
                 name: '信息技术',
                 desc: '变量骰子+1',
                 apply: (p) => { p.specialDiceUses += 1; },
-                undo: () => {},
+                undo: (p) => { p.specialDiceUses = Math.max(0, p.specialDiceUses - 1); },
             }, {
                 name: '语文',
                 desc: '菜就多练，攻击骰+1',
                 apply: (p) => { addStatus(p, STATUS.CAI_DUO, 1); },
-                undo: () => {},
+                undo: (p) => { removeStatus(p, STATUS.CAI_DUO, 1); },
             }, {
                 name: '数学',
                 desc: '-3血',
                 apply: (p) => { p.health = Math.max(1, p.health - 3); },
-                undo: () => {},
+                undo: (p) => { p.health = Math.min(p.maxHealth, p.health + 3); },
             }, {
                 name: '物理',
                 desc: '报名强基计划，伤害提升',
                 apply: (p) => { addStatus(p, STATUS.STRONG_PLAN, 1); },
-                undo: () => {},
+                undo: (p) => { removeStatus(p, STATUS.STRONG_PLAN, 1); },
             }, {
                 name: '历史',
                 desc: '总骰子数+1',
@@ -818,7 +819,7 @@
                 name: '地理',
                 desc: '坚固+1',
                 apply: (p) => { p.armor += 1; },
-                undo: () => {},
+                undo: (p) => { p.armor = Math.max(0, p.armor - 1); },
             }, ];
 
             // ---------- 特殊骰子 ----------
@@ -846,7 +847,7 @@
                 },
                 hard_armor: {
                     title: '很硬的甲',
-                    desc: '下回合受伤减少25%（包括dot），获得1层坚固',
+                    desc: '下回合受伤减少30%（包括dot），获得1层坚固',
                     exec: (p) => { p.armor += 1;
                         addStatus(p, STATUS.HARD_ARMOR, 1);
                         return true; },
@@ -875,8 +876,10 @@
                 if (G.phase !== 'playing') return;
                 if (G.prevCourseIdx >= 0 && G.prevCourseIdx < COURSES.length) {
                     const old = COURSES[G.prevCourseIdx];
-                    if (old.undo) { old.undo(players[1]);
-                        old.undo(players[2]); }
+                    if (old.undo) {
+                        old.undo(players[1]);
+                        old.undo(players[2]);
+                    }
                 }
                 let ni;
                 do {
@@ -885,8 +888,10 @@
                 G.prevCourseIdx = G.currentCourseIdx;
                 G.currentCourseIdx = ni;
                 const course = COURSES[ni];
-                if (course.apply) { course.apply(players[1]);
-                    course.apply(players[2]); }
+                if (course.apply) {
+                    course.apply(players[1]);
+                    course.apply(players[2]);
+                }
                 const cd = $('course-display');
                 if (cd) cd.textContent = `当前课程: ${course.name}（${course.desc}）`;
                 checkBothAlive();
@@ -926,18 +931,42 @@
                 doStarfall(p2);
             }
 
-            function triggerDragonScales(p) {
-                if (p.character.skill !== 'dragonScales') return;
+            // ---- 古龙：攻击后触发 ----
+            function triggerDragonScalesOnAttack(att) {
+                if (att.character.skill !== 'dragonScales') return false;
+                if (att._dragonScalesUsedThisTurn) return false; // 每回合限一次
                 const heal = 3;
-                p.health = Math.min(p.maxHealth, p.health + heal);
-                p.power += 1;
-                p.armor += 1;
-                log(p.name + ' 的龙鳞护体回复 ' + heal + ' 点生命，力量+1，坚固+1', 'heal');
+                att.health = Math.min(att.maxHealth, att.health + heal);
+                att.power += 2;
+                att._dragonScalesUsedThisTurn = true;
+                log(att.name + ' 的龙鳞逆袭触发：回复 ' + heal + ' 点生命，力量+2', 'heal');
                 refreshAllUI();
+                return true;
+            }
+
+            // ---- 古龙：受击反击 ----
+            function triggerDragonScalesOnDefense(def, attacker) {
+                if (def.character.skill !== 'dragonScales') return false;
+                // 坚固+1（上限3层）
+                if (def.armor < 3) {
+                    def.armor += 1;
+                    log(def.name + ' 受击，龙鳞逆袭坚固+1（当前' + def.armor + '/3）', 'effect');
+                }
+                // 反击：造成等同于当前坚固层数的真实伤害
+                const counterDamage = def.armor;
+                if (counterDamage > 0 && attacker && attacker.health > 0) {
+                    attacker.health = Math.max(0, attacker.health - counterDamage);
+                    log(def.name + ' 的龙鳞逆袭反击 ' + counterDamage + ' 点真实伤害！', 'damage');
+                    refreshAllUI();
+                    if (attacker.health <= 0) { endGame(def.num); }
+                    return true;
+                }
+                refreshAllUI();
+                return false;
             }
 
             function handleTurnStartEffects(p) {
-                triggerDragonScales(p);
+                // 古龙的回合开始不再自动回血加力量，全部改为攻击触发，所以这里留空
             }
 
             function endGame(winner) {
@@ -952,13 +981,40 @@
                 showResult(players[winner], players[winner === 1 ? 2 : 1]);
             }
 
+            // ---------- 切换回合（每回合+1，课程每2回合切换，最终时刻） ----------
             function switchTurn() {
                 if (G.phase !== 'playing') return;
 
                 G.currentPlayer = G.currentPlayer === 1 ? 2 : 1;
                 const p = players[G.currentPlayer];
+
+                G.turn++;
+                const tc = $('turn-counter');
+                if (tc) tc.textContent = '回合数: ' + G.turn;
+                // 最终时刻样式
+                if (G.turn >= 6) {
+                    tc.classList.add('final-moment');
+                } else {
+                    tc.classList.remove('final-moment');
+                }
+
+                if (G.turn % 2 === 1 && G.turn > 1) {
+                    switchCourse();
+                }
+
+                if (G.turn >= 6) {
+                    const cur = players[G.currentPlayer];
+                    if (cur && getStatus(cur, STATUS.FINAL_MOMENT) === 0) {
+                        setStatus(cur, STATUS.FINAL_MOMENT, 1);
+                        log(cur.name + ' 进入最终时刻！攻击值+5', 'effect');
+                    }
+                }
+
                 p.rerollsUsedThisTurn = 0;
                 p._extraAttacksRemaining = p.character.id === CHAR.EMBER_HERO ? 1 : 0;
+                // 重置古龙攻击触发标记
+                p._dragonScalesUsedThisTurn = false;
+
                 G.allDice = [];
                 G.selectedIndices = [];
                 G._attackerSelection = [];
@@ -973,17 +1029,13 @@
                 G.waitingForDefense = false;
 
                 if (G.currentPlayer === 1) {
-                    G.turn++;
-                    const tc = $('turn-counter');
-                    if (tc) tc.textContent = '回合数: ' + G.turn;
-                    switchCourse();
                     triggerStarfallForBoth();
                     if (G.phase === 'ended') return;
                 }
 
                 handleTurnStartEffects(p);
                 refreshAllUI();
-                log('轮到 ' + p.name + ' 的回合', 'system');
+                log('轮到 ' + p.name + ' 的回合 (第' + G.turn + '回合)', 'system');
                 const ar = $('action-result');
                 if (ar) ar.textContent = p.name + ' 的回合，请选择操作';
                 updateButtons();
@@ -1054,10 +1106,21 @@
                 if (skillResult.extraAttack) att._hasExtraAttack = true;
                 if (skillResult.powerGain) {
                     att.power += skillResult.powerGain;
-                    log(att.name + ' 暗影突袭力量+1', 'effect');
+                    log(att.name + ' 暗影突袭力量+2', 'effect');
                 }
 
+                // ---- 古龙攻击后触发（力量+2，回血3） ----
+                triggerDragonScalesOnAttack(att);
+
+                // 基础攻击值 = 骰子总和 + 力量
                 let rawSum = dice.reduce((a, b) => a + b, 0) + att.power;
+
+                // 最终时刻：攻击值+5
+                if (getStatus(att, STATUS.FINAL_MOMENT) > 0) {
+                    rawSum += 5;
+                    log(att.name + ' 最终时刻触发，攻击值+5', 'effect');
+                }
+
                 const weakened = getStatus(att, STATUS.WEAK) > 0;
                 if (weakened) {
                     log(att.name + ' 处于虚弱，攻击伤害-30%', 'effect');
@@ -1070,7 +1133,8 @@
                     log(att.name + ' 暗影突袭触发，伤害×2.5！', 'effect');
                 }
 
-                log(att.name + ' 攻击点数: ' + rawSum + ' (' + dice.join('+') + (att.power > 0 ? '+力量' + att.power : '') + ')',
+                log(att.name + ' 攻击点数: ' + rawSum + ' (' + dice.join('+') + (att.power > 0 ? '+力量' + att.power : '') +
+                    (getStatus(att, STATUS.FINAL_MOMENT) > 0 ? '+最终时刻5' : '') + ')',
                     'player' + attNum);
                 const ar = $('action-result');
                 if (ar) ar.textContent = att.name + ' 攻击: ' + dice.join(', ') + ' = ' + rawSum + ' — 请 ' + def.name + ' 防御';
@@ -1154,9 +1218,9 @@
                 let finalDamage = damage;
                 let reduced = 0;
                 if (getStatus(def, STATUS.HARD_ARMOR) > 0 && finalDamage > 0) {
-                    reduced = Math.floor(finalDamage * 0.25);
+                    reduced = Math.floor(finalDamage * 0.30);
                     finalDamage = finalDamage - reduced;
-                    log(def.name + ' 很硬的甲 减免 ' + reduced + ' 点伤害', 'effect');
+                    log(def.name + ' 很硬的甲 减免 ' + reduced + ' 点伤害（30%）', 'effect');
                 }
 
                 if (getStatus(def, STATUS.LAST_STAND) > 0 && def.health - finalDamage <= 0 && finalDamage > 0) {
@@ -1171,6 +1235,12 @@
                 def.health = Math.max(0, def.health - finalDamage);
                 log(def.name + ' 受到 ' + finalDamage + ' 点伤害，剩余 ' + def.health, 'damage');
 
+                // ---- 古龙受击反击 ----
+                if (def.character.skill === 'dragonScales' && finalDamage > 0) {
+                    triggerDragonScalesOnDefense(def, att);
+                    if (G.phase === 'ended') return;
+                }
+
                 if (getStatus(def, STATUS.HARD_ARMOR) > 0 && (finalDamage > 0 || reduced > 0)) {
                     removeStatus(def, STATUS.HARD_ARMOR, 1);
                 }
@@ -1178,8 +1248,8 @@
                 if (att.character.skill === 'starfall' && finalDamage > 0) {
                     att._damageCounter = (att._damageCounter || 0) + finalDamage;
                     let gained = 0;
-                    while (att._damageCounter >= 5) {
-                        att._damageCounter -= 5;
+                    while (att._damageCounter >= 4) {
+                        att._damageCounter -= 4;
                         att._starSoul = (att._starSoul || 0) + 1;
                         gained++;
                     }
@@ -1193,7 +1263,7 @@
                 if (poisonBefore > 0) {
                     let poisonDmg = poisonBefore * (1 + dudokuBefore);
                     if (getStatus(def, STATUS.HARD_ARMOR) > 0) {
-                        poisonDmg = Math.floor(poisonDmg * 0.75);
+                        poisonDmg = Math.floor(poisonDmg * 0.70);
                     }
                     def.health = Math.max(0, def.health - poisonDmg);
                     log(def.name + ' 中毒损失 ' + poisonDmg + ' 点生命', 'effect');
@@ -1251,6 +1321,8 @@
                     G.currentAction = null;
                     G.currentPlayer = att.num;
                     players[att.num].rerollsUsedThisTurn = 0;
+                    // 重置古龙攻击标记，因为额外攻击仍算本回合，但已触发过则不再触发
+                    // 保持 _dragonScalesUsedThisTurn 不变，防止连续触发
                     refreshAllUI();
                     updateButtons();
                     const ar = $('action-result');
@@ -1586,7 +1658,6 @@
                 }, 480);
             }
 
-            // 骰子交互
             function setupDiceInteraction() {
                 const dr = $('dice-result');
                 if (!dr) return;
@@ -1774,6 +1845,12 @@
                 }
                 const tc = $('turn-counter');
                 if (tc) tc.textContent = '回合数: ' + G.turn;
+                // 最终时刻样式
+                if (G.turn >= 6) {
+                    tc.classList.add('final-moment');
+                } else {
+                    tc.classList.remove('final-moment');
+                }
                 for (let pn of [1, 2]) {
                     const el = $('p' + pn + '-turn');
                     if (el) {
@@ -1799,7 +1876,7 @@
                 const diff = pveConfig ? pveConfig.difficulty : 0;
 
                 if (detailEl) {
-                    detailEl.textContent = ai.bonusDesc ? 'AI 难度加成：' + ai.bonusDesc : 'AI 难度加成：无';
+                    detailEl.textContent = ai.bonusDesc ? 'AI 加成：' + ai.bonusDesc : 'AI 加成：无';
                 }
                 if (stageEl) {
                     let diffText = diffNames[diff] || '普通';
@@ -1879,7 +1956,8 @@
                 }
 
                 const statusKeys = [STATUS.POISON, STATUS.DUDU, STATUS.KEJING, STATUS.CAI_DUO,
-                    STATUS.HARD_ARMOR, STATUS.LAST_STAND, STATUS.WEAK, STATUS.STRONG_PLAN
+                    STATUS.HARD_ARMOR, STATUS.LAST_STAND, STATUS.WEAK, STATUS.STRONG_PLAN,
+                    STATUS.FINAL_MOMENT
                 ];
                 for (const key of statusKeys) {
                     const val = getStatus(p, key);
@@ -2052,13 +2130,13 @@
                 setTimeout(() => toast.remove(), 4000);
             }
 
-            // ---------- 敌人选择（排除百变怪） ----------
+            // ---------- 敌人选择 ----------
             function getRandomEnemyCharacter(currentBattle) {
                 if (currentBattle === 3) return 13;
                 if (currentBattle === 5) return 15;
                 if (currentBattle === 7) return 14;
                 if (currentBattle >= 8) {
-                    const allIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15]; // 排除12
+                    const allIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15];
                     return allIds[Math.floor(Math.random() * allIds.length)];
                 }
                 const normalIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
@@ -2253,7 +2331,7 @@
                 startNextBattle();
             }
 
-            // ---------- backToMenu 定义 ----------
+            // ---------- backToMenu ----------
             function backToMenu() {
                 if (G.phase === 'playing' && !confirm('返回主菜单会丢失当前进度，确定吗？')) return;
                 window.location.href = 'index.html';
@@ -2472,7 +2550,7 @@
                     ruleItems: [
                         '双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。',
                         '共有12种角色，每种有不同技能和属性。',
-                        '攻击值 = 攻击选中骰子点数 + 力量层数',
+                        '攻击值 = 攻击选中骰子点数 + 力量层数 + 最终时刻(5)',
                         '防御值 = 防御选中骰子点数 + 坚固层数',
                         '造成伤害值 = (攻击值 - 防御方防御值) * 其它效果',
                         '变量骰子可在任意时间使用，提供特殊效果。',
@@ -2482,12 +2560,13 @@
                         '<strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。',
                         '<strong>力量/坚固</strong>：每层+1点对应攻击/防御值。',
                         '<strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。',
-                        '<strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。',
+                        '<strong>很硬的甲</strong>：受伤减少30%（包括dot），触发后消失。',
                         '<strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。',
                         '<strong>虚弱</strong>：攻击伤害减30%，触发后消失。',
                         '<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。',
                         '<strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。',
                         '<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。',
+                        '<strong>最终时刻</strong>：回合数≥6时攻击方获得，攻击值+5，持续到战斗结束。',
                     ],
                 },
                 en: {
@@ -2519,8 +2598,8 @@
                     ruleItems: [
                         'Players alternate attack/defense each turn.',
                         '12 characters with unique skills.',
-                        'Attack = selected dice sum + Power stacks',
-                        'Defense = selected dice sum + Armor stacks',
+                        'Attack = selected dice sum + Power + Final Moment(5)',
+                        'Defense = selected dice sum + Armor',
                         'Damage = (Attack - Defense) * other effects',
                         'Special dice can be used anytime.',
                     ],
@@ -2529,12 +2608,13 @@
                         '<strong>My Poison</strong>: Poison dmg ×(1+stacks), never decays.',
                         '<strong>Power/Armor</strong>: +1 atk/def per stack.',
                         '<strong>Too Smart</strong>: Selectable dice -1 (min 1), consumes 1 stack.',
-                        '<strong>Hard Armor</strong>: Reduce dmg by 25%, disappears after trigger.',
+                        '<strong>Hard Armor</strong>: Reduce dmg by 30%, disappears after trigger.',
                         '<strong>Last Stand</strong>: Survive lethal dmg with 1 HP, gain Weak (2 uses).',
                         '<strong>Weakened</strong>: Attack dmg -30%, disappears after trigger.',
                         '<strong>666</strong>: Guarantee one 6 on roll (stackable).',
                         '<strong>Practice More</strong>: +1 selectable attack dice, disappears after trigger.',
                         '<strong>Strong Foundation</strong>: +20% dmg (min +1), consumes after attack.',
+                        '<strong>Final Moment</strong>: Obtained when turn ≥ 6, attack +5, lasts until battle ends.',
                     ],
                 }
             };
@@ -2594,12 +2674,14 @@
                 if (lpTitle) lpTitle.textContent = t.log;
                 const newBtn = $('new-game-btn');
                 if (newBtn) newBtn.textContent = t.newGame;
-                const settingsTitle = document.querySelector('#settings-modal .modal-title span:first-child');
+
+                const settingsTitle = $('settings-title-text');
                 if (settingsTitle) settingsTitle.textContent = t.settings;
-                const darkLabel = document.querySelector('.setting-row:first-child .setting-label');
+                const darkLabel = $('dark-mode-label');
                 if (darkLabel) darkLabel.textContent = t.dark;
-                const langLabel = document.querySelector('.setting-row:nth-child(2) .setting-label');
+                const langLabel = $('lang-label');
                 if (langLabel) langLabel.textContent = t.lang;
+
                 const doneBtn = $('settings-done');
                 if (doneBtn) doneBtn.textContent = t.close;
                 const authorSpan = document.querySelector('.author-link span:last-child');

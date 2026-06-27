@@ -45,6 +45,7 @@
             --radius: 10px;
             --radius-sm: 8px;
             --transition: 0.25s ease;
+            --final-color: #ff4444;
         }
 
         /* ===== 深色主题 ===== */
@@ -82,6 +83,7 @@
             --color-purple: #a78bfa;
             --color-red: #f87171;
             --color-blue: #60a5fa;
+            --final-color: #ff6666;
         }
 
         /* ===== 重置 & 全局 ===== */
@@ -594,6 +596,19 @@
             color: var(--text-primary);
             transition: background 0.2s;
         }
+        #turn-counter.final-moment {
+            color: var(--final-color);
+            font-size: 1.6rem;
+            font-weight: 900;
+            text-shadow: 0 0 12px rgba(255, 68, 68, 0.6);
+            animation: pulse 1s infinite alternate;
+            border-color: var(--final-color);
+            background: var(--bg-panel);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
 
         /* ===== 模态框 ===== */
         .modal-overlay {
@@ -643,13 +658,19 @@
         }
         .modal-title .close-btn {
             cursor: pointer;
-            font-size: 1.8rem;
-            line-height: 1;
-            color: var(--text-secondary);
-            transition: color 0.2s;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 30px;
+            background: var(--bg-option);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            transition: background 0.2s, color 0.2s;
+            line-height: 1.4;
         }
         .modal-title .close-btn:hover {
-            color: var(--color-danger);
+            background: var(--color-danger);
+            color: #fff;
         }
 
         .card-options {
@@ -1120,7 +1141,7 @@
         <div class="modal-content" style="max-width:450px;">
             <div class="modal-title">
                 <span id="settings-title-text">设置</span>
-                <span class="close-btn" id="settings-close">&times;</span>
+                <span class="close-btn" id="settings-close">关闭</span>
             </div>
             <div class="setting-row">
                 <span class="setting-label" id="settings-dark-label">深色模式</span>
@@ -1158,9 +1179,8 @@
 
     <script>
         // ================================================================
-        //  银河站立党 · 最终修复版
-        //  修复：语法错误（COURSES数组多余','）及硬甲减伤上调至30%（含dot）
-        //  版本：5.5.1
+        //  银河站立党 · v5.5.4
+        //  修改：666效果 → 额外投掷一个初始为6的骰子（在总骰数之外）
         // ================================================================
 
         (function() {
@@ -1183,6 +1203,7 @@
                 POWER: 'power',
                 ARMOR: 'armor',
                 SIX_SIX_SIX: 'sixSixSix',
+                FINAL_MOMENT: 'finalMoment',
             };
             const STATUS_DISPLAY = {
                 [STATUS.POISON]: '你已中毒！',
@@ -1193,6 +1214,7 @@
                 [STATUS.LAST_STAND]: '藏一手',
                 [STATUS.WEAK]: '虚弱',
                 [STATUS.STRONG_PLAN]: '强基计划',
+                [STATUS.FINAL_MOMENT]: '最终时刻',
             };
             const CHAR = {
                 EMBER_HERO: 1,
@@ -1218,7 +1240,7 @@
                     totalDice: 5,
                     attackDice: 3,
                     defenseDice: 2,
-                    effect: '三角猛攻：攻击时三个点数相同可额外攻击一次，并获得“菜就多练”并力量+3（每回合限一次）',
+                    effect: '三角猛攻：攻击时三个点数相同可额外攻击一次，并获得"菜就多练"并力量+3（每回合限一次）',
                     skill: 'emberHero',
                 },
                 [CHAR.WITCH]: {
@@ -1258,7 +1280,7 @@
                     totalDice: 5,
                     attackDice: 3,
                     defenseDice: 3,
-                    effect: '蚀骨奇毒：攻击时每有一个奇数骰子，攻击结束后挂一层中毒；若全为偶数，则立即施加1层“我下的毒”',
+                    effect: '蚀骨奇毒：攻击时每有一个奇数骰子，攻击结束后挂一层中毒；若全为偶数，则立即施加1层"我下的毒"',
                     skill: 'toxicologist',
                 },
                 [CHAR.LUCKY]: {
@@ -1308,7 +1330,7 @@
                     totalDice: 5,
                     attackDice: 3,
                     defenseDice: 2,
-                    effect: '寒风低语：攻击时每有一个未被选中的6点，给对手施加一层“可精了”并造成1点伤害',
+                    effect: '寒风低语：攻击时每有一个未被选中的6点，给对手施加一层"可精了"并造成1点伤害',
                     skill: 'northwind',
                 },
                 [CHAR.GAMBLER]: {
@@ -1389,7 +1411,7 @@
                 mimic: () => ({}),
             };
 
-            // ---------- 课程（修复：移除多余的 , ]） ----------
+            // ---------- 课程 ----------
             const COURSES = [{
                 name: '体育',
                 desc: '力量+2',
@@ -1443,7 +1465,7 @@
                 desc: '坚固+1',
                 apply: (p) => { p.armor += 1; },
                 undo: () => {},
-            }];   // <--- 修复：删除了多余的逗号和}]
+            }];
 
             // ---------- 特殊骰子 ----------
             const SPECIAL_EFFECTS = {
@@ -1487,7 +1509,7 @@
                 },
                 empower: {
                     title: '力了',
-                    desc: '立即获得2层力量，并获得1层666（下次额外投掷初始6点的骰子，可叠加）',
+                    desc: '立即获得2层力量，并获得1层666（额外投掷一个初始为6的骰子，可叠加）',
                     exec: (p) => { p.power += 2;
                         p._fixedSixStacks += 1;
                         return true; },
@@ -1510,7 +1532,7 @@
                     power: 0,
                     armor: 0,
                     _lastStandUsed: 0,
-                    _fixedSixStacks: 0,
+                    _fixedSixStacks: 0, // 666层数：额外投掷一个初始为6的骰子
                     _extraSixCount: 0,
                     _sixCount: 0,
                     _extraAttacksRemaining: 0,
@@ -1519,6 +1541,7 @@
                     _extraPoisonRemove: 0,
                     _gamblerBuff: 0,
                     _hasExtraAttack: false,
+                    _finalMomentUsedThisTurn: false,
                 };
             }
 
@@ -1570,20 +1593,26 @@
                 return base;
             }
 
+            // ---------- 修改：666 → 额外骰子（在总骰子数之外） ----------
             function rollDice(count, p) {
                 const vals = [];
-                let used = 0;
-                const isGambler = p.character.id === CHAR.GAMBLER;
-                const maxVal = isGambler ? 8 : 6;
-                while (used < p._fixedSixStacks) {
+                // 先消耗 _fixedSixStacks（每个额外投掷一个6）
+                let extraSixCount = p._fixedSixStacks;
+                p._fixedSixStacks = 0;
+                // 额外骰子追加到vals中，不占用count
+                for (let i = 0; i < extraSixCount; i++) {
                     vals.push(6);
-                    used++;
                 }
-                p._fixedSixStacks -= used;
+                if (extraSixCount > 0) {
+                    log(p.name + ' 触发了 ' + extraSixCount + ' 个额外固定6点（666）', 'effect');
+                }
+                // 其他额外6（来自其他效果）
                 for (let i = 0; i < p._extraSixCount; i++) vals.push(6);
                 p._extraSixCount = 0;
-                const remaining = Math.max(0, count - vals.length);
-                for (let i = 0; i < remaining; i++) {
+                // 正常掷骰 count 个
+                const isGambler = p.character.id === CHAR.GAMBLER;
+                const maxVal = isGambler ? 8 : 6;
+                for (let i = 0; i < count; i++) {
                     vals.push(Math.floor(Math.random() * maxVal) + 1);
                 }
                 return vals;
@@ -1640,7 +1669,8 @@
                 if (course.apply) { course.apply(players[1]);
                     course.apply(players[2]); }
                 const cd = $('course-display');
-                if (cd) cd.textContent = `当前课程: ${course.name}（${course.desc}）`;
+                if (cd) cd.textContent = (getLangText('courseLabel') || '当前课程') + ': ' + course.name + '（' + course.desc +
+                    '）';
                 checkBothAlive();
                 refreshAllUI();
             }
@@ -1671,6 +1701,8 @@
                 const p = players[G.currentPlayer];
                 p.rerollsUsedThisTurn = 0;
                 p._extraAttacksRemaining = p.character.id === CHAR.EMBER_HERO ? 1 : 0;
+                p._finalMomentUsedThisTurn = false;
+
                 G.allDice = [];
                 G.selectedIndices = [];
                 G._attackerSelection = [];
@@ -1681,14 +1713,29 @@
                 G.subState = 'idle';
                 G.currentAction = null;
                 G.waitingForDefense = false;
-                if (G.currentPlayer === 1) {
-                    G.turn++;
-                    const tc = $('turn-counter');
-                    if (tc) tc.textContent = '回合数: ' + G.turn;
+
+                G.turn++;
+                const tc = $('turn-counter');
+                if (tc) {
+                    tc.textContent = (getLangText('turnLabel') || '回合数') + ': ' + G.turn;
+                    if (G.turn >= 6) {
+                        tc.classList.add('final-moment');
+                    } else {
+                        tc.classList.remove('final-moment');
+                    }
+                }
+
+                if (G.turn >= 3 && G.turn % 2 === 1) {
                     switchCourse();
                 }
+
+                if (G.turn >= 6) {
+                    addStatus(p, STATUS.FINAL_MOMENT, 1);
+                    log(p.name + ' 进入"最终时刻"！攻击值+5', 'effect');
+                }
+
                 refreshAllUI();
-                log('轮到 ' + p.name + ' 的回合', 'system');
+                log('轮到 ' + p.name + ' 的回合（回合 ' + G.turn + '）', 'system');
                 const ar = $('action-result');
                 if (ar) ar.textContent = p.name + ' 的回合，请选择操作';
                 updateButtons();
@@ -1750,14 +1797,26 @@
                 if (skillResult.extraAttack) att._hasExtraAttack = true;
 
                 let rawSum = dice.reduce((a, b) => a + b, 0) + att.power;
+
+                let finalBonus = 0;
+                if (getStatus(att, STATUS.FINAL_MOMENT) > 0 && !att._finalMomentUsedThisTurn) {
+                    finalBonus = 5;
+                    rawSum += finalBonus;
+                    att._finalMomentUsedThisTurn = true;
+                    removeStatus(att, STATUS.FINAL_MOMENT, 1);
+                    log(att.name + ' 触发"最终时刻"，攻击值+5！', 'effect');
+                }
+
                 const weakened = getStatus(att, STATUS.WEAK) > 0;
                 if (weakened) {
                     log(att.name + ' 处于虚弱，攻击伤害-30%', 'effect');
                     removeStatus(att, STATUS.WEAK, 1);
                 }
 
-                log(att.name + ' 攻击点数: ' + rawSum + ' (' + dice.join('+') + (att.power > 0 ? '+力量' + att.power : '') + ')',
-                    'player' + attNum);
+                let logMsg = att.name + ' 攻击点数: ' + rawSum + ' (' + dice.join('+') + (att.power > 0 ? '+力量' + att.power :
+                    '') + (finalBonus > 0 ? '+最终时刻' : '') + ')';
+                log(logMsg, 'player' + attNum);
+
                 const ar = $('action-result');
                 if (ar) ar.textContent = att.name + ' 攻击: ' + dice.join(', ') + ' = ' + rawSum + ' — 请 ' + def.name + ' 防御';
 
@@ -1820,11 +1879,10 @@
                         damage = nd; }
                 }
 
-                // ===== 硬甲减免（直接伤害）上调至 30% =====
                 let finalDamage = damage;
                 let reduced = 0;
                 if (getStatus(def, STATUS.HARD_ARMOR) > 0 && damage > 0) {
-                    reduced = Math.floor(damage * 0.3);   // 从0.25改为0.3
+                    reduced = Math.floor(damage * 0.3);
                     finalDamage = damage - reduced;
                     log(def.name + ' 很硬的甲 减免 ' + reduced + ' 点伤害', 'effect');
                 }
@@ -1845,13 +1903,12 @@
                     removeStatus(def, STATUS.HARD_ARMOR, 1);
                 }
 
-                // === 中毒结算（也受硬甲减免，改为30%） ===
                 const poisonBefore = getStatus(def, STATUS.POISON);
                 const dudokuBefore = getStatus(def, STATUS.DUDU);
                 if (poisonBefore > 0) {
                     let poisonDmg = poisonBefore * (1 + dudokuBefore);
                     if (getStatus(def, STATUS.HARD_ARMOR) > 0) {
-                        poisonDmg = Math.floor(poisonDmg * 0.7);   // 从0.75改为0.7
+                        poisonDmg = Math.floor(poisonDmg * 0.7);
                     }
                     def.health = Math.max(0, def.health - poisonDmg);
                     log(def.name + ' 中毒损失 ' + poisonDmg + ' 点生命', 'effect');
@@ -1909,11 +1966,12 @@
                     G.currentAction = null;
                     G.currentPlayer = att.num;
                     players[att.num].rerollsUsedThisTurn = 0;
+                    players[att.num]._finalMomentUsedThisTurn = false;
                     refreshAllUI();
                     updateButtons();
                     const ar = $('action-result');
                     if (ar) ar.textContent = att.name + ' 获得额外攻击！请攻击';
-                    log(att.name + ' 获得额外攻击机会', 'effect');
+                    log(att.name + ' 获得额外攻击机会（不计入回合数）', 'effect');
                     return;
                 }
 
@@ -1977,7 +2035,6 @@
                 }, 480);
             }
 
-            // ---- 重掷功能 ----
             function rerollSelected(pn) {
                 if (G.isRerolling) return;
                 if (G.phase !== 'playing' || G.currentPlayer !== pn) return;
@@ -2014,7 +2071,6 @@
                 }, 400);
             }
 
-            // ---- 结束回合 ----
             function endTurn(pn) {
                 if (G.phase !== 'playing') return;
                 if (G.waitingForDefense && G.attackData && G.attackData.defNum !== pn) {
@@ -2115,10 +2171,18 @@
                 if (G.currentCourseIdx >= 0 && G.currentCourseIdx < COURSES.length) {
                     const c = COURSES[G.currentCourseIdx];
                     const cd = $('course-display');
-                    if (cd) cd.textContent = `当前课程: ${c.name}（${c.desc}）`;
+                    if (cd) cd.textContent = (getLangText('courseLabel') || '当前课程') + ': ' + c.name + '（' + c.desc +
+                        '）';
                 }
                 const tc = $('turn-counter');
-                if (tc) tc.textContent = '回合数: ' + G.turn;
+                if (tc) {
+                    tc.textContent = (getLangText('turnLabel') || '回合数') + ': ' + G.turn;
+                    if (G.turn >= 6) {
+                        tc.classList.add('final-moment');
+                    } else {
+                        tc.classList.remove('final-moment');
+                    }
+                }
                 for (let pn of [1, 2]) {
                     const el = $('p' + pn + '-turn');
                     if (el) {
@@ -2193,7 +2257,8 @@
                 if (p._sixCount > 0) statusItems.push('虹彩恩赐 ' + p._sixCount + '/3');
 
                 const statusKeys = [STATUS.POISON, STATUS.DUDU, STATUS.KEJING, STATUS.CAI_DUO,
-                    STATUS.HARD_ARMOR, STATUS.LAST_STAND, STATUS.WEAK, STATUS.STRONG_PLAN
+                    STATUS.HARD_ARMOR, STATUS.LAST_STAND, STATUS.WEAK, STATUS.STRONG_PLAN,
+                    STATUS.FINAL_MOMENT
                 ];
                 for (const key of statusKeys) {
                     const val = getStatus(p, key);
@@ -2211,7 +2276,6 @@
                     cache.statusHtml = statusHtml;
                 }
 
-                // 更新选择信息
                 const maxSel = G.currentAction === 'attack' ? getMaxSelectable(players[G.currentPlayer], 'attack') :
                     (G.currentAction === 'defend' && G.attackData ? getMaxSelectable(players[G.attackData.defNum],
                         'defend') : 0);
@@ -2422,14 +2486,15 @@
                     G.phase = 'playing';
                     G.turn = 1;
                     const tc = $('turn-counter');
-                    if (tc) tc.textContent = '回合数: 1';
+                    if (tc) tc.textContent = (getLangText('turnLabel') || '回合数') + ': 1';
                     G.currentCourseIdx = Math.floor(Math.random() * COURSES.length);
                     G.prevCourseIdx = -1;
                     const course = COURSES[G.currentCourseIdx];
                     if (course.apply) { course.apply(players[1]);
                         course.apply(players[2]); }
                     const cd = $('course-display');
-                    if (cd) cd.textContent = `当前课程: ${course.name}（${course.desc}）`;
+                    if (cd) cd.textContent = (getLangText('courseLabel') || '当前课程') + ': ' + course.name + '（' + course
+                        .desc + '）';
                     log('游戏开始！先手回合', 'system');
                     const ar = $('action-result');
                     if (ar) ar.textContent = players[1].name + ' 的回合，请选择操作';
@@ -2554,6 +2619,8 @@
                     follow: '🅱️ 关注作者 ↗',
                     rules: '基本规则',
                     statusRules: '状态解释',
+                    turnLabel: '回合数',
+                    courseLabel: '当前课程',
                     ruleItems: [
                         '双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。',
                         '共有12种角色，每种有不同技能和属性。',
@@ -2570,9 +2637,10 @@
                         '<strong>很硬的甲</strong>：受伤减少30%（包括dot），触发后消失。',
                         '<strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。',
                         '<strong>虚弱</strong>：攻击伤害减30%，触发后消失。',
-                        '<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。',
+                        '<strong>666</strong>：额外投掷一个初始为6的骰子（可叠加）。',
                         '<strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。',
                         '<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。',
+                        '<strong>最终时刻</strong>：回合数≥6时，攻击方攻击值+5，每回合触发一次。',
                     ],
                 },
                 en: {
@@ -2601,6 +2669,8 @@
                     follow: '🅱️ Follow Author ↗',
                     rules: 'Basic Rules',
                     statusRules: 'Status Glossary',
+                    turnLabel: 'Turn',
+                    courseLabel: 'Current Course',
                     ruleItems: [
                         'Players alternate attack/defense each turn.',
                         '12 characters with unique skills.',
@@ -2614,18 +2684,27 @@
                         '<strong>My Poison</strong>: Poison dmg ×(1+stacks), never decays.',
                         '<strong>Power/Armor</strong>: +1 atk/def per stack.',
                         '<strong>Too Smart</strong>: Selectable dice -1 (min 1), consumes 1 stack.',
-                        '<strong>Hard Armor</strong>: Reduce dmg by 30%, including DoT, disappears after trigger.',
+                        '<strong>Hard Armor</strong>: Reduce dmg by 30% (including DoT), disappears after trigger.',
                         '<strong>Last Stand</strong>: Survive lethal dmg with 1 HP, gain Weak (2 uses).',
                         '<strong>Weakened</strong>: Attack dmg -30%, disappears after trigger.',
-                        '<strong>666</strong>: Guarantee one 6 on roll (stackable).',
+                        '<strong>666</strong>: Gain an extra die that is always 6 (stackable).',
                         '<strong>Practice More</strong>: +1 selectable attack dice, disappears after trigger.',
                         '<strong>Strong Foundation</strong>: +20% dmg (min +1), consumes after attack.',
+                        '<strong>Final Moment</strong>: When turn ≥ 6, attacker gains +5 ATK once per turn.',
                     ],
                 }
             };
 
+            let _currentLang = 'zh';
+
+            function getLangText(key) {
+                const data = LANG_DATA[_currentLang] || LANG_DATA.zh;
+                return data[key] || null;
+            }
+
             function applyLang(lang) {
-                const t = LANG_DATA[lang] || LANG_DATA.zh;
+                _currentLang = lang || 'zh';
+                const t = LANG_DATA[_currentLang] || LANG_DATA.zh;
                 const h1 = document.querySelector('.header h1');
                 if (h1) h1.textContent = t.title;
                 const h6 = document.querySelector('.header h6');
@@ -2674,7 +2753,6 @@
                 const newBtn = $('new-game-btn');
                 if (newBtn) newBtn.textContent = t.newGame;
 
-                // 设置面板
                 const settingsTitle = $('settings-title-text');
                 if (settingsTitle) settingsTitle.textContent = t.settings;
                 const darkLabel = $('settings-dark-label');
@@ -2683,9 +2761,25 @@
                 if (langLabel) langLabel.textContent = t.lang;
                 const doneBtn = $('settings-done');
                 if (doneBtn) doneBtn.textContent = t.close;
+                const settingsClose = $('settings-close');
+                if (settingsClose) settingsClose.textContent = t.close;
 
                 const authorSpan = document.querySelector('.author-link span:last-child');
                 if (authorSpan) authorSpan.textContent = '关注作者';
+
+                const tc = $('turn-counter');
+                if (tc) {
+                    tc.textContent = t.turnLabel + ': ' + (G.turn || 1);
+                    if (G.turn >= 6) tc.classList.add('final-moment');
+                    else tc.classList.remove('final-moment');
+                }
+                const cd = $('course-display');
+                if (cd && G.currentCourseIdx >= 0 && G.currentCourseIdx < COURSES.length) {
+                    const c = COURSES[G.currentCourseIdx];
+                    cd.textContent = t.courseLabel + ': ' + c.name + '（' + c.desc + '）';
+                } else if (cd) {
+                    cd.textContent = t.courseLabel + ': 无';
+                }
 
                 const inst = $('instructions-area');
                 if (inst) {
@@ -2730,9 +2824,12 @@
                 const gl = $('game-log');
                 if (gl) gl.innerHTML = '<div class="log-entry system">游戏已重置，请选择角色开始新对局。</div>';
                 const tc = $('turn-counter');
-                if (tc) tc.textContent = '回合数: 1';
+                if (tc) {
+                    tc.textContent = (getLangText('turnLabel') || '回合数') + ': 1';
+                    tc.classList.remove('final-moment');
+                }
                 const cd = $('course-display');
-                if (cd) cd.textContent = '当前课程: 无';
+                if (cd) cd.textContent = (getLangText('courseLabel') || '当前课程') + ': 无';
                 const title = $('char-modal-title');
                 if (title) title.textContent = '先手选择角色卡';
                 const modal = $('char-modal');

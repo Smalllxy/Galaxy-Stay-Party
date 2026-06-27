@@ -269,7 +269,7 @@
       color: #fbbf24;
     }
 
-    /* 解锁条件卡片 - 与1.0.4保持一致 */
+    /* 解锁条件卡片 */
     .unlock-info {
       background: #f8fafc;
       border-radius: 20px;
@@ -324,7 +324,7 @@
       font-weight: 700;
     }
 
-    /* 规则解释区域 - 详细版匹配1.0.4 */
+    /* 规则解释区域 - 更新为1.0.8版本 */
     .instructions {
       background: #f8fafc;
       border-radius: 20px;
@@ -693,20 +693,23 @@
     <span class="unlock-item"><span class="badge" style="background:#ef4444;">噩梦</span> 7战 → <span class="star">★</span> 星辰主宰</span>
   </div>
 
-  <!-- 规则 & 状态解释 -->
+  <!-- 规则 & 状态解释（同步1.0.8） -->
   <div class="instructions" id="instructionsContainer">
     <div>
       <h3 data-i18n="rules-title">基本规则</h3>
       <ul data-i18n="rules-list">
         <li>双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。</li>
         <li>共有12种基础角色 + 3种隐藏角色，每种有不同技能和属性。</li>
-        <li>攻击值 = 攻击选中骰子点数 + 力量层数</li>
+        <li>攻击值 = 攻击选中骰子点数 + 力量层数 + <strong>最终时刻(5)</strong>（回合数≥6时获得）</li>
         <li>防御值 = 防御选中骰子点数 + 坚固层数</li>
         <li>造成伤害值 = (攻击值 - 防御方防御值) × 其它效果（如角色技能、虚弱、强基计划等）</li>
         <li>变量骰子可在任意时间使用，提供特殊效果（如重掷次数、回复、中毒、护甲、藏一手、力量+666等）。</li>
-        <li><strong>噩梦难度</strong>：我方跳过第一次行动，且敌方获得更大加成。</li>
-        <li><strong>连续战斗</strong>：每场战斗后勇者恢复 13 点生命，+5生命上限，变量骰子 +2；敌方随波次逐渐增强（生命、力量、坚固累加）。</li>
+        <li><strong>噩梦难度</strong>：AI 先手，且敌方获得更大加成。</li>
+        <li><strong>连续战斗</strong>：每场战斗后勇者恢复 13 点生命，+5生命上限，变量骰子 +2。</li>
         <li><strong>波次增幅</strong>：AI 随波次获得生命、力量、坚固的累加成长（前期平缓，后期显著）。</li>
+        <li><strong>课程切换</strong>：每2回合切换一次课程。</li>
+        <li><strong>最终时刻</strong>：回合数≥6时，攻击方获得“最终时刻”状态，攻击值+5，持续到战斗结束。</li>
+
       </ul>
     </div>
     <div>
@@ -716,18 +719,19 @@
         <li><strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。</li>
         <li><strong>力量/坚固</strong>：每层+1点对应攻击/防御值。</li>
         <li><strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。</li>
-        <li><strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。</li>
+        <li><strong>很硬的甲</strong>：受伤减少30%（包括dot），触发后消失。</li>
         <li><strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。</li>
         <li><strong>虚弱</strong>：攻击伤害减30%，触发后消失。</li>
         <li><strong>666</strong>：掷骰时固定获得一个6点（可叠加）。</li>
         <li><strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。</li>
         <li><strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。</li>
+        <li><strong>最终时刻</strong>：回合数≥6时获得，攻击值+5，持续到战斗结束。</li>
       </ul>
     </div>
   </div>
 
   <div class="footer-note">
-    <span data-i18n="pve-footer">每场战斗后自动保存，击败首领可解锁隐藏角色</span>
+    <span data-i18n="pve-footer">每场战斗后自动保存角色获取情况，达成某些条件可解锁隐藏角色</span>
   </div>
 </div>
 
@@ -776,7 +780,7 @@
 
 <script>
 (function() {
-  // ===== 角色数据 =====
+  // ===== 角色数据（与1.0.8完全一致） =====
   const normalCharacters = {
     1: { id: 1, name: "烬城勇者", maxHealth: 32, totalDice: 5, attackDice: 3, defenseDice: 2,
         effect_zh: "三角猛攻：攻击时若三个骰子点数相同，可额外进行一次攻击，并获得“菜就多练”和3层力量（每回合限一次）。",
@@ -816,22 +820,22 @@
         effect_en: "Mimic: Randomly mimic another non-hidden character, gain +2 max HP after transformation." }
   };
 
-  // 隐藏角色
+  // 隐藏角色（与1.0.8完全一致）
   const hiddenCharacters = {
     13: { id: 13, name: "幻影刺客 ★", maxHealth: 25, totalDice: 6, attackDice: 4, defenseDice: 2,
-        effect_zh: "暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+1。",
-        effect_en: "Shadow Strike: If all attack dice are prime (2,3,5,7), damage is multiplied by 2.5 and gain +1 Power." },
+        effect_zh: "暗影突袭：攻击时若所有攻击骰子点数均为质数（2,3,5,7），造成伤害×2.5并力量+2。",
+        effect_en: "Shadow Strike: If all attack dice are prime (2,3,5,7), damage is multiplied by 2.5 and gain +2 Power." },
     14: { id: 14, name: "不朽古龙 ★", maxHealth: 40, totalDice: 7, attackDice: 3, defenseDice: 4,
-        effect_zh: "龙鳞护体：每回合开始回复3点生命，并获得1层力量和1层坚固。",
-        effect_en: "Dragon Scales: Heal 3 HP at the start of each turn, gain +1 Power and +1 Armor." },
+        effect_zh: "龙鳞逆袭：攻击后力量+2并回复3点生命；受伤时坚固+1（上限3层）并造成等量真实伤害反击。",
+        effect_en: "Dragon Counter: After attack, gain +2 Power and heal 3 HP; when damaged, gain +1 Armor (max 3) and counter with true damage equal to Armor." },
     15: { id: 15, name: "星辰主宰 ★", maxHealth: 35, totalDice: 6, attackDice: 4, defenseDice: 2,
-        effect_zh: "星落：进入战斗和每造成5点伤害获得1点星魂，每回合结束时对敌方造成等量伤害。",
-        effect_en: "Starfall: Gain 1 Star Soul at battle start and for every 5 damage dealt. Deal true damage equal to Star Souls at end of each turn." }
+        effect_zh: "星落：进入战斗和每造成4点伤害获得1点星魂，每回合结束时对敌方造成等量真实伤害。",
+        effect_en: "Starfall: Gain 1 Star Soul at battle start and for every 4 damage dealt. Deal true damage equal to Star Souls at end of each turn." }
   };
 
   const allCharacters = { ...normalCharacters, ...hiddenCharacters };
 
-  // ===== 难度敌方加成配置 =====
+  // ===== 难度敌方加成配置（与1.0.8一致） =====
   const difficultyBonuses = {
     0: { zh: '无加成', en: 'No bonus' },
     1: { zh: '生命值 +5', en: 'HP +5' },
@@ -1015,11 +1019,11 @@
       timestamp: Date.now()
     };
     localStorage.setItem('pveAdventureConfig', JSON.stringify(config));
-    // 跳转到战斗页面（1.0.4）
+    // 跳转到战斗页面（1.0.8）
     window.location.href = 'PVEzd.html';
   }
 
-  // ===== 多语言=====
+  // ===== 多语言（更新为1.0.8规则） =====
   const i18n = {
     zh: {
       "pve-title": "单人冒险 · 银河试炼",
@@ -1040,13 +1044,16 @@
       "rules-list": [
         "双方轮流攻击和防御，每回合选择攻击骰子或防御骰子。",
         "共有12种基础角色 + 3种隐藏角色，每种有不同技能和属性。",
-        "攻击值 = 攻击选中骰子点数 + 力量层数",
+        "攻击值 = 攻击选中骰子点数 + 力量层数 + 最终时刻(5)（回合数≥6时获得）",
         "防御值 = 防御选中骰子点数 + 坚固层数",
         "造成伤害值 = (攻击值 - 防御方防御值) × 其它效果（如角色技能、虚弱、强基计划等）",
         "变量骰子可在任意时间使用，提供特殊效果（如重掷次数、回复、中毒、护甲、藏一手、力量+666等）。",
-        "噩梦难度：我方跳过第一回合，且敌方获得更大加成。",
+        "噩梦难度：AI 先手，且敌方获得更大加成。",
         "连续战斗：每场战斗后勇者恢复 13 点生命，+5生命上限，变量骰子 +2；敌方随波次逐渐增强（生命、力量、坚固累加）。",
-        "波次增幅：AI 随波次获得生命、力量、坚固的累加成长（前期平缓，后期显著）。"
+        "波次增幅：AI 随波次获得生命、力量、坚固的累加成长（前期平缓，后期显著）。",
+        "课程切换：每2回合切换一次课程。",
+        "最终时刻：回合数≥6时，攻击方获得“最终时刻”状态，攻击值+5，持续到战斗结束。",
+        "隐藏角色技能：幻影刺客（暗影突袭：质数骰×2.5并力量+2）、不朽古龙（龙鳞逆袭：攻击后力量+2回血3，受击坚固+1并反击等量真实伤害）、星辰主宰（星落：每4点伤害获得1星魂，回合结束造成等量真实伤害）。"
       ],
       "status-title": "状态解释",
       "status-list": [
@@ -1054,12 +1061,16 @@
         "<strong>我下的毒</strong>：使中毒伤害×(1+层数)，不会自然衰减。",
         "<strong>力量/坚固</strong>：每层+1点对应攻击/防御值。",
         "<strong>可精了</strong>：攻击或防御时可选骰子数-1（最低1），触发后消耗一层。",
-        "<strong>很硬的甲</strong>：受伤减少25%（包括dot），触发后消失。",
+        "<strong>很硬的甲</strong>：受伤减少30%（包括dot），触发后消失。",
         "<strong>藏一手</strong>：受到致命伤害时保留1点生命值，并获得虚弱（每局限用2次）。",
         "<strong>虚弱</strong>：攻击伤害减30%，触发后消失。",
         "<strong>666</strong>：掷骰时固定获得一个6点（可叠加）。",
         "<strong>菜就多练</strong>：攻击时可选攻击骰子数+1，触发后消失。",
         "<strong>强基计划</strong>：造成伤害提升20%（至少+1），攻击结束后消耗一层。",
+        "<strong>最终时刻</strong>：回合数≥6时获得，攻击值+5，持续到战斗结束。",
+        "<strong>星魂（星辰主宰）</strong>：战斗开始和每造成4点伤害获得1层，每回合结束时对敌方造成等量真实伤害（无视防御和减伤）。",
+        "<strong>暗影突袭（幻影刺客）</strong>：若所有攻击骰子均为质数（2,3,5,7），伤害×2.5并力量+2。",
+        "<strong>龙鳞逆袭（不朽古龙）</strong>：攻击后力量+2并回复3点生命；受击时坚固+1（上限3层）并造成等量真实伤害反击。"
       ]
     },
     en: {
@@ -1081,13 +1092,16 @@
       "rules-list": [
         "Players alternate attack/defense, choose attack or defense dice each turn.",
         "12 base characters + 3 hidden characters with unique skills.",
-        "Attack = selected dice sum + Power stacks",
+        "Attack = selected dice sum + Power + Final Moment(5) (obtained when turn ≥ 6)",
         "Defense = selected dice sum + Armor stacks",
         "Damage = (Attack - Defense) × other modifiers (skills, Weakness, Strong Plan, etc.)",
         "Special dice can be used anytime for unique effects (rerolls, heal, poison, armor, Last Stand, +Power+666).",
         "Nightmare: AI goes first, and enemy gains larger bonuses.",
-        "Consecutive battles: Hero recovers 13 HP and +2 Special Dice after each battle; enemy gains cumulative bonuses (HP, Power, Armor) with waves.",
-        "Wave scaling: AI gains cumulative HP, Power, Armor growth with each wave (gentle early, significant later)."
+        "Consecutive battles: Hero recovers 13 HP, +5 max HP, +2 Special Dice after each battle; enemy gains cumulative bonuses (HP, Power, Armor) with waves.",
+        "Wave scaling: AI gains cumulative HP, Power, Armor growth with each wave (gentle early, significant later).",
+        "Course switching: Courses change every 2 turns.",
+        "Final Moment: When turn ≥ 6, attacker gains 'Final Moment' status, attack +5 until battle ends.",
+        "Hidden skills: Shadow Assassin (prime dice ×2.5 +2 Power), Immortal Dragon (attack: +2 Power & heal 3 HP; defend: +1 Armor & counter true damage), Star Lord (Star Soul per 4 damage, deal true damage at end of turn)."
       ],
       "status-title": "Status Glossary",
       "status-list": [
@@ -1095,12 +1109,16 @@
         "<strong>My Poison</strong>: Poison damage × (1+ stacks), never decays.",
         "<strong>Power/Armor</strong>: Each stack adds +1 to attack/defense.",
         "<strong>Too Smart</strong>: Selectable dice -1 (min 1), consumed after use.",
-        "<strong>Hard Armor</strong>: Incoming damage -25% (including DoT), disappears after trigger.",
+        "<strong>Hard Armor</strong>: Reduce damage by 30% (including DoT), disappears after trigger.",
         "<strong>Last Stand</strong>: Survive lethal damage with 1 HP and gain Weak (2 uses per game).",
         "<strong>Weakness</strong>: Attack damage -30%, disappears after trigger.",
         "<strong>666</strong>: Gain a fixed 6 when rolling (stackable).",
         "<strong>Practice More</strong>: +1 selectable attack dice, disappears after use.",
         "<strong>Strong Foundation</strong>: Damage +20% (min +1), consumed after attack.",
+        "<strong>Final Moment</strong>: Obtained when turn ≥ 6, attack +5, lasts until battle ends.",
+        "<strong>Star Soul (Star Lord)</strong>: Gain 1 at battle start and for every 4 damage dealt. Deal true damage equal to Star Souls at end of each turn (ignores defense & reductions).",
+        "<strong>Shadow Strike (Shadow Assassin)</strong>: If all attack dice are prime (2,3,5,7), damage ×2.5 and gain +2 Power.",
+        "<strong>Dragon Counter (Immortal Dragon)</strong>: After attack, gain +2 Power and heal 3 HP; when damaged, gain +1 Armor (max 3) and counter with true damage equal to Armor."
       ]
     }
   };
